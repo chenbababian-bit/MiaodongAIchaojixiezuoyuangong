@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const DEEPSEEK_API_KEY = "sk-86ad3fdde49f4cf28aa51e12b0c658c0";
-const DEEPSEEK_API_URL = "https://api.deepseek.com/v1/chat/completions";
+// DeepSeek API 配置
+const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
+const DEEPSEEK_API_URL =
+  process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/v1/chat/completions";
 
 const SYSTEM_PROMPT = `# Role: 小红书流量操盘手 & 爆款文案架构师
 
@@ -76,6 +78,15 @@ export async function POST(request: NextRequest) {
       return NextResponse.json(
         { error: "请提供文案主题内容" },
         { status: 400 }
+      );
+    }
+
+    // 验证 API Key
+    if (!DEEPSEEK_API_KEY) {
+      console.error("DeepSeek API Key 未配置");
+      return NextResponse.json(
+        { error: "服务器配置错误，请联系管理员" },
+        { status: 500 }
       );
     }
 

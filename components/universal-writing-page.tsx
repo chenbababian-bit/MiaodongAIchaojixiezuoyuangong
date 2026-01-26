@@ -3,24 +3,11 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
 import {
-  Search,
-  FileText,
-  MessageCircle,
   ChevronLeft,
   ChevronRight,
-  BookOpen,
-  Video,
-  Newspaper,
-  PenTool,
-  Briefcase,
-  Calendar,
-  Target,
-  FileCheck,
-  MessageSquare,
   Loader2,
   Copy,
   Check,
@@ -28,6 +15,10 @@ import {
   RefreshCw,
   Save,
   X,
+  FileText,
+  Calendar,
+  MessageSquare,
+  MessageCircle,
 } from "lucide-react";
 import {
   Select,
@@ -39,250 +30,158 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { historyStorage, HistoryItem } from "@/lib/history-storage";
-import {
-  xiaohongshuTemplates,
-  wechatTemplates,
-  toutiaoTemplates,
-  weiboTemplates,
-  zhihuTemplates,
-  privateTemplates,
-} from "@/components/media-page"; // 从media-page导入模板数据
 
-// 顶部筛选标签
-const topFilters = [
-  { id: "hot", label: "热门写作" },
-  { id: "favorite", label: "收藏最多" },
-  { id: "newest", label: "最新推出" },
-  { id: "featured", label: "平台精选" },
-];
-
-// 左侧写作模板列表
-const sideTemplates = [
-  {
-    id: 1,
-    icon: "xiaohongshu",
-    iconBg: "bg-red-500",
-    title: "小红书爆款文案",
-    desc: "创作出能够吸引用户注意...",
-    active: true,
-  },
-  {
-    id: 2,
-    icon: "report",
-    iconBg: "bg-emerald-500",
-    title: "汇报材料",
-    desc: "撰写一份全面、准确、有...",
-    active: false,
-  },
-  {
-    id: 3,
-    icon: "wechat",
-    iconBg: "bg-green-500",
-    title: "公众号文章撰写",
-    desc: "创作高质量的公众号文章...",
-    active: false,
-  },
-  {
-    id: 4,
-    icon: "video",
-    iconBg: "bg-amber-500",
-    title: "短视频爆款文案",
-    desc: "设计能够迅速吸引观众注...",
-    active: false,
-  },
-  {
-    id: 5,
-    icon: "toutiao",
-    iconBg: "bg-red-600",
-    title: "头条爆文",
-    desc: "帮助用户创作出能够吸引...",
-    active: false,
-  },
-  {
-    id: 6,
-    icon: "title",
-    iconBg: "bg-red-500",
-    title: "小红书爆款标题",
-    desc: "设计出能够吸引目标受众...",
-    active: false,
-  },
-  {
-    id: 7,
-    icon: "business",
-    iconBg: "bg-purple-500",
-    title: "商业计划书",
-    desc: "为客户撰写一份详细、全...",
-    active: false,
-  },
-  {
-    id: 8,
-    icon: "weekly",
-    iconBg: "bg-orange-500",
-    title: "周/月/季度工作总结",
-    desc: "为用户提供详细、实用的...",
-    active: false,
-  },
-  {
-    id: 9,
-    icon: "hook",
-    iconBg: "bg-amber-500",
-    title: "短视频黄金3秒开头",
-    desc: "设计出能够迅速吸引观众...",
-    active: false,
-  },
-];
-
-// 示例提问
-const examplePrompts = [
-  {
-    id: 1,
-    text: "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。",
-  },
-  {
-    id: 2,
-    text: "我是一名美食爱好者，需要一些能够让人垂涎三尺的食谱介绍文案。",
-  },
-  {
-    id: 3,
-    text: "我是一位旅行达人，想要创作一些能够激发人们旅行欲望的目的地介绍文案。",
-  },
-];
-
-// 历史记录类型已从 @/lib/history-storage 导入
-
-function getIconComponent(iconType: string) {
-  switch (iconType) {
-    case "xiaohongshu":
-      return <BookOpen className="h-5 w-5 text-white" />;
-    case "report":
-      return <FileCheck className="h-5 w-5 text-white" />;
-    case "wechat":
-      return <MessageCircle className="h-5 w-5 text-white" />;
-    case "video":
-      return <Video className="h-5 w-5 text-white" />;
-    case "toutiao":
-      return <Newspaper className="h-5 w-5 text-white" />;
-    case "title":
-      return <PenTool className="h-5 w-5 text-white" />;
-    case "business":
-      return <Briefcase className="h-5 w-5 text-white" />;
-    case "weekly":
-      return <Calendar className="h-5 w-5 text-white" />;
-    case "hook":
-      return <Target className="h-5 w-5 text-white" />;
-    case "weibo":
-      return <MessageSquare className="h-5 w-5 text-white" />;
-    case "zhihu":
-      return <BookOpen className="h-5 w-5 text-white" />;
-    case "private":
-      return <Share2 className="h-5 w-5 text-white" />;
-    default:
-      return <FileText className="h-5 w-5 text-white" />;
-  }
+// 模板配置接口
+interface TemplateConfig {
+  id: string;
+  title: string;
+  description: string;
+  placeholder: string;
+  apiEndpoint: string;
+  examplePrompts: { id: number; text: string }[];
 }
 
-export function XiaohongshuWritingPage() {
+// 模板配置映射
+const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
+  "1": {
+    id: "1",
+    title: "小红书爆款文案",
+    description: "欢迎来到小红书爆款文案创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域,让我们开始创作吧!",
+    placeholder: "请输入您想要创作的文案主题或内容描述...",
+    apiEndpoint: "/api/xiaohongshu",
+    examplePrompts: [
+      { id: 1, text: "我是一名时尚博主,正在寻找能够引起共鸣的穿搭分享文案。" },
+      { id: 2, text: "我是一名美食爱好者,需要一些能够让人垂涎三尺的食谱介绍文案。" },
+      { id: 3, text: "我是一位旅行达人,想要创作一些能够激发人们旅行欲望的目的地介绍文案。" },
+    ],
+  },
+  "2": {
+    id: "2",
+    title: "汇报材料",
+    description: "欢迎来到汇报材料创作空间！帮助您撰写一份全面、准确、有针对性的政务汇报材料,为上级决策提供依据。",
+    placeholder: "请输入汇报材料的主题、背景信息、关键数据等...",
+    apiEndpoint: "/api/xiaohongshu", // 复用小红书API
+    examplePrompts: [
+      { id: 1, text: "我需要撰写一份关于季度工作进展的汇报材料。" },
+      { id: 2, text: "请帮我准备一份项目实施情况的汇报文稿。" },
+      { id: 3, text: "我要向领导汇报年度预算执行情况。" },
+    ],
+  },
+  "3": {
+    id: "3",
+    title: "公众号文章撰写",
+    description: "欢迎来到公众号文章创作空间！帮助您创作高质量的公众号文章,提升文章的吸引力和传播力。",
+    placeholder: "请输入文章主题、目标受众、核心观点等...",
+    apiEndpoint: "/api/wechat-article",
+    examplePrompts: [
+      { id: 1, text: "我想写一篇关于职场成长的公众号文章。" },
+      { id: 2, text: "请帮我创作一篇关于健康生活方式的推文。" },
+      { id: 3, text: "我需要写一篇产品介绍类的公众号文章。" },
+    ],
+  },
+  "4": {
+    id: "4",
+    title: "短视频爆款文案",
+    description: "欢迎来到短视频文案创作空间！帮助您设计能够迅速吸引观众注意力的短视频文案。",
+    placeholder: "请输入视频主题、目标平台、受众群体等...",
+    apiEndpoint: "/api/video",
+    examplePrompts: [
+      { id: 1, text: "我需要为抖音创作一条美食类短视频文案。" },
+      { id: 2, text: "请帮我写一个知识分享类短视频的脚本。" },
+      { id: 3, text: "我想做一个产品推广的短视频文案。" },
+    ],
+  },
+  "5": {
+    id: "5",
+    title: "头条爆文",
+    description: "欢迎来到头条爆文创作空间！帮助您创作出能够吸引大量阅读和互动的头条文章。",
+    placeholder: "请输入文章主题、目标受众、关键卖点等...",
+    apiEndpoint: "/api/xiaohongshu", // 复用小红书API
+    examplePrompts: [
+      { id: 1, text: "我想写一篇关于社会热点的头条文章。" },
+      { id: 2, text: "请帮我创作一篇科技类的头条爆文。" },
+      { id: 3, text: "我需要写一篇情感类的头条文章。" },
+    ],
+  },
+  "6": {
+    id: "6",
+    title: "小红书爆款标题",
+    description: "欢迎来到小红书标题创作空间！帮助您设计出能够吸引目标受众并提升点击率的爆款标题。",
+    placeholder: "请输入内容主题、关键词、目标受众等...",
+    apiEndpoint: "/api/xiaohongshu", // 复用小红书API
+    examplePrompts: [
+      { id: 1, text: "我需要为一篇护肤心得创作吸引人的标题。" },
+      { id: 2, text: "请帮我写几个美妆教程的爆款标题。" },
+      { id: 3, text: "我想为旅行攻略设计几个高点击率的标题。" },
+    ],
+  },
+  "7": {
+    id: "7",
+    title: "商业计划书",
+    description: "欢迎来到商业计划书创作空间！为您撰写一份详细、全面、具有说服力的商业计划书,帮助您获得投资和支持。",
+    placeholder: "请输入项目名称、商业模式、市场分析、财务规划等...",
+    apiEndpoint: "/api/wechat-article", // 复用公众号文章API
+    examplePrompts: [
+      { id: 1, text: "我需要为一个互联网创业项目撰写商业计划书。" },
+      { id: 2, text: "请帮我准备一份连锁餐饮项目的商业计划。" },
+      { id: 3, text: "我想写一份科技产品的商业计划书。" },
+    ],
+  },
+  "8": {
+    id: "8",
+    title: "周/月/季度工作总结",
+    description: "欢迎来到工作总结创作空间！为您提供详细、实用的工作总结模板,帮助您全面回顾工作成果。",
+    placeholder: "请输入总结周期、主要工作内容、完成情况、数据指标等...",
+    apiEndpoint: "/api/wechat-article", // 复用公众号文章API
+    examplePrompts: [
+      { id: 1, text: "我需要撰写本月的工作总结报告。" },
+      { id: 2, text: "请帮我准备第一季度的工作总结。" },
+      { id: 3, text: "我要写一份本周工作总结。" },
+    ],
+  },
+  "9": {
+    id: "9",
+    title: "短视频黄金3秒开头",
+    description: "欢迎来到短视频开头创作空间！帮助您设计出能够迅速吸引观众并降低跳出率的黄金3秒开头。",
+    placeholder: "请输入视频主题、目标受众、核心卖点等...",
+    apiEndpoint: "/api/video", // 复用视频API
+    examplePrompts: [
+      { id: 1, text: "我需要为一个美妆教程设计吸引人的开头。" },
+      { id: 2, text: "请帮我创作一个知识分享视频的前3秒钩子。" },
+      { id: 3, text: "我想为产品测评视频设计一个抓人眼球的开场。" },
+    ],
+  },
+  "10": {
+    id: "10",
+    title: "品牌定位报告",
+    description: "欢迎来到品牌定位报告创作空间！帮助您撰写一份全面、准确、有洞察力的品牌定位报告,为品牌发展提供战略指导。",
+    placeholder: "请输入品牌名称、目标市场、竞争对手、核心价值等...",
+    apiEndpoint: "/api/wechat-article", // 复用公众号文章API
+    examplePrompts: [
+      { id: 1, text: "我需要为一个新消费品牌撰写定位报告。" },
+      { id: 2, text: "请帮我分析一个科技品牌的市场定位。" },
+      { id: 3, text: "我想为餐饮品牌制定品牌定位策略。" },
+    ],
+  },
+};
+
+export function UniversalWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const templateTitle = searchParams.get("title") || "小红书爆款文案";
   const templateId = searchParams.get("template") || "1";
-  const source = searchParams.get("source") || "hot"; // 获取source参数
+  const source = searchParams.get("source") || "hot";
 
-  const [activeFilter, setActiveFilter] = useState("hot");
-  const [activeTemplate, setActiveTemplate] = useState(parseInt(templateId));
+  // 获取模板配置
+  const config = TEMPLATE_CONFIGS[templateId] || TEMPLATE_CONFIGS["1"];
+
   const [contentInput, setContentInput] = useState("");
   const [selectedModel, setSelectedModel] = useState("fast");
   const [resultTab, setResultTab] = useState<"current" | "history">("current");
-  const [searchQuery, setSearchQuery] = useState("");
-
-  // 新增状态
   const [isLoading, setIsLoading] = useState(false);
   const [currentResult, setCurrentResult] = useState<string>("");
   const [error, setError] = useState<string>("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
-
-  // 根据source参数动态获取模板列表
-  const getTemplatesFromSource = () => {
-    if (source === "hot") {
-      // 热门写作的模板（来自首页）
-      return sideTemplates;
-    } else if (source.startsWith("media-")) {
-      const platform = source.replace("media-", "");
-      // 根据平台返回对应的模板
-      switch (platform) {
-        case "xiaohongshu":
-          return xiaohongshuTemplates.map(t => ({
-            id: t.id,
-            icon: "xiaohongshu",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "wechat":
-          return wechatTemplates.map(t => ({
-            id: t.id,
-            icon: "wechat",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "toutiao":
-          return toutiaoTemplates.map(t => ({
-            id: t.id,
-            icon: "toutiao",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "weibo":
-          return weiboTemplates.map(t => ({
-            id: t.id,
-            icon: "weibo",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "zhihu":
-          return zhihuTemplates.map(t => ({
-            id: t.id,
-            icon: "zhihu",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "private":
-          return privateTemplates.map(t => ({
-            id: t.id,
-            icon: "private",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        default:
-          return sideTemplates;
-      }
-    } else {
-      // 默认返回热门写作模板
-      return sideTemplates;
-    }
-  };
-
-  // 动态模板列表
-  const displayTemplates = getTemplatesFromSource();
-
-  // 根据 URL 参数更新活动模板
-  useEffect(() => {
-    if (templateId) {
-      setActiveTemplate(parseInt(templateId));
-    }
-  }, [templateId]);
 
   // 加载历史记录
   useEffect(() => {
@@ -291,7 +190,7 @@ export function XiaohongshuWritingPage() {
         const historyData = await historyStorage.getHistory(templateId);
         setHistory(historyData);
       } catch (error) {
-        console.error('加载历史记录失败:', error);
+        console.error("加载历史记录失败:", error);
       }
     };
 
@@ -305,7 +204,7 @@ export function XiaohongshuWritingPage() {
   // 智能创作
   const handleSubmit = async () => {
     if (!contentInput.trim()) {
-      setError("请输入文案主题或内容描述");
+      setError("请输入内容描述");
       return;
     }
 
@@ -315,18 +214,7 @@ export function XiaohongshuWritingPage() {
     setResultTab("current");
 
     try {
-      // 根据模板ID选择API端点
-      let apiEndpoint = "/api/xiaohongshu"; // 默认小红书API
-
-      if (templateId === "3") {
-        // 公众号文章撰写
-        apiEndpoint = "/api/wechat-article";
-      } else if (templateId === "4" || templateId === "9") {
-        // 短视频相关模板，注意：实际应该跳转到视频页面，这里作为兜底
-        apiEndpoint = "/api/video";
-      }
-
-      const response = await fetch(apiEndpoint, {
+      const response = await fetch(config.apiEndpoint, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -348,17 +236,16 @@ export function XiaohongshuWritingPage() {
       try {
         const newHistoryItem = await historyStorage.addHistory(
           templateId,
-          templateTitle,
+          config.title,
           contentInput,
           data.result
         );
         setHistory((prev) => [newHistoryItem, ...prev]);
       } catch (historyError) {
-        console.error('保存历史记录失败:', historyError);
-        // 历史记录保存失败不影响主流程
+        console.error("保存历史记录失败:", historyError);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "创作失败，请重试");
+      setError(err instanceof Error ? err.message : "创作失败,请重试");
     } finally {
       setIsLoading(false);
     }
@@ -381,7 +268,7 @@ export function XiaohongshuWritingPage() {
       await historyStorage.deleteHistory(id);
       setHistory((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
-      console.error('删除历史记录失败:', error);
+      console.error("删除历史记录失败:", error);
     }
   };
 
@@ -404,13 +291,12 @@ export function XiaohongshuWritingPage() {
   // 根据source参数判断返回路径
   const getBackPath = () => {
     if (source === "hot") {
-      // 从热门写作来的，返回首页
       return "/";
     } else if (source.startsWith("media-")) {
-      // 从自媒体分类来的，返回自媒体分类页
       return "/?category=media";
+    } else if (source === "general") {
+      return "/?category=general";
     } else {
-      // 默认返回首页
       return "/";
     }
   };
@@ -433,17 +319,13 @@ export function XiaohongshuWritingPage() {
           {/* Title */}
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-lg font-semibold text-foreground">
-              {templateTitle}
+              {config.title}
             </h1>
             <Button
               variant="link"
               size="sm"
               className="text-primary p-0 h-auto"
-              onClick={() =>
-                handleExampleClick(
-                  "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。"
-                )
-              }
+              onClick={() => handleExampleClick(config.examplePrompts[0].text)}
             >
               插入示例
             </Button>
@@ -452,7 +334,7 @@ export function XiaohongshuWritingPage() {
           {/* Description */}
           <div className="bg-muted/50 rounded-lg p-4 mb-6">
             <p className="text-sm text-foreground leading-relaxed">
-              欢迎来到{templateTitle}创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域，让我们开始创作吧！
+              {config.description}
             </p>
           </div>
 
@@ -462,7 +344,7 @@ export function XiaohongshuWritingPage() {
               您可以试试这样提问：
             </p>
             <div className="space-y-2">
-              {examplePrompts.map((prompt) => (
+              {config.examplePrompts.map((prompt) => (
                 <button
                   key={prompt.id}
                   onClick={() => handleExampleClick(prompt.text)}
@@ -483,7 +365,7 @@ export function XiaohongshuWritingPage() {
                 描述内容
               </label>
               <Textarea
-                placeholder="请输入您想要创作的文案主题或内容描述..."
+                placeholder={config.placeholder}
                 className="min-h-[160px] resize-none"
                 value={contentInput}
                 onChange={(e) => setContentInput(e.target.value)}
@@ -564,26 +446,22 @@ export function XiaohongshuWritingPage() {
         {/* Result Content */}
         <div className="flex-1 overflow-hidden flex flex-col">
           {resultTab === "current" ? (
-            // 本次创作结果
             isLoading ? (
-              // 加载状态
               <div className="flex flex-col items-center justify-center h-full p-6">
                 <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
                 <p className="text-sm text-muted-foreground">
-                  AI正在为您创作爆款文案...
+                  AI正在为您创作内容...
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   预计需要10-20秒
                 </p>
               </div>
             ) : currentResult ? (
-              // 显示富文本编辑器结果
               <div className="flex-1 flex flex-col overflow-hidden">
                 <RichTextEditor
                   initialContent={currentResult}
                   className="flex-1"
                 />
-                {/* 底部操作按钮 */}
                 <div className="border-t border-border px-4 py-3 flex items-center justify-between bg-card">
                   <div className="flex items-center gap-2">
                     <Button
@@ -591,10 +469,9 @@ export function XiaohongshuWritingPage() {
                       size="sm"
                       className="h-8"
                       onClick={() => {
-                        // 分享功能
                         if (navigator.share) {
                           navigator.share({
-                            title: "小红书爆款文案",
+                            title: config.title,
                             text: currentResult,
                           });
                         }
@@ -648,7 +525,6 @@ export function XiaohongshuWritingPage() {
                       size="sm"
                       className="h-8"
                       onClick={() => {
-                        // 保存到历史记录
                         alert("已保存");
                       }}
                     >
@@ -659,26 +535,20 @@ export function XiaohongshuWritingPage() {
                 </div>
               </div>
             ) : (
-              // 空状态
               <div className="flex flex-col items-center justify-center h-full p-6">
                 <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
                   <MessageSquare className="h-10 w-10 text-muted-foreground/50" />
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  AI创作结果会在显示这里，现在你只需要
+                  AI创作结果会显示在这里,现在你只需要
                 </p>
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p>
-                    1. 在左侧填好必要的信息，填写越详细，结果越准确哦
-                  </p>
-                  <p>
-                    2. 点击智能创作按钮，静待AI妙笔生花，一般在10秒内搞定
-                  </p>
+                  <p>1. 在左侧填好必要的信息,填写越详细,结果越准确哦</p>
+                  <p>2. 点击智能创作按钮,静待AI妙笔生花,一般在10秒内搞定</p>
                 </div>
               </div>
             )
           ) : (
-            // 历史创作结果
             <ScrollArea className="h-full">
               {history.length > 0 ? (
                 <div className="p-4 space-y-4">

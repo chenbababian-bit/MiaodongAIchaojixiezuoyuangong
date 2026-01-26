@@ -12,15 +12,7 @@ import {
   MessageCircle,
   ChevronLeft,
   ChevronRight,
-  BookOpen,
   Video,
-  Newspaper,
-  PenTool,
-  Briefcase,
-  Calendar,
-  Target,
-  FileCheck,
-  MessageSquare,
   Loader2,
   Copy,
   Check,
@@ -28,6 +20,8 @@ import {
   RefreshCw,
   Save,
   X,
+  Calendar,
+  MessageSquare,
 } from "lucide-react";
 import {
   Select,
@@ -39,14 +33,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { historyStorage, HistoryItem } from "@/lib/history-storage";
-import {
-  xiaohongshuTemplates,
-  wechatTemplates,
-  toutiaoTemplates,
-  weiboTemplates,
-  zhihuTemplates,
-  privateTemplates,
-} from "@/components/media-page"; // 从media-page导入模板数据
+import { videoContentTemplates } from "@/lib/video-templates";
 
 // 顶部筛选标签
 const topFilters = [
@@ -56,141 +43,53 @@ const topFilters = [
   { id: "featured", label: "平台精选" },
 ];
 
-// 左侧写作模板列表
-const sideTemplates = [
-  {
-    id: 1,
-    icon: "xiaohongshu",
-    iconBg: "bg-red-500",
-    title: "小红书爆款文案",
-    desc: "创作出能够吸引用户注意...",
-    active: true,
-  },
-  {
-    id: 2,
-    icon: "report",
-    iconBg: "bg-emerald-500",
-    title: "汇报材料",
-    desc: "撰写一份全面、准确、有...",
-    active: false,
-  },
-  {
-    id: 3,
-    icon: "wechat",
-    iconBg: "bg-green-500",
-    title: "公众号文章撰写",
-    desc: "创作高质量的公众号文章...",
-    active: false,
-  },
-  {
-    id: 4,
-    icon: "video",
-    iconBg: "bg-amber-500",
-    title: "短视频爆款文案",
-    desc: "设计能够迅速吸引观众注...",
-    active: false,
-  },
-  {
-    id: 5,
-    icon: "toutiao",
-    iconBg: "bg-red-600",
-    title: "头条爆文",
-    desc: "帮助用户创作出能够吸引...",
-    active: false,
-  },
-  {
-    id: 6,
-    icon: "title",
-    iconBg: "bg-red-500",
-    title: "小红书爆款标题",
-    desc: "设计出能够吸引目标受众...",
-    active: false,
-  },
-  {
-    id: 7,
-    icon: "business",
-    iconBg: "bg-purple-500",
-    title: "商业计划书",
-    desc: "为客户撰写一份详细、全...",
-    active: false,
-  },
-  {
-    id: 8,
-    icon: "weekly",
-    iconBg: "bg-orange-500",
-    title: "周/月/季度工作总结",
-    desc: "为用户提供详细、实用的...",
-    active: false,
-  },
-  {
-    id: 9,
-    icon: "hook",
-    iconBg: "bg-amber-500",
-    title: "短视频黄金3秒开头",
-    desc: "设计出能够迅速吸引观众...",
-    active: false,
-  },
+// 视频类型选项
+const videoTypes = [
+  { value: "oral", label: "口播" },
+  { value: "plot", label: "剧情" },
+  { value: "vlog", label: "Vlog" },
+  { value: "product", label: "带货" },
+  { value: "tutorial", label: "教程" },
+  { value: "entertainment", label: "娱乐" },
+];
+
+// 目标选项
+const goalOptions = [
+  { value: "fans", label: "涨粉" },
+  { value: "monetization", label: "变现" },
+  { value: "interaction", label: "互动" },
+  { value: "brand", label: "品牌宣传" },
 ];
 
 // 示例提问
 const examplePrompts = [
   {
     id: 1,
-    text: "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。",
+    text: "我想拍一个美妆产品带货视频,目标观众是25-35岁职场女性,希望提高购买转化率。",
   },
   {
     id: 2,
-    text: "我是一名美食爱好者，需要一些能够让人垂涎三尺的食谱介绍文案。",
+    text: "需要一个职场干货类口播脚本,关于时间管理技巧,目标是涨粉和提高互动。",
   },
   {
     id: 3,
-    text: "我是一位旅行达人，想要创作一些能够激发人们旅行欲望的目的地介绍文案。",
+    text: "想做一个美食探店Vlog,突出餐厅特色和用餐体验,吸引本地吃货关注。",
   },
 ];
 
-// 历史记录类型已从 @/lib/history-storage 导入
-
-function getIconComponent(iconType: string) {
-  switch (iconType) {
-    case "xiaohongshu":
-      return <BookOpen className="h-5 w-5 text-white" />;
-    case "report":
-      return <FileCheck className="h-5 w-5 text-white" />;
-    case "wechat":
-      return <MessageCircle className="h-5 w-5 text-white" />;
-    case "video":
-      return <Video className="h-5 w-5 text-white" />;
-    case "toutiao":
-      return <Newspaper className="h-5 w-5 text-white" />;
-    case "title":
-      return <PenTool className="h-5 w-5 text-white" />;
-    case "business":
-      return <Briefcase className="h-5 w-5 text-white" />;
-    case "weekly":
-      return <Calendar className="h-5 w-5 text-white" />;
-    case "hook":
-      return <Target className="h-5 w-5 text-white" />;
-    case "weibo":
-      return <MessageSquare className="h-5 w-5 text-white" />;
-    case "zhihu":
-      return <BookOpen className="h-5 w-5 text-white" />;
-    case "private":
-      return <Share2 className="h-5 w-5 text-white" />;
-    default:
-      return <FileText className="h-5 w-5 text-white" />;
-  }
-}
-
-export function XiaohongshuWritingPage() {
+export function VideoWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const templateTitle = searchParams.get("title") || "小红书爆款文案";
-  const templateId = searchParams.get("template") || "1";
+  const templateTitle = searchParams.get("title") || "短视频爆款文案";
+  const templateId = searchParams.get("template") || "1001";
   const source = searchParams.get("source") || "hot"; // 获取source参数
 
   const [activeFilter, setActiveFilter] = useState("hot");
   const [activeTemplate, setActiveTemplate] = useState(parseInt(templateId));
   const [contentInput, setContentInput] = useState("");
+  const [videoType, setVideoType] = useState("");
+  const [audience, setAudience] = useState("");
+  const [goal, setGoal] = useState("");
   const [selectedModel, setSelectedModel] = useState("fast");
   const [resultTab, setResultTab] = useState<"current" | "history">("current");
   const [searchQuery, setSearchQuery] = useState("");
@@ -201,81 +100,6 @@ export function XiaohongshuWritingPage() {
   const [error, setError] = useState<string>("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
-
-  // 根据source参数动态获取模板列表
-  const getTemplatesFromSource = () => {
-    if (source === "hot") {
-      // 热门写作的模板（来自首页）
-      return sideTemplates;
-    } else if (source.startsWith("media-")) {
-      const platform = source.replace("media-", "");
-      // 根据平台返回对应的模板
-      switch (platform) {
-        case "xiaohongshu":
-          return xiaohongshuTemplates.map(t => ({
-            id: t.id,
-            icon: "xiaohongshu",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "wechat":
-          return wechatTemplates.map(t => ({
-            id: t.id,
-            icon: "wechat",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "toutiao":
-          return toutiaoTemplates.map(t => ({
-            id: t.id,
-            icon: "toutiao",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "weibo":
-          return weiboTemplates.map(t => ({
-            id: t.id,
-            icon: "weibo",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "zhihu":
-          return zhihuTemplates.map(t => ({
-            id: t.id,
-            icon: "zhihu",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        case "private":
-          return privateTemplates.map(t => ({
-            id: t.id,
-            icon: "private",
-            iconBg: t.color,
-            title: t.title,
-            desc: t.desc,
-            active: false,
-          }));
-        default:
-          return sideTemplates;
-      }
-    } else {
-      // 默认返回热门写作模板
-      return sideTemplates;
-    }
-  };
-
-  // 动态模板列表
-  const displayTemplates = getTemplatesFromSource();
 
   // 根据 URL 参数更新活动模板
   useEffect(() => {
@@ -291,7 +115,7 @@ export function XiaohongshuWritingPage() {
         const historyData = await historyStorage.getHistory(templateId);
         setHistory(historyData);
       } catch (error) {
-        console.error('加载历史记录失败:', error);
+        console.error("加载历史记录失败:", error);
       }
     };
 
@@ -305,7 +129,7 @@ export function XiaohongshuWritingPage() {
   // 智能创作
   const handleSubmit = async () => {
     if (!contentInput.trim()) {
-      setError("请输入文案主题或内容描述");
+      setError("请输入视频主题或内容描述");
       return;
     }
 
@@ -315,24 +139,16 @@ export function XiaohongshuWritingPage() {
     setResultTab("current");
 
     try {
-      // 根据模板ID选择API端点
-      let apiEndpoint = "/api/xiaohongshu"; // 默认小红书API
-
-      if (templateId === "3") {
-        // 公众号文章撰写
-        apiEndpoint = "/api/wechat-article";
-      } else if (templateId === "4" || templateId === "9") {
-        // 短视频相关模板，注意：实际应该跳转到视频页面，这里作为兜底
-        apiEndpoint = "/api/video";
-      }
-
-      const response = await fetch(apiEndpoint, {
+      const response = await fetch("/api/video", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
           content: contentInput,
+          videoType: videoType,
+          audience: audience,
+          goal: goal,
         }),
       });
 
@@ -354,11 +170,10 @@ export function XiaohongshuWritingPage() {
         );
         setHistory((prev) => [newHistoryItem, ...prev]);
       } catch (historyError) {
-        console.error('保存历史记录失败:', historyError);
-        // 历史记录保存失败不影响主流程
+        console.error("保存历史记录失败:", historyError);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "创作失败，请重试");
+      setError(err instanceof Error ? err.message : "创作失败,请重试");
     } finally {
       setIsLoading(false);
     }
@@ -381,7 +196,7 @@ export function XiaohongshuWritingPage() {
       await historyStorage.deleteHistory(id);
       setHistory((prev) => prev.filter((item) => item.id !== id));
     } catch (error) {
-      console.error('删除历史记录失败:', error);
+      console.error("删除历史记录失败:", error);
     }
   };
 
@@ -406,8 +221,8 @@ export function XiaohongshuWritingPage() {
     if (source === "hot") {
       // 从热门写作来的，返回首页
       return "/";
-    } else if (source.startsWith("media-")) {
-      // 从自媒体分类来的，返回自媒体分类页
+    } else if (source.startsWith("media-") || source.startsWith("video-")) {
+      // 从分类来的，返回自媒体分类页
       return "/?category=media";
     } else {
       // 默认返回首页
@@ -417,19 +232,107 @@ export function XiaohongshuWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {/* Center - Form Area */}
-      <div className="w-[60%] flex flex-col overflow-hidden">
-        {/* Main Form Content */}
-        <div className="flex-1 overflow-y-auto p-6">
-          {/* Back Button */}
+      {/* Left Sidebar - Template List */}
+      <div className="w-[280px] border-r border-border bg-card flex flex-col">
+        {/* Header with back button */}
+        <div className="p-4 border-b border-border">
           <button
             onClick={() => router.push(getBackPath())}
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-6"
+            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-3"
           >
             <ChevronLeft className="h-4 w-4" />
-            <span className="text-sm font-medium">返回</span>
+            <span className="text-sm font-medium">返回分类页</span>
           </button>
 
+          {/* Search */}
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
+            <Input
+              placeholder="请输入关键词搜索"
+              className="pl-9 h-9 bg-background text-sm"
+              value={searchQuery}
+              onChange={(e) => setSearchQuery(e.target.value)}
+            />
+          </div>
+        </div>
+
+        {/* Template List */}
+        <div className="flex-1 overflow-y-auto p-2">
+          {videoContentTemplates
+            .filter((template) =>
+              template.title.toLowerCase().includes(searchQuery.toLowerCase())
+            )
+            .map((template) => (
+              <button
+                key={template.id}
+                onClick={() => {
+                  router.push(
+                    `/writing/video?template=${template.id}&title=${encodeURIComponent(template.title)}&source=${source}`
+                  );
+                }}
+                className={cn(
+                  "w-full flex items-start gap-3 p-3 rounded-lg text-left transition-all mb-1",
+                  activeTemplate === template.id
+                    ? "bg-primary text-primary-foreground"
+                    : "hover:bg-muted"
+                )}
+              >
+                <div
+                  className={cn(
+                    "flex h-10 w-10 shrink-0 items-center justify-center rounded-xl text-2xl",
+                    template.color
+                  )}
+                >
+                  {template.icon}
+                </div>
+                <div className="flex-1 min-w-0">
+                  <h3
+                    className={cn(
+                      "font-medium text-sm truncate",
+                      activeTemplate === template.id
+                        ? "text-primary-foreground"
+                        : "text-foreground"
+                    )}
+                  >
+                    {template.title}
+                  </h3>
+                  <p
+                    className={cn(
+                      "text-xs truncate mt-0.5",
+                      activeTemplate === template.id
+                        ? "text-primary-foreground/70"
+                        : "text-muted-foreground"
+                    )}
+                  >
+                    {template.desc}
+                  </p>
+                </div>
+              </button>
+            ))}
+        </div>
+      </div>
+
+      {/* Center - Form Area */}
+      <div className="flex-1 flex flex-col overflow-hidden">
+        {/* Top Filter Tabs */}
+        <div className="border-b border-border bg-card px-6 py-3">
+          <div className="flex items-center gap-2">
+            {topFilters.map((filter) => (
+              <Button
+                key={filter.id}
+                variant={activeFilter === filter.id ? "default" : "ghost"}
+                size="sm"
+                onClick={() => setActiveFilter(filter.id)}
+                className="h-8"
+              >
+                {filter.label}
+              </Button>
+            ))}
+          </div>
+        </div>
+
+        {/* Main Form Content */}
+        <div className="flex-1 overflow-y-auto p-6">
           {/* Title */}
           <div className="flex items-center justify-between mb-4">
             <h1 className="text-lg font-semibold text-foreground">
@@ -439,11 +342,7 @@ export function XiaohongshuWritingPage() {
               variant="link"
               size="sm"
               className="text-primary p-0 h-auto"
-              onClick={() =>
-                handleExampleClick(
-                  "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。"
-                )
-              }
+              onClick={() => handleExampleClick(examplePrompts[0].text)}
             >
               插入示例
             </Button>
@@ -452,14 +351,15 @@ export function XiaohongshuWritingPage() {
           {/* Description */}
           <div className="bg-muted/50 rounded-lg p-4 mb-6">
             <p className="text-sm text-foreground leading-relaxed">
-              欢迎来到{templateTitle}创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域，让我们开始创作吧！
+              欢迎来到{templateTitle}
+              创作空间！我不写废话,只产出能留住注意力的爆款。前3秒定生死,结尾定转化。请告诉我您的视频主题、目标观众和核心目标,让我们开始创作吧！
             </p>
           </div>
 
           {/* Example Prompts */}
           <div className="mb-6">
             <p className="text-sm text-muted-foreground mb-3">
-              您可以试试这样提问：
+              您可以试试这样提问:
             </p>
             <div className="space-y-2">
               {examplePrompts.map((prompt) => (
@@ -480,14 +380,64 @@ export function XiaohongshuWritingPage() {
             <div>
               <label className="text-sm font-medium text-foreground mb-2 flex items-center">
                 <span className="text-red-500 mr-1">*</span>
-                描述内容
+                视频主题
               </label>
               <Textarea
-                placeholder="请输入您想要创作的文案主题或内容描述..."
-                className="min-h-[160px] resize-none"
+                placeholder="请输入您想要创作的视频主题或内容描述..."
+                className="min-h-[120px] resize-none"
                 value={contentInput}
                 onChange={(e) => setContentInput(e.target.value)}
               />
+            </div>
+
+            {/* Video Type */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                视频类型 (可选)
+              </label>
+              <Select value={videoType} onValueChange={setVideoType}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="选择视频类型" />
+                </SelectTrigger>
+                <SelectContent>
+                  {videoTypes.map((type) => (
+                    <SelectItem key={type.value} value={type.value}>
+                      {type.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </div>
+
+            {/* Target Audience */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                目标观众 (可选)
+              </label>
+              <Input
+                placeholder="例如: 25-35岁职场女性"
+                value={audience}
+                onChange={(e) => setAudience(e.target.value)}
+              />
+            </div>
+
+            {/* Goal */}
+            <div>
+              <label className="text-sm font-medium text-foreground mb-2 block">
+                核心目标 (可选)
+              </label>
+              <Select value={goal} onValueChange={setGoal}>
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="选择核心目标" />
+                </SelectTrigger>
+                <SelectContent>
+                  {goalOptions.map((option) => (
+                    <SelectItem key={option.value} value={option.value}>
+                      {option.label}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
             </div>
 
             {/* Error Message */}
@@ -538,7 +488,7 @@ export function XiaohongshuWritingPage() {
       </div>
 
       {/* Right Sidebar - Results Area */}
-      <div className="w-[40%] border-l border-border bg-card flex flex-col relative">
+      <div className="w-[400px] border-l border-border bg-card flex flex-col relative">
         {/* Result Tabs */}
         <div className="border-b border-border p-4">
           <div className="flex items-center gap-2">
@@ -570,7 +520,7 @@ export function XiaohongshuWritingPage() {
               <div className="flex flex-col items-center justify-center h-full p-6">
                 <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
                 <p className="text-sm text-muted-foreground">
-                  AI正在为您创作爆款文案...
+                  AI正在为您创作爆款视频脚本...
                 </p>
                 <p className="text-xs text-muted-foreground mt-1">
                   预计需要10-20秒
@@ -591,10 +541,9 @@ export function XiaohongshuWritingPage() {
                       size="sm"
                       className="h-8"
                       onClick={() => {
-                        // 分享功能
                         if (navigator.share) {
                           navigator.share({
-                            title: "小红书爆款文案",
+                            title: "短视频爆款文案",
                             text: currentResult,
                           });
                         }
@@ -648,7 +597,6 @@ export function XiaohongshuWritingPage() {
                       size="sm"
                       className="h-8"
                       onClick={() => {
-                        // 保存到历史记录
                         alert("已保存");
                       }}
                     >
@@ -665,15 +613,11 @@ export function XiaohongshuWritingPage() {
                   <MessageSquare className="h-10 w-10 text-muted-foreground/50" />
                 </div>
                 <p className="text-sm text-muted-foreground mb-2">
-                  AI创作结果会在显示这里，现在你只需要
+                  AI创作结果会在显示这里,现在你只需要
                 </p>
                 <div className="text-sm text-muted-foreground space-y-1">
-                  <p>
-                    1. 在左侧填好必要的信息，填写越详细，结果越准确哦
-                  </p>
-                  <p>
-                    2. 点击智能创作按钮，静待AI妙笔生花，一般在10秒内搞定
-                  </p>
+                  <p>1. 在左侧填好必要的信息,填写越详细,结果越准确哦</p>
+                  <p>2. 点击智能创作按钮,静待AI妙笔生花,一般在10秒内搞定</p>
                 </div>
               </div>
             )
