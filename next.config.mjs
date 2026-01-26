@@ -9,6 +9,8 @@ const nextConfig = {
       },
     ],
   },
+  // 配置输出模式为 standalone，适合 Vercel 部署
+  output: 'standalone',
 }
 
 export default nextConfig
