@@ -30,10 +30,6 @@ export const metadata: Metadata = {
   },
 }
 
-// 禁用静态生成，使用动态渲染
-// 这对于使用 useSearchParams 等客户端 hooks 的页面是必需的
-export const dynamic = 'force-dynamic'
-
 export default function RootLayout({
   children,
 }: Readonly<{
