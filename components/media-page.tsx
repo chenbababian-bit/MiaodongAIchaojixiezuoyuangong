@@ -455,43 +455,48 @@ export function MediaPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-56px)] bg-background">
-      {/* Left Sidebar */}
-      <div className="w-48 border-r border-border bg-card">
-        <div className="p-2">
-          {/* 第二层:自媒体文案、短视频文案、直播文案 */}
-          <div className="space-y-1 mb-2">
-            {secondLevelCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setActiveSecondLevel(category.id);
-                  // 如果切换到自媒体文案,默认选中小红书
-                  if (category.id === "media") {
-                    setActiveThirdLevel("xiaohongshu");
-                  }
-                  // 如果切换到短视频文案,默认选中视频文案
-                  if (category.id === "video") {
-                    setActiveFourthLevel("video-content");
-                  }
-                  // 如果切换到直播文案,默认选中直播话术
-                  if (category.id === "live") {
-                    setActiveLiveLevel("live-script");
-                  }
-                }}
-                className={cn(
-                  "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
-                  activeSecondLevel === category.id
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted text-foreground"
-                )}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
+    <div className="flex flex-col h-[calc(100vh-56px)]">
+      {/* 第二层导航 - 自媒体文案 / 短视频文案 / 直播文案 */}
+      <div className="border-b border-border bg-card">
+        <div className="flex items-center px-6 h-14">
+          {secondLevelCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => {
+                setActiveSecondLevel(category.id);
+                // 如果切换到自媒体文案,默认选中小红书
+                if (category.id === "media") {
+                  setActiveThirdLevel("xiaohongshu");
+                }
+                // 如果切换到短视频文案,默认选中视频文案
+                if (category.id === "video") {
+                  setActiveFourthLevel("video-content");
+                }
+                // 如果切换到直播文案,默认选中直播话术
+                if (category.id === "live") {
+                  setActiveLiveLevel("live-script");
+                }
+              }}
+              className={cn(
+                "px-6 h-full text-sm font-medium transition-colors relative",
+                activeSecondLevel === category.id
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {category.label}
+              {activeSecondLevel === category.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+              )}
+            </button>
+          ))}
+        </div>
+      </div>
 
-          {/* 第三层：根据选中的第二层显示不同的子分类 */}
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - 第三层导航 */}
+        <div className="w-48 border-r border-border bg-card overflow-y-auto">
+          <div className="p-2">
           {activeSecondLevel === "media" && (
             <div className="space-y-1">
               {mediaSubCategories.map((category) => (
@@ -501,8 +506,8 @@ export function MediaPage() {
                   className={cn(
                     "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
                     activeThirdLevel === category.id
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/50"
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted text-foreground"
                   )}
                 >
                   {category.label}
@@ -521,8 +526,8 @@ export function MediaPage() {
                   className={cn(
                     "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
                     activeFourthLevel === category.id
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/50"
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted text-foreground"
                   )}
                 >
                   {category.label}
@@ -541,8 +546,8 @@ export function MediaPage() {
                   className={cn(
                     "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
                     activeLiveLevel === category.id
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/50"
+                      ? "bg-primary text-primary-foreground"
+                      : "hover:bg-muted text-foreground"
                   )}
                 >
                   {category.label}
@@ -550,11 +555,11 @@ export function MediaPage() {
               ))}
             </div>
           )}
+          </div>
         </div>
-      </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-y-auto">
+        {/* Main Content - 右侧内容区域 */}
+        <div className="flex-1 p-6 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-6">{getCurrentSecondLevelTitle()}</h1>
 
         {/* 根据选中的第二层显示不同的内容 */}
@@ -672,6 +677,7 @@ export function MediaPage() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }

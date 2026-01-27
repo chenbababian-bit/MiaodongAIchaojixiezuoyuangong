@@ -93,58 +93,64 @@ export function MarketingPage() {
   };
 
   return (
-    <div className="flex min-h-[calc(100vh-56px)] bg-background">
-      {/* Left Sidebar */}
-      <div className="w-48 border-r border-border bg-card">
-        <div className="p-2">
-          {/* 第二层:营销下的主要分类 */}
-          <div className="space-y-1 mb-2">
-            {marketingSecondLevelCategories.map((category) => (
-              <button
-                key={category.id}
-                onClick={() => {
-                  setActiveSecondLevel(category.id);
-                  // 如果切换到品牌,默认选中品牌战略
-                  if (category.id === "brand") {
-                    setActiveThirdLevel("brand-strategy");
-                  }
-                }}
-                className={cn(
-                  "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
-                  activeSecondLevel === category.id
-                    ? "bg-primary text-primary-foreground"
-                    : "hover:bg-muted text-foreground"
-                )}
-              >
-                {category.label}
-              </button>
-            ))}
-          </div>
-
-          {/* 第三层：品牌下的子分类 */}
-          {activeSecondLevel === "brand" && (
-            <div className="space-y-1">
-              {brandSubCategories.map((category) => (
-                <button
-                  key={category.id}
-                  onClick={() => scrollToCategory(category.id)}
-                  className={cn(
-                    "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
-                    activeThirdLevel === category.id
-                      ? "bg-muted text-foreground"
-                      : "text-muted-foreground hover:bg-muted/50"
-                  )}
-                >
-                  {category.label}
-                </button>
-              ))}
-            </div>
-          )}
+    <div className="flex flex-col h-[calc(100vh-56px)]">
+      {/* 第二层导航 - 横向标签页 */}
+      <div className="border-b border-border bg-card">
+        <div className="flex items-center px-6 h-14">
+          {marketingSecondLevelCategories.map((category) => (
+            <button
+              key={category.id}
+              onClick={() => {
+                setActiveSecondLevel(category.id);
+                // 如果切换到品牌,默认选中品牌战略
+                if (category.id === "brand") {
+                  setActiveThirdLevel("brand-strategy");
+                }
+              }}
+              className={cn(
+                "px-6 h-full text-sm font-medium transition-colors relative",
+                activeSecondLevel === category.id
+                  ? "text-primary"
+                  : "text-muted-foreground hover:text-foreground"
+              )}
+            >
+              {category.label}
+              {activeSecondLevel === category.id && (
+                <div className="absolute bottom-0 left-0 right-0 h-0.5 bg-primary" />
+              )}
+            </button>
+          ))}
         </div>
       </div>
 
-      {/* Main Content */}
-      <div className="flex-1 p-6 overflow-y-auto">
+      <div className="flex flex-1 overflow-hidden">
+        {/* Left Sidebar - 第三层导航 */}
+        <div className="w-48 border-r border-border bg-card overflow-y-auto">
+          <div className="p-2">
+            {/* 第三层：品牌下的子分类 */}
+            {activeSecondLevel === "brand" && (
+              <div className="space-y-1">
+                {brandSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        </div>
+
+        {/* Main Content - 右侧内容区域 */}
+        <div className="flex-1 p-6 overflow-y-auto">
         <h1 className="text-2xl font-bold mb-6">{getCurrentSecondLevelTitle()}</h1>
 
         {/* 根据选中的第二层显示不同的内容 */}
@@ -219,6 +225,7 @@ export function MarketingPage() {
           </div>
         )}
       </div>
+    </div>
     </div>
   );
 }
