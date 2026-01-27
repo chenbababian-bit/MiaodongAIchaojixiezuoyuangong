@@ -1,12 +1,15 @@
 "use client";
 
+import { Suspense } from "react";
 import { AppLayout } from "@/components/app-layout";
 import { XiaohongshuWritingPage } from "@/components/xiaohongshu-writing-page";
 
 export default function XiaohongshuPage() {
   return (
     <AppLayout>
-      <XiaohongshuWritingPage />
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">加载中...</div>}>
+        <XiaohongshuWritingPage />
+      </Suspense>
     </AppLayout>
   );
 }
