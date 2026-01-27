@@ -6,6 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
 import { MediaPage } from "@/components/media-page";
+import { MarketingPage } from "@/components/marketing-page";
 import { GeneralWritingPage } from "@/components/general-writing-page";
 import {
   Search,
@@ -551,8 +552,8 @@ export function WritingPage() {
 
   // 滚动监听，自动更新左侧导航高亮
   useEffect(() => {
-    // 如果是自媒体或通用写作页面，不需要滚动监听
-    if (activeCategory === "media" || activeCategory === "general") return;
+    // 如果是自媒体、营销或通用写作页面，不需要滚动监听
+    if (activeCategory === "media" || activeCategory === "marketing" || activeCategory === "general") return;
 
     const contentElement = contentRef.current;
     if (!contentElement) return;
@@ -668,6 +669,9 @@ export function WritingPage() {
       {activeCategory === "media" ? (
         // 自媒体页面
         <MediaPage />
+      ) : activeCategory === "marketing" ? (
+        // 营销页面
+        <MarketingPage />
       ) : activeCategory === "general" ? (
         // 通用写作页面
         <GeneralWritingPage />
