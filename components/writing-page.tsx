@@ -481,7 +481,11 @@ const featuredTemplates = [
 function getIconComponent(iconType: string) {
   switch (iconType) {
     case "xiaohongshu":
-      return <Image src="/20240723180934ae8ed2830.png" alt="小红书" width={20} height={20} className="object-contain" />;
+      return (
+        <div className="bg-white rounded-full p-0.5 flex items-center justify-center">
+          <Image src="/20240723180934ae8ed2830.png" alt="小红书" width={18} height={18} className="object-contain" />
+        </div>
+      );
     case "report":
       return <FileCheck className="h-5 w-5 text-white" />;
     case "wechat":
