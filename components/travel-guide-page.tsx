@@ -2,25 +2,22 @@
 
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { Loader2, Copy, Check, MapPin, Wallet, Users, Calendar, Palette } from "lucide-react";
+import { Loader2, Copy, Check, Sparkles } from "lucide-react";
 import { cn } from "@/lib/utils";
 
+// 示例提示
+const EXAMPLE_PROMPTS = [
+  "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。",
+  "我是一名美食爱好者，需要一些能够让人垂涎三尺的食谱介绍文案。",
+  "我是一位旅行达人，想要创作一些能够激发人们旅行欲望的目的地介绍文案。",
+  "我计划去成都旅游3天，预算3000元，和闺蜜一起，想要极致省钱干货攻略。",
+  "我想去大理度假5天，预算8000元，情侣出行，想要氛围感大片文案风格。",
+  "我要带孩子去三亚玩7天，预算15000元，需要亲子友好的旅游攻略。",
+];
+
 export function TravelGuidePage() {
-  const [destination, setDestination] = useState("");
-  const [budget, setBudget] = useState("");
-  const [companions, setCompanions] = useState("");
-  const [days, setDays] = useState("");
-  const [style, setStyle] = useState("");
+  const [content, setContent] = useState("");
   const [result, setResult] = useState("");
   const [loading, setLoading] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -28,8 +25,8 @@ export function TravelGuidePage() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!destination || !budget || !companions || !days || !style) {
-      alert("请填写完整的旅行信息");
+    if (!content.trim()) {
+      alert("请输入您想要创作的内容描述");
       return;
     }
 
@@ -43,11 +40,7 @@ export function TravelGuidePage() {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          destination,
-          budget,
-          companions,
-          days,
-          style,
+          content: content.trim(),
         }),
       });
 
@@ -77,170 +70,125 @@ export function TravelGuidePage() {
     }
   };
 
+  const handleExampleClick = (example: string) => {
+    setContent(example);
+  };
+
   return (
-    <div className="container mx-auto px-4 py-8 max-w-6xl">
-      <div className="mb-8">
-        <h1 className="text-3xl font-bold mb-2">🌟 小红书旅游攻略生成器</h1>
-        <p className="text-muted-foreground">
-          填写您的旅行信息，AI 将为您生成专业的小红书爆款旅游攻略
+    <div className="container mx-auto px-4 py-8 max-w-5xl">
+      {/* 标题区域 */}
+      <div className="mb-8 text-center">
+        <h1 className="text-4xl font-bold mb-3 bg-gradient-to-r from-pink-500 to-purple-600 bg-clip-text text-transparent">
+          小红书旅游攻略
+        </h1>
+        <p className="text-muted-foreground text-lg">
+          欢迎来到小红书旅游攻略创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我您想要聚焦的主题或领域，让我们开始创作吧！
         </p>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-        {/* 左侧表单 */}
-        <div className="space-y-6">
-          <div className="bg-card rounded-lg border p-6 space-y-4">
-            <h2 className="text-xl font-semibold mb-4">📝 旅行信息</h2>
-
-            <form onSubmit={handleSubmit} className="space-y-4">
-              {/* 目的地 */}
-              <div className="space-y-2">
-                <Label htmlFor="destination" className="flex items-center gap-2">
-                  <MapPin className="w-4 h-4" />
-                  目的地
-                </Label>
-                <Input
-                  id="destination"
-                  placeholder="例如：成都、大理、三亚"
-                  value={destination}
-                  onChange={(e) => setDestination(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* 预算 */}
-              <div className="space-y-2">
-                <Label htmlFor="budget" className="flex items-center gap-2">
-                  <Wallet className="w-4 h-4" />
-                  预算
-                </Label>
-                <Input
-                  id="budget"
-                  placeholder="例如：3000元、5000-8000元"
-                  value={budget}
-                  onChange={(e) => setBudget(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* 同行者 */}
-              <div className="space-y-2">
-                <Label htmlFor="companions" className="flex items-center gap-2">
-                  <Users className="w-4 h-4" />
-                  同行者
-                </Label>
-                <Select value={companions} onValueChange={setCompanions} required>
-                  <SelectTrigger id="companions">
-                    <SelectValue placeholder="选择同行者类型" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="情侣">情侣</SelectItem>
-                    <SelectItem value="闺蜜">闺蜜</SelectItem>
-                    <SelectItem value="亲子">亲子</SelectItem>
-                    <SelectItem value="独狼">独狼（独自旅行）</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              {/* 天数 */}
-              <div className="space-y-2">
-                <Label htmlFor="days" className="flex items-center gap-2">
-                  <Calendar className="w-4 h-4" />
-                  旅行天数
-                </Label>
-                <Input
-                  id="days"
-                  placeholder="例如：3天、5-7天"
-                  value={days}
-                  onChange={(e) => setDays(e.target.value)}
-                  required
-                />
-              </div>
-
-              {/* 风格偏好 */}
-              <div className="space-y-2">
-                <Label htmlFor="style" className="flex items-center gap-2">
-                  <Palette className="w-4 h-4" />
-                  风格偏好
-                </Label>
-                <Select value={style} onValueChange={setStyle} required>
-                  <SelectTrigger id="style">
-                    <SelectValue placeholder="选择内容风格" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="极致省钱干货">极致省钱干货</SelectItem>
-                    <SelectItem value="氛围感大片文案">氛围感大片文案</SelectItem>
-                  </SelectContent>
-                </Select>
-              </div>
-
-              <Button
-                type="submit"
-                className="w-full"
-                disabled={loading}
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    生成中...
-                  </>
-                ) : (
-                  "生成旅游攻略"
-                )}
-              </Button>
-            </form>
-          </div>
-        </div>
-
-        {/* 右侧结果 */}
-        <div className="space-y-6">
-          <div className="bg-card rounded-lg border p-6">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-xl font-semibold">✨ 生成结果</h2>
-              {result && (
-                <Button
-                  variant="outline"
-                  size="sm"
-                  onClick={handleCopy}
-                  className="gap-2"
-                >
-                  {copied ? (
-                    <>
-                      <Check className="w-4 h-4" />
-                      已复制
-                    </>
-                  ) : (
-                    <>
-                      <Copy className="w-4 h-4" />
-                      复制
-                    </>
-                  )}
-                </Button>
+      {/* 示例提示卡片 */}
+      <div className="mb-8">
+        <h2 className="text-sm font-semibold mb-3 text-muted-foreground">您可以试试这样提问：</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+          {EXAMPLE_PROMPTS.map((example, index) => (
+            <button
+              key={index}
+              onClick={() => handleExampleClick(example)}
+              className={cn(
+                "p-4 text-left text-sm rounded-lg border-2 transition-all",
+                "hover:border-pink-500 hover:bg-pink-50/50 dark:hover:bg-pink-950/20",
+                "focus:outline-none focus:ring-2 focus:ring-pink-500",
+                "bg-card"
               )}
-            </div>
-
-            {loading ? (
-              <div className="flex flex-col items-center justify-center py-12 space-y-4">
-                <Loader2 className="h-8 w-8 animate-spin text-primary" />
-                <p className="text-muted-foreground">AI 正在为您生成专业的旅游攻略...</p>
-              </div>
-            ) : result ? (
-              <Textarea
-                value={result}
-                readOnly
-                className="min-h-[500px] font-mono text-sm"
-              />
-            ) : (
-              <div className="flex flex-col items-center justify-center py-12 text-center space-y-2">
-                <MapPin className="h-12 w-12 text-muted-foreground/50" />
-                <p className="text-muted-foreground">
-                  填写左侧表单，开始生成您的专属旅游攻略
-                </p>
-              </div>
-            )}
-          </div>
+            >
+              {example}
+            </button>
+          ))}
         </div>
       </div>
+
+      {/* 输入区域 */}
+      <form onSubmit={handleSubmit} className="space-y-4 mb-8">
+        <div>
+          <label htmlFor="content" className="block text-sm font-medium mb-2 flex items-center gap-2">
+            <Sparkles className="w-4 h-4 text-pink-500" />
+            描述内容
+          </label>
+          <Textarea
+            id="content"
+            placeholder="请输入您想要创作的文案主题或内容描述..."
+            value={content}
+            onChange={(e) => setContent(e.target.value)}
+            className="min-h-[150px] resize-none"
+            required
+          />
+        </div>
+
+        <Button
+          type="submit"
+          className="w-full bg-gradient-to-r from-pink-500 to-purple-600 hover:from-pink-600 hover:to-purple-700"
+          size="lg"
+          disabled={loading}
+        >
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-5 w-5 animate-spin" />
+              AI 正在创作中...
+            </>
+          ) : (
+            <>
+              <Sparkles className="mr-2 h-5 w-5" />
+              开始创作
+            </>
+          )}
+        </Button>
+      </form>
+
+      {/* 结果显示区域 */}
+      {(loading || result) && (
+        <div className="bg-card rounded-lg border p-6">
+          <div className="flex items-center justify-between mb-4">
+            <h2 className="text-xl font-semibold flex items-center gap-2">
+              <Sparkles className="w-5 h-5 text-pink-500" />
+              生成结果
+            </h2>
+            {result && (
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleCopy}
+                className="gap-2"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    已复制
+                  </>
+                ) : (
+                  <>
+                    <Copy className="w-4 h-4" />
+                    复制
+                  </>
+                )}
+              </Button>
+            )}
+          </div>
+
+          {loading ? (
+            <div className="flex flex-col items-center justify-center py-12 space-y-4">
+              <Loader2 className="h-10 w-10 animate-spin text-pink-500" />
+              <p className="text-muted-foreground">AI 正在为您生成专业的小红书内容...</p>
+              <p className="text-sm text-muted-foreground">这可能需要 10-30 秒，请耐心等待</p>
+            </div>
+          ) : result ? (
+            <div className="prose prose-sm max-w-none dark:prose-invert">
+              <pre className="whitespace-pre-wrap font-sans text-sm leading-relaxed bg-muted/50 p-4 rounded-lg">
+                {result}
+              </pre>
+            </div>
+          ) : null}
+        </div>
+      )}
     </div>
   );
 }

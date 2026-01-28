@@ -63,13 +63,9 @@ const SYSTEM_PROMPT = `# 角色（Role）: 小红书爆款旅游攻略架构师
 
 准备好了吗？让我们一起打造下一篇万赞笔记吧！🌟`;
 
-// 表单数据接口
+// 请求数据接口
 interface TravelGuideRequest {
-  destination: string; // 目的地
-  budget: string; // 预算
-  companions: string; // 同行者类型：情侣/闺蜜/亲子/独狼
-  days: string; // 旅行天数
-  style: string; // 风格偏好：极致省钱干货/氛围感大片文案
+  content: string; // 用户输入的描述内容
 }
 
 // 设置最大执行时间
@@ -78,12 +74,12 @@ export const maxDuration = 60;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { destination, budget, companions, days, style }: TravelGuideRequest = body;
+    const { content }: TravelGuideRequest = body;
 
     // 验证必填字段
-    if (!destination || !budget || !companions || !days || !style) {
+    if (!content || typeof content !== "string" || content.trim().length === 0) {
       return NextResponse.json(
-        { error: "请填写完整的旅行信息（目的地、预算、同行者、天数、风格偏好）" },
+        { error: "请输入您想要创作的文案主题或内容描述" },
         { status: 400 }
       );
     }
@@ -97,18 +93,7 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    // 构建用户输入内容
-    const userContent = `
-📍 目的地：${destination}
-💰 预算：${budget}
-👥 同行者：${companions}
-📅 天数：${days}
-🎨 风格偏好：${style}
-
-请根据以上信息，为我生成一份小红书爆款旅游攻略。
-`;
-
-    console.log("开始调用 DeepSeek API, 旅行信息:", { destination, budget, companions, days, style });
+    console.log("开始调用 DeepSeek API, 用户输入:", content);
 
     // 创建 AbortController 用于超时控制
     const controller = new AbortController();
@@ -130,7 +115,7 @@ export async function POST(request: NextRequest) {
             },
             {
               role: "user",
-              content: userContent,
+              content: content,
             },
           ],
           temperature: 0.8,
