@@ -482,8 +482,14 @@ function getIconComponent(iconType: string) {
   switch (iconType) {
     case "xiaohongshu":
       return (
-        <div className="bg-white rounded-full p-0.5 flex items-center justify-center">
-          <Image src="/20240723180934ae8ed2830.png" alt="小红书" width={18} height={18} className="object-contain" />
+        <div className="w-full h-full flex items-center justify-center">
+          <Image
+            src="/20240723180934ae8ed2830.png"
+            alt="小红书"
+            width={40}
+            height={40}
+            className="object-contain mix-blend-lighten"
+          />
         </div>
       );
     case "report":
