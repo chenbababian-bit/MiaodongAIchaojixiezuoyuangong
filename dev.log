@@ -1,0 +1,27 @@
+
+> my-v0-project@0.1.0 dev
+> next dev
+
+   ▲ Next.js 16.0.10 (Turbopack)
+   - Local:         http://localhost:3000
+   - Network:       http://192.168.1.20:3000
+   - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 511ms
+ ○ Compiling / ...
+ GET / 200 in 6.8s (compile: 5.9s, render: 907ms)
+ ✓ Compiled in 99ms
+ ✓ Compiled in 68ms
+ ✓ Compiled in 69ms
+ ✓ Compiled in 54ms
+ ✓ Compiled in 52ms
+ ✓ Compiled in 60ms
+ ✓ Compiled in 69ms
+ ✓ Compiled in 59ms
+ ✓ Compiled in 58ms
+ ✓ Compiled in 64ms
+ GET / 200 in 697ms (compile: 138ms, render: 560ms)
+ GET /writing/xiaohongshu?template=10101&title=%E5%B8%82%E5%9C%BA%E8%B6%8B%E5%8A%BF%E6%8A%A5%E5%91%8A&source=marketing-brand-market-analysis 200 in 1523ms (compile: 1370ms, render: 153ms)
+ GET /writing/xiaohongshu?template=10101&title=%E5%B8%82%E5%9C%BA%E8%B6%8B%E5%8A%BF%E6%8A%A5%E5%91%8A&source=marketing-brand-market-analysis 200 in 89ms (compile: 15ms, render: 74ms)
+ GET / 200 in 47ms (compile: 8ms, render: 40ms)

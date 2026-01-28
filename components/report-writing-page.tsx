@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -133,7 +134,7 @@ const examplePrompts = [
 function getIconComponent(iconType: string) {
   switch (iconType) {
     case "xiaohongshu":
-      return <BookOpen className="h-5 w-5 text-white" />;
+      return <Image src="/20240723180934ae8ed2830.png" alt="小红书" width={20} height={20} className="object-contain" />;
     case "report":
       return <FileCheck className="h-5 w-5 text-white" />;
     case "wechat":
