@@ -582,8 +582,8 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
-                            template.color
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
@@ -624,8 +624,8 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
-                            template.color
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
@@ -666,8 +666,8 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
-                            template.color
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
