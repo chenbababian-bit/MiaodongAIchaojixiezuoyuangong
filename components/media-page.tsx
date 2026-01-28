@@ -46,7 +46,7 @@ export const xiaohongshuTemplates = [
   },
   {
     id: 102,
-    icon: "/20240723180934ae8ed2830.png",
+    icon: "/6bd5a3e5806a1f91e9e4eb4118c2c274.png",
     title: "小红书爆款文案",
     desc: "创作出能够吸引用户注意力、引发共鸣、促进互动的自媒体文案。",
     color: "bg-red-500",
