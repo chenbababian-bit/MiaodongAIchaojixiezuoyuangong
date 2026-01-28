@@ -45,7 +45,7 @@ export const xiaohongshuTemplates = [
   },
   {
     id: 102,
-    icon: "📝",
+    icon: "/20240723180934ae8ed2830.png",
     title: "小红书爆款文案",
     desc: "创作出能够吸引用户注意力、引发共鸣、促进互动的自媒体文案。",
     color: "bg-red-500",
@@ -586,7 +586,11 @@ export function MediaPage() {
                             template.color
                           )}
                         >
-                          {template.icon}
+                          {template.icon.startsWith('/') ? (
+                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                          ) : (
+                            template.icon
+                          )}
                         </div>
                         <h3 className="font-medium text-sm flex-1">{template.title}</h3>
                       </div>
@@ -624,7 +628,11 @@ export function MediaPage() {
                             template.color
                           )}
                         >
-                          {template.icon}
+                          {template.icon.startsWith('/') ? (
+                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                          ) : (
+                            template.icon
+                          )}
                         </div>
                         <h3 className="font-medium text-sm flex-1">{template.title}</h3>
                       </div>
@@ -662,7 +670,11 @@ export function MediaPage() {
                             template.color
                           )}
                         >
-                          {template.icon}
+                          {template.icon.startsWith('/') ? (
+                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                          ) : (
+                            template.icon
+                          )}
                         </div>
                         <h3 className="font-medium text-sm flex-1">{template.title}</h3>
                       </div>
