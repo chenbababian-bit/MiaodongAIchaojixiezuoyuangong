@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
+import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -582,12 +583,18 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden",
                             template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                            <Image
+                              src={template.icon}
+                              alt={template.title}
+                              width={40}
+                              height={40}
+                              className="rounded-lg"
+                            />
                           ) : (
                             template.icon
                           )}
@@ -624,12 +631,18 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden",
                             template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                            <Image
+                              src={template.icon}
+                              alt={template.title}
+                              width={40}
+                              height={40}
+                              className="rounded-lg"
+                            />
                           ) : (
                             template.icon
                           )}
@@ -666,12 +679,18 @@ export function MediaPage() {
                       <div className="flex items-start gap-3 mb-3">
                         <div
                           className={cn(
-                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0",
+                            "w-10 h-10 rounded-lg flex items-center justify-center shrink-0 overflow-hidden",
                             template.icon.startsWith('/') ? "" : `text-xl ${template.color}`
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <img src={template.icon} alt={template.title} className="w-full h-full object-cover rounded-lg" />
+                            <Image
+                              src={template.icon}
+                              alt={template.title}
+                              width={40}
+                              height={40}
+                              className="rounded-lg"
+                            />
                           ) : (
                             template.icon
                           )}
