@@ -7,6 +7,7 @@ import { cn } from "@/lib/utils";
 import {
   marketingSecondLevelCategories,
   brandSubCategories,
+  creativeSubCategories,
   brandStrategyTemplates,
   marketAnalysisTemplates,
   creativeContentTemplates,
@@ -17,7 +18,18 @@ import {
   reportSummaryTemplates,
   innovationPlanningTemplates,
   legalComplianceTemplates,
-  creativeTemplates,
+  creativeStrategyTemplates,
+  designVisualTemplates,
+  creativeDevelopmentTemplates,
+  projectManagementTemplates,
+  trainingDevelopmentTemplates,
+  performanceEvaluationTemplates,
+  marketResearchTemplates,
+  innovationTrendsTemplates,
+  customerRelationsTemplates,
+  financialBudgetTemplates,
+  legalComplianceCreativeTemplates,
+  technicalToolsTemplates,
   mediaTemplates,
   activityTemplates,
   researchTemplates,
@@ -40,6 +52,8 @@ export function MarketingPage() {
     let source = "";
     if (activeSecondLevel === "brand") {
       source = `marketing-brand-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "creative") {
+      source = `marketing-creative-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -71,9 +85,24 @@ export function MarketingPage() {
     { id: "legal-compliance", label: "法律合规", templates: legalComplianceTemplates },
   ];
 
+  // 创意下的所有子分类配置
+  const creativeCategories = [
+    { id: "creative-strategy", label: "创意策略", templates: creativeStrategyTemplates },
+    { id: "design-visual", label: "设计视觉", templates: designVisualTemplates },
+    { id: "creative-development", label: "创意开发", templates: creativeDevelopmentTemplates },
+    { id: "project-management", label: "项目管理", templates: projectManagementTemplates },
+    { id: "training-development", label: "培训发展", templates: trainingDevelopmentTemplates },
+    { id: "performance-evaluation", label: "绩效评估", templates: performanceEvaluationTemplates },
+    { id: "market-research", label: "市场调研", templates: marketResearchTemplates },
+    { id: "innovation-trends", label: "创新趋势", templates: innovationTrendsTemplates },
+    { id: "customer-relations", label: "客户关系", templates: customerRelationsTemplates },
+    { id: "financial-budget", label: "财务预算", templates: financialBudgetTemplates },
+    { id: "legal-compliance-creative", label: "法律合规", templates: legalComplianceCreativeTemplates },
+    { id: "technical-tools", label: "技术工具", templates: technicalToolsTemplates },
+  ];
+
   // 其他第二层分类的模板配置
   const otherCategories: { [key: string]: any[] } = {
-    creative: creativeTemplates,
     media: mediaTemplates,
     activity: activityTemplates,
     research: researchTemplates,
@@ -106,6 +135,10 @@ export function MarketingPage() {
                 if (category.id === "brand") {
                   setActiveThirdLevel("brand-strategy");
                 }
+                // 如果切换到创意,默认选中创意策略
+                if (category.id === "creative") {
+                  setActiveThirdLevel("creative-strategy");
+                }
               }}
               className={cn(
                 "px-6 h-full text-sm font-medium transition-colors relative",
@@ -131,6 +164,26 @@ export function MarketingPage() {
             {activeSecondLevel === "brand" && (
               <div className="space-y-1">
                 {brandSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 第三层：创意下的子分类 */}
+            {activeSecondLevel === "creative" && (
+              <div className="space-y-1">
+                {creativeSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -192,8 +245,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* 创意：按子分类分组显示所有功能 */}
+        {activeSecondLevel === "creative" && (
+          <div className="space-y-8">
+            {creativeCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
