@@ -149,6 +149,22 @@ const examplePrompts = [
   },
 ];
 
+// 小红书旅游攻略专用示例
+const travelExamplePrompts = [
+  {
+    id: 1,
+    text: "我是一名时尚博主，正在寻找能够引起共鸣的穿搭分享文案。",
+  },
+  {
+    id: 2,
+    text: "我是一名美食爱好者，需要一些能够让人垂涎三尺的食谱介绍文案。",
+  },
+  {
+    id: 3,
+    text: "我是一位旅行达人，想要创作一些能够激发人们旅行欲望的目的地介绍文案。",
+  },
+];
+
 // 历史记录类型已从 @/lib/history-storage 导入
 
 function getIconComponent(iconType: string) {
@@ -202,6 +218,13 @@ export function XiaohongshuWritingPage() {
   const [error, setError] = useState<string>("");
   const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
+
+  // 旅游攻略专用表单状态
+  const [travelDestination, setTravelDestination] = useState("");
+  const [travelBudget, setTravelBudget] = useState("");
+  const [travelCompanion, setTravelCompanion] = useState("");
+  const [travelDays, setTravelDays] = useState("");
+  const [travelStyle, setTravelStyle] = useState("");
 
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
@@ -305,9 +328,35 @@ export function XiaohongshuWritingPage() {
 
   // 智能创作
   const handleSubmit = async () => {
-    if (!contentInput.trim()) {
-      setError("请输入文案主题或内容描述");
-      return;
+    // 根据模板ID验证不同的输入
+    if (templateId === "101") {
+      // 旅游攻略表单验证
+      if (!travelDestination.trim()) {
+        setError("请输入目的地");
+        return;
+      }
+      if (!travelBudget.trim()) {
+        setError("请输入预算");
+        return;
+      }
+      if (!travelCompanion) {
+        setError("请选择同行人");
+        return;
+      }
+      if (!travelDays.trim()) {
+        setError("请输入旅行天数");
+        return;
+      }
+      if (!travelStyle) {
+        setError("请选择风格偏好");
+        return;
+      }
+    } else {
+      // 其他模板的验证
+      if (!contentInput.trim()) {
+        setError("请输入文案主题或内容描述");
+        return;
+      }
     }
 
     setIsLoading(true);
@@ -318,13 +367,27 @@ export function XiaohongshuWritingPage() {
     try {
       // 根据模板ID选择API端点
       let apiEndpoint = "/api/xiaohongshu"; // 默认小红书API
+      let requestBody: any = {};
 
-      if (templateId === "3") {
+      if (templateId === "101") {
+        // 旅游攻略专用API
+        apiEndpoint = "/api/travel-guide";
+        // 将表单数据组合成结构化的描述
+        const travelInfo = `📍 目的地 & 预算：${travelDestination}，预算${travelBudget}
+👥 人物 & 天数：${travelCompanion === "couple" ? "情侣" : travelCompanion === "friends" ? "闺蜜" : travelCompanion === "family" ? "亲子" : travelCompanion === "solo" ? "独狼" : "其他"}，玩${travelDays}天
+🎨 风格偏好：${travelStyle === "budget" ? "极致省钱干货" : "氛围感大片文案"}
+${contentInput ? `\n补充说明：${contentInput}` : ""}`;
+        requestBody = { content: travelInfo };
+      } else if (templateId === "3") {
         // 公众号文章撰写
         apiEndpoint = "/api/wechat-article";
+        requestBody = { content: contentInput };
       } else if (templateId === "4" || templateId === "9") {
         // 短视频相关模板，注意：实际应该跳转到视频页面，这里作为兜底
         apiEndpoint = "/api/video";
+        requestBody = { content: contentInput };
+      } else {
+        requestBody = { content: contentInput };
       }
 
       const response = await fetch(apiEndpoint, {
@@ -332,9 +395,7 @@ export function XiaohongshuWritingPage() {
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({
-          content: contentInput,
-        }),
+        body: JSON.stringify(requestBody),
       });
 
       const data = await response.json();
@@ -347,10 +408,14 @@ export function XiaohongshuWritingPage() {
 
       // 添加到历史记录
       try {
+        const contentForHistory = templateId === "101"
+          ? `${travelDestination} | ${travelCompanion} | ${travelDays}天 | ${travelStyle}`
+          : contentInput;
+
         const newHistoryItem = await historyStorage.addHistory(
           templateId,
           templateTitle,
-          contentInput,
+          contentForHistory,
           data.result
         );
         setHistory((prev) => [newHistoryItem, ...prev]);
@@ -453,43 +518,165 @@ export function XiaohongshuWritingPage() {
           {/* Description */}
           <div className="bg-muted/50 rounded-lg p-4 mb-6">
             <p className="text-sm text-foreground leading-relaxed">
-              欢迎来到{templateTitle}创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域，让我们开始创作吧！
+              {templateId === "101"
+                ? "✨ 嘿！欢迎来到小红书旅游攻略创作空间！我不仅是一名旅游爱好者，更是一位精通小红书流量密码的内容架构师。准备好了吗？让我们一起打造下一篇万赞笔记吧！🌟"
+                : `欢迎来到${templateTitle}创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域，让我们开始创作吧！`
+              }
             </p>
           </div>
 
-          {/* Example Prompts */}
-          <div className="mb-6">
-            <p className="text-sm text-muted-foreground mb-3">
-              您可以试试这样提问：
-            </p>
-            <div className="space-y-2">
-              {examplePrompts.map((prompt) => (
-                <button
-                  key={prompt.id}
-                  onClick={() => handleExampleClick(prompt.text)}
-                  className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors group w-full text-left"
-                >
-                  <span className="flex-1">{prompt.text}</span>
-                  <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                </button>
-              ))}
+          {/* Example Prompts - 仅在非旅游攻略模板时显示 */}
+          {templateId !== "101" && (
+            <div className="mb-6">
+              <p className="text-sm text-muted-foreground mb-3">
+                您可以试试这样提问：
+              </p>
+              <div className="space-y-2">
+                {examplePrompts.map((prompt) => (
+                  <button
+                    key={prompt.id}
+                    onClick={() => handleExampleClick(prompt.text)}
+                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors group w-full text-left"
+                  >
+                    <span className="flex-1">{prompt.text}</span>
+                    <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
+                  </button>
+                ))}
+              </div>
             </div>
-          </div>
+          )}
+
+          {/* 旅游攻略专用提问案例 */}
+          {templateId === "101" && (
+            <div className="mb-6">
+              <p className="text-sm text-muted-foreground mb-3">
+                您可以试试这样提问：
+              </p>
+              <div className="space-y-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
+                {travelExamplePrompts.map((prompt) => (
+                  <div
+                    key={prompt.id}
+                    className="flex items-start gap-2 text-sm text-foreground"
+                  >
+                    <span className="text-primary shrink-0">•</span>
+                    <span className="flex-1">{prompt.text}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
 
           {/* Input Form */}
           <div className="space-y-4">
-            <div>
-              <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                <span className="text-red-500 mr-1">*</span>
-                描述内容
-              </label>
-              <Textarea
-                placeholder="请输入您想要创作的文案主题或内容描述..."
-                className="min-h-[160px] resize-none"
-                value={contentInput}
-                onChange={(e) => setContentInput(e.target.value)}
-              />
-            </div>
+            {/* 旅游攻略专用表单 */}
+            {templateId === "101" ? (
+              <>
+                {/* 目的地 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📍 目的地
+                  </label>
+                  <Input
+                    placeholder="例如：成都、大理、三亚..."
+                    value={travelDestination}
+                    onChange={(e) => setTravelDestination(e.target.value)}
+                  />
+                </div>
+
+                {/* 预算 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    💰 预算
+                  </label>
+                  <Input
+                    placeholder="例如：3000元、5000-8000元、穷游..."
+                    value={travelBudget}
+                    onChange={(e) => setTravelBudget(e.target.value)}
+                  />
+                </div>
+
+                {/* 同行人 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    👥 同行人
+                  </label>
+                  <Select value={travelCompanion} onValueChange={setTravelCompanion}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择同行人" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="couple">情侣</SelectItem>
+                      <SelectItem value="friends">闺蜜</SelectItem>
+                      <SelectItem value="family">亲子</SelectItem>
+                      <SelectItem value="solo">独狼</SelectItem>
+                      <SelectItem value="other">其他</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 旅行天数 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📅 旅行天数
+                  </label>
+                  <Input
+                    type="number"
+                    placeholder="例如：3、5、7..."
+                    value={travelDays}
+                    onChange={(e) => setTravelDays(e.target.value)}
+                    min="1"
+                  />
+                </div>
+
+                {/* 风格偏好 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎨 风格偏好
+                  </label>
+                  <Select value={travelStyle} onValueChange={setTravelStyle}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择风格偏好" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="budget">极致省钱干货</SelectItem>
+                      <SelectItem value="aesthetic">氛围感大片文案</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 额外描述（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    补充说明（可选）
+                  </label>
+                  <Textarea
+                    placeholder="您可以补充更多信息，比如特殊需求、想去的景点、饮食偏好等..."
+                    className="min-h-[100px] resize-none"
+                    value={contentInput}
+                    onChange={(e) => setContentInput(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : (
+              /* 其他模板的通用表单 */
+              <div>
+                <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                  <span className="text-red-500 mr-1">*</span>
+                  描述内容
+                </label>
+                <Textarea
+                  placeholder="请输入您想要创作的文案主题或内容描述..."
+                  className="min-h-[160px] resize-none"
+                  value={contentInput}
+                  onChange={(e) => setContentInput(e.target.value)}
+                />
+              </div>
+            )}
 
             {/* Error Message */}
             {error && (
