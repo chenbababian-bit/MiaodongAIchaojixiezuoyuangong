@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import Image from "next/image";
 import { Card } from "@/components/ui/card";
 import { cn } from "@/lib/utils";
 import {
@@ -588,13 +587,10 @@ export function MediaPage() {
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <Image
+                            <img
                               src={template.icon}
                               alt={template.title}
-                              width={40}
-                              height={40}
-                              className="rounded-lg"
-                              unoptimized
+                              className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
                             template.icon
@@ -637,13 +633,10 @@ export function MediaPage() {
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <Image
+                            <img
                               src={template.icon}
                               alt={template.title}
-                              width={40}
-                              height={40}
-                              className="rounded-lg"
-                              unoptimized
+                              className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
                             template.icon
@@ -686,13 +679,10 @@ export function MediaPage() {
                           )}
                         >
                           {template.icon.startsWith('/') ? (
-                            <Image
+                            <img
                               src={template.icon}
                               alt={template.title}
-                              width={40}
-                              height={40}
-                              className="rounded-lg"
-                              unoptimized
+                              className="w-full h-full object-cover rounded-lg"
                             />
                           ) : (
                             template.icon
