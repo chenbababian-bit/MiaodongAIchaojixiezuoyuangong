@@ -398,16 +398,18 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
         body: JSON.stringify(requestBody),
       });
 
-      // 改进错误处理：先检查响应状态，再解析JSON
+      // 先读取响应文本，然后尝试解析为JSON
+      const responseText = await response.text();
+
+      // 检查响应状态
       if (!response.ok) {
         let errorMessage = "请求失败";
         try {
-          const data = await response.json();
+          const data = JSON.parse(responseText);
           errorMessage = data.error || `请求失败 (${response.status})`;
         } catch (jsonError) {
-          // 如果响应不是JSON格式，尝试读取文本
-          const textError = await response.text();
-          errorMessage = textError || `请求失败 (${response.status})`;
+          // 如果不是JSON格式，直接使用文本内容
+          errorMessage = responseText || `请求失败 (${response.status})`;
         }
         throw new Error(errorMessage);
       }
@@ -415,7 +417,7 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
       // 解析成功的响应
       let data;
       try {
-        data = await response.json();
+        data = JSON.parse(responseText);
       } catch (jsonError) {
         throw new Error("服务器返回了无效的响应格式");
       }
@@ -544,47 +546,6 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
               }
             </p>
           </div>
-
-          {/* Example Prompts - 仅在非旅游攻略模板时显示 */}
-          {templateId !== "101" && (
-            <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-3">
-                您可以试试这样提问：
-              </p>
-              <div className="space-y-2">
-                {examplePrompts.map((prompt) => (
-                  <button
-                    key={prompt.id}
-                    onClick={() => handleExampleClick(prompt.text)}
-                    className="flex items-center gap-2 text-sm text-primary hover:text-primary/80 transition-colors group w-full text-left"
-                  >
-                    <span className="flex-1">{prompt.text}</span>
-                    <ChevronRight className="h-4 w-4 opacity-0 group-hover:opacity-100 transition-opacity shrink-0" />
-                  </button>
-                ))}
-              </div>
-            </div>
-          )}
-
-          {/* 旅游攻略专用提问案例 */}
-          {templateId === "101" && (
-            <div className="mb-6">
-              <p className="text-sm text-muted-foreground mb-3">
-                您可以试试这样提问：
-              </p>
-              <div className="space-y-2 bg-red-50 dark:bg-red-950/20 border border-red-200 dark:border-red-800 rounded-lg p-4">
-                {travelExamplePrompts.map((prompt) => (
-                  <div
-                    key={prompt.id}
-                    className="flex items-start gap-2 text-sm text-foreground"
-                  >
-                    <span className="text-primary shrink-0">•</span>
-                    <span className="flex-1">{prompt.text}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
 
           {/* Input Form */}
           <div className="space-y-4">
