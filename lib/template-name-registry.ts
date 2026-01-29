@@ -98,7 +98,7 @@ export const TEMPLATE_NAME_REGISTRY: Record<string, TemplateMeta> = {
   },
   "小红书爆款标题": {
     name: "小红书爆款标题",
-    apiEndpoint: "/api/xiaohongshu",
+    apiEndpoint: "/api/xiaohongshu-title",
     routePath: "/writing/xiaohongshu",
     description: "设计出能够吸引目标受众的小红书标题",
   },

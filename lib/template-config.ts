@@ -52,7 +52,7 @@ export const TEMPLATE_REGISTRY: Record<string, TemplateConfig> = {
     desc: "设计出能够吸引目标受众...",
     icon: "title",
     iconBg: "bg-red-500",
-    apiEndpoint: "/api/xiaohongshu",
+    apiEndpoint: "/api/xiaohongshu-title",
     routePath: "/writing/xiaohongshu",
   },
 
