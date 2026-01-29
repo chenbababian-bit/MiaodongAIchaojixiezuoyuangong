@@ -296,6 +296,14 @@ export function XiaohongshuWritingPage() {
   const [productScene, setProductScene] = useState(""); // 使用场景
   const [productRequirements, setProductRequirements] = useState(""); // 特殊要求（可选）
 
+  // 好物推荐专用表单状态
+  const [recommendProductName, setRecommendProductName] = useState(""); // 产品名称
+  const [recommendProductCategory, setRecommendProductCategory] = useState(""); // 产品赛道
+  const [recommendProductFeatures, setRecommendProductFeatures] = useState(""); // 核心卖点
+  const [recommendTargetAudience, setRecommendTargetAudience] = useState(""); // 目标人群
+  const [recommendStyle, setRecommendStyle] = useState(""); // 期望风格
+  const [recommendExtraInfo, setRecommendExtraInfo] = useState(""); // 补充信息（可选）
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -490,6 +498,13 @@ export function XiaohongshuWritingPage() {
         setError("请至少填写产品名称、品类或核心卖点中的一项");
         return;
       }
+    } else if (templateId === "108") {
+      // 好物推荐表单验证（所有字段都是可选的，用户根据需求填选）
+      // 不进行必填验证，但至少需要有一些基本信息
+      if (!recommendProductName.trim() && !recommendProductCategory.trim() && !recommendProductFeatures.trim()) {
+        setError("请至少填写产品名称、产品赛道或核心卖点中的一项");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -599,6 +614,25 @@ ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补
 🎯 使用场景：${productScene || "待补充"}
 ${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
         requestBody = { content: productInfo };
+      } else if (templateId === "108") {
+        // 好物推荐专用API
+        apiEndpoint = "/api/product-recommendation";
+        // 将表单数据组合成结构化的描述
+        const styleMap: Record<string, string> = {
+          "sincere": "真诚分享",
+          "hardcore": "硬核测评",
+          "funny": "搞笑吐槽"
+        };
+        const recommendInfo = `1. 📦 产品是什么？
+${recommendProductName ? `产品名称：${recommendProductName}` : ""}${recommendProductCategory ? `\n所属赛道：${recommendProductCategory}` : ""}${recommendProductFeatures ? `\n核心卖点：${recommendProductFeatures}` : ""}
+
+2. 👥 想推给谁看？
+${recommendTargetAudience || "待补充"}
+
+3. 🎨 希望什么风格？
+${recommendStyle ? styleMap[recommendStyle] || recommendStyle : "待补充"}
+${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
+        requestBody = { content: recommendInfo };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -665,6 +699,8 @@ ${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
           ? `${styleTheme} | ${styleAudience} | ${styleType}`
           : templateId === "107"
           ? `${productName || productCategory} | ${productAudience || "通用"} | ${productScene || "日常使用"}`
+          : templateId === "108"
+          ? `${recommendProductName || recommendProductCategory} | ${recommendTargetAudience || "通用"} | ${recommendStyle || "真诚分享"}`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -784,6 +820,8 @@ ${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
                 ? "🚀 哈喽！我是你的小红书爆款内容操盘手！别让你的好内容被埋没！不管是干货种草🌱、情绪宣泄💢还是硬核科普🧠，我都能帮你把流量拿捏得死死的。我精通流量算法、视觉排版美学、爆款文案心理学和SEO关键词布局。准备好打造爆款笔记了吗？✨"
                 : templateId === "107"
                 ? "🌟 嗨呀！我是你的小红书爆款文案搭子！把产品变成让人忍不住点赞收藏的种草笔记！无论是美妆护肤、数码家电还是生活好物，我都能写出让人心动下单的文案～准备好一起整个爆款出来了吗？🚀"
+                : templateId === "108"
+                ? "👋 哈喽宝子们！我是你们的小红书爆款种草专家呱呱！✨ 不管你是想推美妆神仙水🧴、硬核黑科技💻，还是家居好物🛋️，我都能帮你把草种到用户的心坎里！🌱 把信息甩给我，剩下的爆款文案交给我来搞定！💪🔥"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -1296,6 +1334,99 @@ ${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
                     <br />• "能不能再强调一下性价比？"
                     <br />• "标题能不能更吸引人一点？"
                     <br />• "能不能换个风格，更活泼一些？"
+                  </p>
+                </div>
+              </>
+            ) : templateId === "108" ? (
+              <>
+                {/* 好物推荐专用表单 */}
+                {/* 产品名称 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    📦 产品名称
+                  </label>
+                  <Input
+                    placeholder="例如：戴森吹风机、雅诗兰黛小棕瓶、iPhone 15 Pro..."
+                    value={recommendProductName}
+                    onChange={(e) => setRecommendProductName(e.target.value)}
+                  />
+                </div>
+
+                {/* 产品赛道 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    🏷️ 所属赛道
+                  </label>
+                  <Input
+                    placeholder="例如：美妆、数码、家居、食品..."
+                    value={recommendProductCategory}
+                    onChange={(e) => setRecommendProductCategory(e.target.value)}
+                  />
+                </div>
+
+                {/* 核心卖点 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    ⭐ 核心卖点
+                  </label>
+                  <Textarea
+                    placeholder="请列出产品最牛的优势，越细越好！例如：&#10;• 超强吸力，3分钟吹干长发&#10;• 智能温控，不伤发质&#10;• 静音设计，深夜也能用"
+                    className="min-h-[100px] resize-none"
+                    value={recommendProductFeatures}
+                    onChange={(e) => setRecommendProductFeatures(e.target.value)}
+                  />
+                </div>
+
+                {/* 目标人群 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    👥 目标人群
+                  </label>
+                  <Input
+                    placeholder="例如：学生党、打工人、精致妈妈..."
+                    value={recommendTargetAudience}
+                    onChange={(e) => setRecommendTargetAudience(e.target.value)}
+                  />
+                </div>
+
+                {/* 期望风格 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    🎨 期望风格
+                  </label>
+                  <Select value={recommendStyle} onValueChange={setRecommendStyle}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择期望风格" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="sincere">真诚分享（像闺蜜一样唠嗑）</SelectItem>
+                      <SelectItem value="hardcore">硬核测评（专业大神测评）</SelectItem>
+                      <SelectItem value="funny">搞笑吐槽（幽默风趣）</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 补充信息（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💡 补充信息（可选）
+                  </label>
+                  <Textarea
+                    placeholder="还有其他想补充的信息吗？比如特别想强调的点、喜欢的风格等..."
+                    className="min-h-[100px] resize-none"
+                    value={recommendExtraInfo}
+                    onChange={(e) => setRecommendExtraInfo(e.target.value)}
+                  />
+                </div>
+
+                {/* 继续提问提示 */}
+                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                    💬 <strong>提示：</strong>生成文案后，你可以在下方继续提问，比如：
+                    <br />• "能不能再强调一下性价比？"
+                    <br />• "标题能不能更吸引人一点？"
+                    <br />• "能不能换个风格，更活泼一些？"
+                    <br />• "可以多提供几个标题选择吗？"
                   </p>
                 </div>
               </>
