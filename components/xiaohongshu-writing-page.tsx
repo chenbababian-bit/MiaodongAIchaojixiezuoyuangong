@@ -398,10 +398,30 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
         body: JSON.stringify(requestBody),
       });
 
-      const data = await response.json();
-
+      // 改进错误处理：先检查响应状态，再解析JSON
       if (!response.ok) {
-        throw new Error(data.error || "请求失败");
+        let errorMessage = "请求失败";
+        try {
+          const data = await response.json();
+          errorMessage = data.error || `请求失败 (${response.status})`;
+        } catch (jsonError) {
+          // 如果响应不是JSON格式，尝试读取文本
+          const textError = await response.text();
+          errorMessage = textError || `请求失败 (${response.status})`;
+        }
+        throw new Error(errorMessage);
+      }
+
+      // 解析成功的响应
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        throw new Error("服务器返回了无效的响应格式");
+      }
+
+      if (!data.result) {
+        throw new Error("AI返回结果为空，请重试");
       }
 
       setCurrentResult(data.result);
