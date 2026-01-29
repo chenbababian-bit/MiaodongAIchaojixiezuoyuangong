@@ -264,6 +264,13 @@ export function XiaohongshuWritingPage() {
   const [travelDays, setTravelDays] = useState("");
   const [travelStyle, setTravelStyle] = useState("");
 
+  // 账号简介专用表单状态
+  const [profileCareer, setProfileCareer] = useState(""); // 职业/身份
+  const [profileContent, setProfileContent] = useState(""); // 内容方向
+  const [profileSkills, setProfileSkills] = useState(""); // 特殊技能/经历
+  const [profileAudience, setProfileAudience] = useState(""); // 目标粉丝
+  const [profilePersona, setProfilePersona] = useState(""); // 理想人设
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -389,6 +396,24 @@ export function XiaohongshuWritingPage() {
         setError("请选择风格偏好");
         return;
       }
+    } else if (templateId === "104") {
+      // 账号简介表单验证
+      if (!profileCareer.trim()) {
+        setError("请输入职业/身份");
+        return;
+      }
+      if (!profileContent.trim()) {
+        setError("请输入内容方向");
+        return;
+      }
+      if (!profileAudience) {
+        setError("请选择目标粉丝");
+        return;
+      }
+      if (!profilePersona) {
+        setError("请选择理想人设");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -416,6 +441,31 @@ export function XiaohongshuWritingPage() {
 🎨 风格偏好：${travelStyle === "budget" ? "极致省钱干货" : "氛围感大片文案"}
 ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
         requestBody = { content: travelInfo };
+      } else if (templateId === "104") {
+        // 账号简介专用API
+        apiEndpoint = "/api/xiaohongshu-profile";
+        // 将表单数据组合成结构化的描述
+        const audienceMap: Record<string, string> = {
+          student: "学生党",
+          workplace: "职场人",
+          mom: "宝妈",
+          young: "年轻女性",
+          male: "男性群体",
+          other: "其他"
+        };
+        const personaMap: Record<string, string> = {
+          professional: "专业靠谱",
+          fun: "有趣好玩",
+          warm: "温暖治愈",
+          cool: "酷飒个性",
+          literary: "文艺清新"
+        };
+        const profileInfo = `👤 职业/身份：${profileCareer}
+📝 内容方向：${profileContent}
+${profileSkills ? `💡 特殊技能/经历：${profileSkills}\n` : ""}🎯 目标粉丝：${audienceMap[profileAudience] || profileAudience}
+✨ 理想人设：${personaMap[profilePersona] || profilePersona}
+${contentInput ? `\n补充说明：${contentInput}` : ""}`;
+        requestBody = { content: profileInfo };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -474,6 +524,8 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
       try {
         const contentForHistory = templateId === "101"
           ? `${travelDestination} | ${travelCompanion} | ${travelDays}天 | ${travelStyle}`
+          : templateId === "104"
+          ? `${profileCareer} | ${profileContent} | ${profileAudience}`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -585,6 +637,8 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
             <p className="text-sm text-foreground leading-relaxed">
               {templateId === "101"
                 ? "✨ 嘿！欢迎来到小红书旅游攻略创作空间！我不仅是一名旅游爱好者，更是一位精通小红书流量密码的内容架构师。准备好了吗？让我们一起打造下一篇万赞笔记吧！🌟"
+                : templateId === "104"
+                ? "🎯 嗨，我是你的小红书简介优化大师！专注小红书个人IP打造，精通用户心理与平台算法。我会帮你用最简洁、最有感染力的语言，让陌生人3秒内记住你、相信你、关注你！准备好打造你的专属人设了吗？✨"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -685,6 +739,102 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
                   <Textarea
                     placeholder="您可以补充更多信息，比如特殊需求、想去的景点、饮食偏好等..."
                     className="min-h-[100px] resize-none"
+                    value={contentInput}
+                    onChange={(e) => setContentInput(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : templateId === "104" ? (
+              <>
+                {/* 账号简介专用表单 */}
+                {/* 职业/身份 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    👤 职业/身份
+                  </label>
+                  <Input
+                    placeholder="例如：全职妈妈、UI设计师、在校大学生..."
+                    value={profileCareer}
+                    onChange={(e) => setProfileCareer(e.target.value)}
+                  />
+                </div>
+
+                {/* 内容方向 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📝 内容方向
+                  </label>
+                  <Input
+                    placeholder="例如：穿搭、美食、学习、职场、探店..."
+                    value={profileContent}
+                    onChange={(e) => setProfileContent(e.target.value)}
+                  />
+                </div>
+
+                {/* 特殊技能/经历 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💡 特殊技能/经历（可选）
+                  </label>
+                  <Textarea
+                    placeholder="有什么让你与众不同的地方？例如：5年摄影经验、去过30个国家、自学转行成功..."
+                    className="min-h-[80px] resize-none"
+                    value={profileSkills}
+                    onChange={(e) => setProfileSkills(e.target.value)}
+                  />
+                </div>
+
+                {/* 目标粉丝 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎯 目标粉丝
+                  </label>
+                  <Select value={profileAudience} onValueChange={setProfileAudience}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择目标粉丝群体" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="student">学生党</SelectItem>
+                      <SelectItem value="workplace">职场人</SelectItem>
+                      <SelectItem value="mom">宝妈</SelectItem>
+                      <SelectItem value="young">年轻女性</SelectItem>
+                      <SelectItem value="male">男性群体</SelectItem>
+                      <SelectItem value="other">其他</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 理想人设 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    ✨ 理想人设
+                  </label>
+                  <Select value={profilePersona} onValueChange={setProfilePersona}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择理想人设风格" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="professional">专业靠谱</SelectItem>
+                      <SelectItem value="fun">有趣好玩</SelectItem>
+                      <SelectItem value="warm">温暖治愈</SelectItem>
+                      <SelectItem value="cool">酷飒个性</SelectItem>
+                      <SelectItem value="literary">文艺清新</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 补充说明（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    补充说明（可选）
+                  </label>
+                  <Textarea
+                    placeholder="还有其他想补充的信息吗？比如你的成就、特色、想强调的点..."
+                    className="min-h-[80px] resize-none"
                     value={contentInput}
                     onChange={(e) => setContentInput(e.target.value)}
                   />
