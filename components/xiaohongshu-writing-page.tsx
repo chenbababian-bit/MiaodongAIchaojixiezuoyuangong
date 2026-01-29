@@ -286,6 +286,16 @@ export function XiaohongshuWritingPage() {
   const [styleType, setStyleType] = useState(""); // 期望风格
   const [styleDraft, setStyleDraft] = useState(""); // 草稿内容（可选）
 
+  // 产品种草笔记专用表单状态
+  const [productName, setProductName] = useState(""); // 产品名称
+  const [productCategory, setProductCategory] = useState(""); // 产品品类
+  const [productBrand, setProductBrand] = useState(""); // 品牌
+  const [productPrice, setProductPrice] = useState(""); // 价格区间
+  const [productFeatures, setProductFeatures] = useState(""); // 核心卖点
+  const [productAudience, setProductAudience] = useState(""); // 目标人群
+  const [productScene, setProductScene] = useState(""); // 使用场景
+  const [productRequirements, setProductRequirements] = useState(""); // 特殊要求（可选）
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -473,6 +483,13 @@ export function XiaohongshuWritingPage() {
         setError("请选择期望风格");
         return;
       }
+    } else if (templateId === "107") {
+      // 产品种草笔记表单验证（所有字段都是可选的，用户根据需求填选）
+      // 不进行必填验证，但至少需要有一些基本信息
+      if (!productName.trim() && !productCategory.trim() && !productFeatures.trim()) {
+        setError("请至少填写产品名称、品类或核心卖点中的一项");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -569,6 +586,19 @@ ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n$
 🎨 期望风格：${styleTypeMap[styleType] || styleType}
 ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补充说明：${contentInput}` : ""}`;
         requestBody = { content: styleInfo };
+      } else if (templateId === "107") {
+        // 产品种草笔记专用API
+        apiEndpoint = "/api/product-review";
+        // 将表单数据组合成结构化的描述
+        const productInfo = `📦 产品信息：${productName ? `${productName}` : ""}${productCategory ? ` | 品类：${productCategory}` : ""}${productBrand ? ` | 品牌：${productBrand}` : ""}${productPrice ? ` | 价格：${productPrice}` : ""}
+
+⭐ 核心卖点：${productFeatures || "待补充"}
+
+👥 目标人群：${productAudience || "待补充"}
+
+🎯 使用场景：${productScene || "待补充"}
+${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
+        requestBody = { content: productInfo };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -633,6 +663,8 @@ ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补
           ? `${seoContentType} | ${seoFansCount}粉丝 | ${seoPainPoints.length}个痛点`
           : templateId === "106"
           ? `${styleTheme} | ${styleAudience} | ${styleType}`
+          : templateId === "107"
+          ? `${productName || productCategory} | ${productAudience || "通用"} | ${productScene || "日常使用"}`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -750,6 +782,8 @@ ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补
                 ? "🎯 你好！我是你的小红书SEO关键词布局专家，专注于帮助创作者通过科学的SEO策略，让优质内容获得它应得的流量和关注。我精通小红书搜索算法，擅长关键词挖掘和内容优化。准备好用SEO打开流量闸门了吗？🚀"
                 : templateId === "106"
                 ? "🚀 哈喽！我是你的小红书爆款内容操盘手！别让你的好内容被埋没！不管是干货种草🌱、情绪宣泄💢还是硬核科普🧠，我都能帮你把流量拿捏得死死的。我精通流量算法、视觉排版美学、爆款文案心理学和SEO关键词布局。准备好打造爆款笔记了吗？✨"
+                : templateId === "107"
+                ? "🌟 嗨呀！我是你的小红书爆款文案搭子！把产品变成让人忍不住点赞收藏的种草笔记！无论是美妆护肤、数码家电还是生活好物，我都能写出让人心动下单的文案～准备好一起整个爆款出来了吗？🚀"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -1151,6 +1185,118 @@ ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补
                     value={contentInput}
                     onChange={(e) => setContentInput(e.target.value)}
                   />
+                </div>
+              </>
+            ) : templateId === "107" ? (
+              <>
+                {/* 产品种草笔记专用表单 */}
+                {/* 产品名称 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    📦 产品名称
+                  </label>
+                  <Input
+                    placeholder="例如：戴森吹风机、雅诗兰黛小棕瓶、iPhone 15 Pro..."
+                    value={productName}
+                    onChange={(e) => setProductName(e.target.value)}
+                  />
+                </div>
+
+                {/* 产品品类 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    🏷️ 产品品类
+                  </label>
+                  <Input
+                    placeholder="例如：美妆护肤、数码家电、生活好物、食品饮料..."
+                    value={productCategory}
+                    onChange={(e) => setProductCategory(e.target.value)}
+                  />
+                </div>
+
+                {/* 品牌 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    🎨 品牌
+                  </label>
+                  <Input
+                    placeholder="例如：戴森、雅诗兰黛、苹果、无印良品..."
+                    value={productBrand}
+                    onChange={(e) => setProductBrand(e.target.value)}
+                  />
+                </div>
+
+                {/* 价格区间 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💰 价格区间
+                  </label>
+                  <Input
+                    placeholder="例如：99元、300-500元、千元以内..."
+                    value={productPrice}
+                    onChange={(e) => setProductPrice(e.target.value)}
+                  />
+                </div>
+
+                {/* 核心卖点 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    ⭐ 核心卖点
+                  </label>
+                  <Textarea
+                    placeholder="请列出产品最牛的3个优势，例如：&#10;1. 超强吸力，3分钟吹干长发&#10;2. 智能温控，不伤发质&#10;3. 静音设计，深夜也能用"
+                    className="min-h-[100px] resize-none"
+                    value={productFeatures}
+                    onChange={(e) => setProductFeatures(e.target.value)}
+                  />
+                </div>
+
+                {/* 目标人群 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    👥 目标人群
+                  </label>
+                  <Input
+                    placeholder="例如：学生党、上班族、宝妈、精致女孩..."
+                    value={productAudience}
+                    onChange={(e) => setProductAudience(e.target.value)}
+                  />
+                </div>
+
+                {/* 使用场景 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    🎯 使用场景
+                  </label>
+                  <Textarea
+                    placeholder="什么时候用？解决什么问题？例如：&#10;- 早晨赶时间，快速造型&#10;- 约会前，打造精致发型&#10;- 健身后，快速吹干头发"
+                    className="min-h-[100px] resize-none"
+                    value={productScene}
+                    onChange={(e) => setProductScene(e.target.value)}
+                  />
+                </div>
+
+                {/* 特殊要求（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💡 特殊要求（可选）
+                  </label>
+                  <Textarea
+                    placeholder="有没有特别想强调的点？喜欢什么风格？例如：&#10;- 强调性价比&#10;- 突出颜值设计&#10;- 偏好真实体验感..."
+                    className="min-h-[100px] resize-none"
+                    value={productRequirements}
+                    onChange={(e) => setProductRequirements(e.target.value)}
+                  />
+                </div>
+
+                {/* 继续提问提示 */}
+                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                    💬 <strong>提示：</strong>生成文案后，你可以在下方继续提问，比如：
+                    <br />• "能不能再强调一下性价比？"
+                    <br />• "标题能不能更吸引人一点？"
+                    <br />• "能不能换个风格，更活泼一些？"
+                  </p>
                 </div>
               </>
             ) : (
