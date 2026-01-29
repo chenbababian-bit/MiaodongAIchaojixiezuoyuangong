@@ -304,6 +304,10 @@ export function XiaohongshuWritingPage() {
   const [recommendStyle, setRecommendStyle] = useState(""); // 期望风格
   const [recommendExtraInfo, setRecommendExtraInfo] = useState(""); // 补充信息（可选）
 
+  // 公众号文章专用表单状态
+  const [articleTheme, setArticleTheme] = useState(""); // 文章主题
+  const [articleFollowUp, setArticleFollowUp] = useState(""); // 追问/补充要求（可选）
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -505,6 +509,13 @@ export function XiaohongshuWritingPage() {
         setError("请至少填写产品名称、产品赛道或核心卖点中的一项");
         return;
       }
+    } else if (templateId === "109") {
+      // 公众号文章表单验证（所有字段都是可选的，用户根据需求填选）
+      // 不进行必填验证，但至少需要有文章主题
+      if (!articleTheme.trim()) {
+        setError("请输入文章主题");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -633,6 +644,14 @@ ${recommendTargetAudience || "待补充"}
 ${recommendStyle ? styleMap[recommendStyle] || recommendStyle : "待补充"}
 ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
         requestBody = { content: recommendInfo };
+      } else if (templateId === "109") {
+        // 公众号文章专用API
+        apiEndpoint = "/api/official-account-article";
+        // 构建请求体，包含文章主题和可选的追问
+        requestBody = {
+          content: articleTheme,
+          followUpQuestion: articleFollowUp || undefined
+        };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -701,6 +720,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           ? `${productName || productCategory} | ${productAudience || "通用"} | ${productScene || "日常使用"}`
           : templateId === "108"
           ? `${recommendProductName || recommendProductCategory} | ${recommendTargetAudience || "通用"} | ${recommendStyle || "真诚分享"}`
+          : templateId === "109"
+          ? `${articleTheme}${articleFollowUp ? " | 追问: " + articleFollowUp.substring(0, 20) + "..." : ""}`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -822,6 +843,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 ? "🌟 嗨呀！我是你的小红书爆款文案搭子！把产品变成让人忍不住点赞收藏的种草笔记！无论是美妆护肤、数码家电还是生活好物，我都能写出让人心动下单的文案～准备好一起整个爆款出来了吗？🚀"
                 : templateId === "108"
                 ? "👋 哈喽宝子们！我是你们的小红书爆款种草专家呱呱！✨ 不管你是想推美妆神仙水🧴、硬核黑科技💻，还是家居好物🛋️，我都能帮你把草种到用户的心坎里！🌱 把信息甩给我，剩下的爆款文案交给我来搞定！💪🔥"
+                : templateId === "109"
+                ? "📝 你好！我是公众号爆款文章-大纲架构师！我擅长深度拆解主题、逻辑构建、场景化痛点挖掘和实操方法论转化。基于经过验证的'七步高转化逻辑框架'，我将为你生成逻辑严密、读者粘性强且具有高度可执行性的文章大纲。准备好打造高质量公众号文章了吗？✨"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -1427,6 +1450,45 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                     <br />• "标题能不能更吸引人一点？"
                     <br />• "能不能换个风格，更活泼一些？"
                     <br />• "可以多提供几个标题选择吗？"
+                  </p>
+                </div>
+              </>
+            ) : templateId === "109" ? (
+              <>
+                {/* 公众号文章专用表单 */}
+                {/* 文章主题 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    📝 文章主题
+                  </label>
+                  <Input
+                    placeholder="例如：如何从零开始养成早起习惯、职场新人如何高效复盘..."
+                    value={articleTheme}
+                    onChange={(e) => setArticleTheme(e.target.value)}
+                  />
+                </div>
+
+                {/* 追问/补充要求（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💡 追问/补充要求（可选）
+                  </label>
+                  <Textarea
+                    placeholder="如果你对生成的大纲有特殊要求，可以在这里补充说明，比如：需要更多案例、希望增加某个环节的内容等..."
+                    className="min-h-[100px] resize-none"
+                    value={articleFollowUp}
+                    onChange={(e) => setArticleFollowUp(e.target.value)}
+                  />
+                </div>
+
+                {/* 继续提问提示 */}
+                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
+                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
+                    💬 <strong>提示：</strong>生成大纲后，你可以在下方继续提问修改，比如：
+                    <br />• "能不能针对第4部分补充更多具体步骤？"
+                    <br />• "可以增加一些心理学原理的解释吗？"
+                    <br />• "能不能提供更多实用工具推荐？"
+                    <br />• "案例部分能不能更详细一些？"
                   </p>
                 </div>
               </>
