@@ -271,6 +271,15 @@ export function XiaohongshuWritingPage() {
   const [profileAudience, setProfileAudience] = useState(""); // 目标粉丝
   const [profilePersona, setProfilePersona] = useState(""); // 理想人设
 
+  // SEO关键词布局专用表单状态
+  const [seoContentType, setSeoContentType] = useState(""); // 内容类型
+  const [seoFansCount, setSeoFansCount] = useState(""); // 粉丝数
+  const [seoInteractionRate, setSeoInteractionRate] = useState(""); // 平均互动量
+  const [seoOperationTime, setSeoOperationTime] = useState(""); // 运营时长
+  const [seoPostFrequency, setSeoPostFrequency] = useState(""); // 发布频率
+  const [seoPainPoints, setSeoPainPoints] = useState<string[]>([]); // 核心痛点(多选)
+  const [seoGoal, setSeoGoal] = useState(""); // 优化目标
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -414,6 +423,36 @@ export function XiaohongshuWritingPage() {
         setError("请选择理想人设");
         return;
       }
+    } else if (templateId === "105") {
+      // SEO关键词布局表单验证
+      if (!seoContentType.trim()) {
+        setError("请输入内容类型");
+        return;
+      }
+      if (!seoFansCount.trim()) {
+        setError("请输入粉丝数");
+        return;
+      }
+      if (!seoInteractionRate.trim()) {
+        setError("请输入平均互动量");
+        return;
+      }
+      if (!seoOperationTime.trim()) {
+        setError("请输入运营时长");
+        return;
+      }
+      if (!seoPostFrequency.trim()) {
+        setError("请输入发布频率");
+        return;
+      }
+      if (seoPainPoints.length === 0) {
+        setError("请至少选择一个核心痛点");
+        return;
+      }
+      if (!seoGoal.trim()) {
+        setError("请输入优化目标");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -466,6 +505,35 @@ ${profileSkills ? `💡 特殊技能/经历：${profileSkills}\n` : ""}🎯 目�
 ✨ 理想人设：${personaMap[profilePersona] || profilePersona}
 ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
         requestBody = { content: profileInfo };
+      } else if (templateId === "105") {
+        // SEO关键词布局专用API
+        apiEndpoint = "/api/xiaohongshu-seo";
+        // 将表单数据组合成结构化的描述
+        const painPointsText = seoPainPoints.map(point => {
+          const painPointMap: Record<string, string> = {
+            "low-exposure": "笔记曝光量低,自然流量少",
+            "low-search": "搜索来源占比不到10%",
+            "no-ranking": "某些关键词想做但一直排不上去",
+            "no-keywords": "不知道该布局哪些关键词",
+            "no-optimization": "写好的笔记不知道如何优化"
+          };
+          return painPointMap[point] || point;
+        }).join("、");
+
+        const seoInfo = `1️⃣ 账号基本信息：
+- 内容类型：${seoContentType}
+- 粉丝数：${seoFansCount}
+- 平均互动量：${seoInteractionRate}
+- 运营时长：${seoOperationTime}
+- 发布频率：${seoPostFrequency}
+
+2️⃣ 当前核心痛点：
+${painPointsText}
+
+3️⃣ 优化目标：
+${seoGoal}
+${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n${contentInput}` : ""}`;
+        requestBody = { content: seoInfo };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -526,6 +594,8 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
           ? `${travelDestination} | ${travelCompanion} | ${travelDays}天 | ${travelStyle}`
           : templateId === "104"
           ? `${profileCareer} | ${profileContent} | ${profileAudience}`
+          : templateId === "105"
+          ? `${seoContentType} | ${seoFansCount}粉丝 | ${seoPainPoints.length}个痛点`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -639,6 +709,8 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
                 ? "✨ 嘿！欢迎来到小红书旅游攻略创作空间！我不仅是一名旅游爱好者，更是一位精通小红书流量密码的内容架构师。准备好了吗？让我们一起打造下一篇万赞笔记吧！🌟"
                 : templateId === "104"
                 ? "🎯 嗨，我是你的小红书简介优化大师！专注小红书个人IP打造，精通用户心理与平台算法。我会帮你用最简洁、最有感染力的语言，让陌生人3秒内记住你、相信你、关注你！准备好打造你的专属人设了吗？✨"
+                : templateId === "105"
+                ? "🎯 你好！我是你的小红书SEO关键词布局专家，专注于帮助创作者通过科学的SEO策略，让优质内容获得它应得的流量和关注。我精通小红书搜索算法，擅长关键词挖掘和内容优化。准备好用SEO打开流量闸门了吗？🚀"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -835,6 +907,134 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
                   <Textarea
                     placeholder="还有其他想补充的信息吗？比如你的成就、特色、想强调的点..."
                     className="min-h-[80px] resize-none"
+                    value={contentInput}
+                    onChange={(e) => setContentInput(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : templateId === "105" ? (
+              <>
+                {/* SEO关键词布局专用表单 */}
+                {/* 内容类型 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📝 内容类型
+                  </label>
+                  <Input
+                    placeholder="例如：美妆测评、职场干货、旅行攻略、穿搭分享..."
+                    value={seoContentType}
+                    onChange={(e) => setSeoContentType(e.target.value)}
+                  />
+                </div>
+
+                {/* 粉丝数 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    👥 粉丝数
+                  </label>
+                  <Input
+                    placeholder="例如：500、2000、1万、5万..."
+                    value={seoFansCount}
+                    onChange={(e) => setSeoFansCount(e.target.value)}
+                  />
+                </div>
+
+                {/* 平均互动量 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    💬 平均互动量
+                  </label>
+                  <Input
+                    placeholder="例如：50赞10收藏、100-200互动、5%互动率..."
+                    value={seoInteractionRate}
+                    onChange={(e) => setSeoInteractionRate(e.target.value)}
+                  />
+                </div>
+
+                {/* 运营时长 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    ⏰ 运营时长
+                  </label>
+                  <Input
+                    placeholder="例如：3个月、半年、1年、2年..."
+                    value={seoOperationTime}
+                    onChange={(e) => setSeoOperationTime(e.target.value)}
+                  />
+                </div>
+
+                {/* 发布频率 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📅 发布频率
+                  </label>
+                  <Input
+                    placeholder="例如：每周3篇、每天1篇、不定期..."
+                    value={seoPostFrequency}
+                    onChange={(e) => setSeoPostFrequency(e.target.value)}
+                  />
+                </div>
+
+                {/* 核心痛点（多选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎯 当前核心痛点（可多选）
+                  </label>
+                  <div className="space-y-2">
+                    {[
+                      { value: "low-exposure", label: "笔记曝光量低,自然流量少" },
+                      { value: "low-search", label: "搜索来源占比不到10%" },
+                      { value: "no-ranking", label: "某些关键词想做但一直排不上去" },
+                      { value: "no-keywords", label: "不知道该布局哪些关键词" },
+                      { value: "no-optimization", label: "写好的笔记不知道如何优化" }
+                    ].map((option) => (
+                      <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
+                        <input
+                          type="checkbox"
+                          checked={seoPainPoints.includes(option.value)}
+                          onChange={(e) => {
+                            if (e.target.checked) {
+                              setSeoPainPoints([...seoPainPoints, option.value]);
+                            } else {
+                              setSeoPainPoints(seoPainPoints.filter(p => p !== option.value));
+                            }
+                          }}
+                          className="w-4 h-4 rounded border-gray-300"
+                        />
+                        <span className="text-sm">{option.label}</span>
+                      </label>
+                    ))}
+                  </div>
+                </div>
+
+                {/* 优化目标 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎯 优化目标
+                  </label>
+                  <Textarea
+                    placeholder="例如：月涨粉1000、核心词排进前5、搜索流量占比提升到30%..."
+                    className="min-h-[80px] resize-none"
+                    value={seoGoal}
+                    onChange={(e) => setSeoGoal(e.target.value)}
+                  />
+                </div>
+
+                {/* 补充说明（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    📎 补充说明（可选）
+                  </label>
+                  <Textarea
+                    placeholder="可以提供2-3篇代表性笔记链接，或其他想补充的信息..."
+                    className="min-h-[100px] resize-none"
                     value={contentInput}
                     onChange={(e) => setContentInput(e.target.value)}
                   />
