@@ -280,6 +280,12 @@ export function XiaohongshuWritingPage() {
   const [seoPainPoints, setSeoPainPoints] = useState<string[]>([]); // 核心痛点(多选)
   const [seoGoal, setSeoGoal] = useState(""); // 优化目标
 
+  // 小红书风格排版专用表单状态
+  const [styleTheme, setStyleTheme] = useState(""); // 主题/核心卖点
+  const [styleAudience, setStyleAudience] = useState(""); // 目标受众
+  const [styleType, setStyleType] = useState(""); // 期望风格
+  const [styleDraft, setStyleDraft] = useState(""); // 草稿内容（可选）
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -453,6 +459,20 @@ export function XiaohongshuWritingPage() {
         setError("请输入优化目标");
         return;
       }
+    } else if (templateId === "106") {
+      // 小红书风格排版表单验证
+      if (!styleTheme.trim()) {
+        setError("请输入主题/核心卖点");
+        return;
+      }
+      if (!styleAudience.trim()) {
+        setError("请输入目标受众");
+        return;
+      }
+      if (!styleType) {
+        setError("请选择期望风格");
+        return;
+      }
     } else {
       // 其他模板的验证
       if (!contentInput.trim()) {
@@ -534,6 +554,21 @@ ${painPointsText}
 ${seoGoal}
 ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n${contentInput}` : ""}`;
         requestBody = { content: seoInfo };
+      } else if (templateId === "106") {
+        // 小红书风格排版专用API
+        apiEndpoint = "/api/xiaohongshu-style";
+        // 将表单数据组合成结构化的描述
+        const styleTypeMap: Record<string, string> = {
+          "girlfriend": "闺蜜夜话风",
+          "boss": "清醒大女主风",
+          "geek": "硬核极客风",
+          "crazy": "发疯文学风"
+        };
+        const styleInfo = `📝 主题/核心卖点：${styleTheme}
+🎯 目标受众：${styleAudience}
+🎨 期望风格：${styleTypeMap[styleType] || styleType}
+${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补充说明：${contentInput}` : ""}`;
+        requestBody = { content: styleInfo };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
@@ -596,6 +631,8 @@ ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n$
           ? `${profileCareer} | ${profileContent} | ${profileAudience}`
           : templateId === "105"
           ? `${seoContentType} | ${seoFansCount}粉丝 | ${seoPainPoints.length}个痛点`
+          : templateId === "106"
+          ? `${styleTheme} | ${styleAudience} | ${styleType}`
           : contentInput;
 
         const newHistoryItem = await historyStorage.addHistory(
@@ -711,6 +748,8 @@ ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n$
                 ? "🎯 嗨，我是你的小红书简介优化大师！专注小红书个人IP打造，精通用户心理与平台算法。我会帮你用最简洁、最有感染力的语言，让陌生人3秒内记住你、相信你、关注你！准备好打造你的专属人设了吗？✨"
                 : templateId === "105"
                 ? "🎯 你好！我是你的小红书SEO关键词布局专家，专注于帮助创作者通过科学的SEO策略，让优质内容获得它应得的流量和关注。我精通小红书搜索算法，擅长关键词挖掘和内容优化。准备好用SEO打开流量闸门了吗？🚀"
+                : templateId === "106"
+                ? "🚀 哈喽！我是你的小红书爆款内容操盘手！别让你的好内容被埋没！不管是干货种草🌱、情绪宣泄💢还是硬核科普🧠，我都能帮你把流量拿捏得死死的。我精通流量算法、视觉排版美学、爆款文案心理学和SEO关键词布局。准备好打造爆款笔记了吗？✨"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
                 : templateId === "1" || templateId === "102"
@@ -1035,6 +1074,80 @@ ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n$
                   <Textarea
                     placeholder="可以提供2-3篇代表性笔记链接，或其他想补充的信息..."
                     className="min-h-[100px] resize-none"
+                    value={contentInput}
+                    onChange={(e) => setContentInput(e.target.value)}
+                  />
+                </div>
+              </>
+            ) : templateId === "106" ? (
+              <>
+                {/* 小红书风格排版专用表单 */}
+                {/* 主题/核心卖点 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    📝 主题/核心卖点
+                  </label>
+                  <Input
+                    placeholder="例如：AI效率工具、秋季穿搭、护肤routine..."
+                    value={styleTheme}
+                    onChange={(e) => setStyleTheme(e.target.value)}
+                  />
+                </div>
+
+                {/* 目标受众 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎯 目标受众
+                  </label>
+                  <Input
+                    placeholder="例如：25-35岁都市女性、设计师群体、大学生..."
+                    value={styleAudience}
+                    onChange={(e) => setStyleAudience(e.target.value)}
+                  />
+                </div>
+
+                {/* 期望风格 */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    <span className="text-red-500 mr-1">*</span>
+                    🎨 期望风格
+                  </label>
+                  <Select value={styleType} onValueChange={setStyleType}>
+                    <SelectTrigger>
+                      <SelectValue placeholder="请选择期望风格" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="girlfriend">闺蜜夜话风（软萌亲切，适合美妆/情感）</SelectItem>
+                      <SelectItem value="boss">清醒大女主风（犀利金句，适合职场/成长）</SelectItem>
+                      <SelectItem value="geek">硬核极客风（参数对比，适合数码/家电）</SelectItem>
+                      <SelectItem value="crazy">发疯文学风（情绪夸张，适合吐槽/搞笑）</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+
+                {/* 草稿内容（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    📄 草稿内容（可选）
+                  </label>
+                  <Textarea
+                    placeholder="如果你已经有初稿，可以粘贴在这里，我来帮你优化排版和风格..."
+                    className="min-h-[120px] resize-none"
+                    value={styleDraft}
+                    onChange={(e) => setStyleDraft(e.target.value)}
+                  />
+                </div>
+
+                {/* 补充说明（可选） */}
+                <div>
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                    💡 补充说明（可选）
+                  </label>
+                  <Textarea
+                    placeholder="还有其他想补充的信息吗？比如特殊要求、参考案例等..."
+                    className="min-h-[80px] resize-none"
                     value={contentInput}
                     onChange={(e) => setContentInput(e.target.value)}
                   />
