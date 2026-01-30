@@ -315,11 +315,9 @@ class HistoryStorageManager {
       console.log('💾 使用本地存储历史记录');
       this.adapter = new LocalStorageAdapter();
 
-      // 自动迁移历史记录ID（仅在本地存储时执行）
+      // 立即执行历史记录ID迁移（不延迟）
       if (typeof window !== 'undefined') {
-        setTimeout(() => {
-          (this.adapter as LocalStorageAdapter).migrateHistoryIds();
-        }, 1000);
+        (this.adapter as LocalStorageAdapter).migrateHistoryIds();
       }
     }
   }

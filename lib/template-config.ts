@@ -75,7 +75,7 @@ export const TEMPLATE_REGISTRY: Record<number, TemplateConfig> = {
 
   102: {
     id: 102,
-    legacyIds: [1], // 侧边栏旧ID
+    legacyIds: [1, 11], // 侧边栏旧ID和其他旧ID
     category: "xiaohongshu",
     title: "小红书爆款文案",
     desc: "创作出能够吸引用户注意力、引发共鸣、促进互动的自媒体文案。",
