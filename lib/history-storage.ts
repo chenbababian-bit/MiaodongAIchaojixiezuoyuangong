@@ -27,6 +27,11 @@ export interface HistoryItem {
 function normalizeTemplateId(templateId: string | number): string {
   const numId = typeof templateId === 'string' ? parseInt(templateId) : templateId;
   const canonicalId = getCanonicalId(numId);
+
+  if (canonicalId !== numId) {
+    console.log(`🔄 ID规范化: ${numId} → ${canonicalId}`);
+  }
+
   return canonicalId.toString();
 }
 
@@ -89,17 +94,25 @@ class LocalStorageAdapter implements StorageAdapter {
   async getHistory(templateId: string): Promise<HistoryItem[]> {
     // 规范化模板ID
     const canonicalId = normalizeTemplateId(templateId);
+    console.log(`📖 读取历史记录: 原始ID=${templateId}, 规范ID=${canonicalId}`);
 
     const allHistory = this.readAllHistory();
 
     // 获取所有可能的ID（包括规范ID和旧ID）
     // 这样可以合并使用不同ID保存的历史记录
-    return allHistory
+    const filteredHistory = allHistory
       .filter(item => {
         const itemCanonicalId = normalizeTemplateId(item.templateId);
-        return itemCanonicalId === canonicalId;
+        const matches = itemCanonicalId === canonicalId;
+        if (matches) {
+          console.log(`  ✓ 匹配历史记录: 存储ID=${item.templateId}, 规范ID=${itemCanonicalId}`);
+        }
+        return matches;
       })
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+
+    console.log(`📊 找到 ${filteredHistory.length} 条历史记录`);
+    return filteredHistory;
   }
 
   async addHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): Promise<HistoryItem> {
