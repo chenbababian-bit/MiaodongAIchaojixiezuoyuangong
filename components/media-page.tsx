@@ -16,6 +16,7 @@ import {
   liveSubCategories,
   liveScriptTemplates,
 } from "@/lib/live-templates";
+import { getTemplateById, getCanonicalId } from "@/lib/template-config";
 
 // 第二层分类（自媒体文案、短视频文案、直播文案）
 const secondLevelCategories = [
@@ -325,6 +326,17 @@ export function MediaPage() {
   const [activeLiveLevel, setActiveLiveLevel] = useState("live-script"); // 直播的四级分类
 
   const handleTemplateClick = (templateId: number, templateTitle: string) => {
+    // 获取规范ID（将旧ID转换为新ID）
+    const canonicalId = getCanonicalId(templateId);
+
+    // 获取模板配置
+    const template = getTemplateById(canonicalId);
+
+    if (!template) {
+      console.error(`Template ${templateId} not found`);
+      return;
+    }
+
     // 根据当前激活的分类构建source参数
     let source = "";
     if (activeSecondLevel === "media") {
@@ -335,18 +347,9 @@ export function MediaPage() {
       source = `live-${activeLiveLevel}`; // 例如：live-script
     }
 
-    // 根据模板 ID 判断跳转到对应的写作页面
-    console.log("点击了模板卡片，ID:", templateId);
-
-    // 根据ID范围判断跳转页面
-    // 小红书模板 (101-108) 或 公众号 (201-208)
-    if ((templateId >= 101 && templateId <= 108) || (templateId >= 201 && templateId <= 208)) {
-      router.push(`/writing/xiaohongshu?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
-    }
-    // 其他自媒体模板也跳转到xiaohongshu页面
-    else {
-      router.push(`/writing/xiaohongshu?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
-    }
+    // 使用模板配置中的路由路径
+    console.log("点击了模板卡片，ID:", templateId, "规范ID:", canonicalId);
+    router.push(`${template.routePath}?template=${canonicalId}&title=${encodeURIComponent(template.title)}&source=${source}`);
   };
 
   // 滚动到指定平台的位置
