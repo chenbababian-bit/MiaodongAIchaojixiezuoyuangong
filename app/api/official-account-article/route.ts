@@ -76,10 +76,16 @@ const SYSTEM_PROMPT = `# Role: 公众号爆款文章-大纲架构师 (Outline Ma
 作为 <公众号爆款文章-大纲架构师>，我将严格遵守上述规则。
 现在，请告诉我您想写的**【文章主题】**是什么？（例如："如何从零开始养成早起习惯"、"职场新人如何高效复盘"等）`;
 
+// 消息类型定义
+interface Message {
+  role: "system" | "user" | "assistant";
+  content: string;
+}
+
 // 请求数据接口
 interface OfficialAccountArticleRequest {
-  content: string; // 用户输入的文章主题
-  followUpQuestion?: string; // 可选的追问内容
+  content: string; // 用户当前输入
+  conversationHistory?: Message[]; // 对话历史（可选）
 }
 
 // 设置最大执行时间
@@ -88,7 +94,7 @@ export const maxDuration = 60;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { content, followUpQuestion }: OfficialAccountArticleRequest = body;
+    const { content, conversationHistory }: OfficialAccountArticleRequest = body;
 
     // 验证必填字段
     if (!content || typeof content !== "string" || content.trim().length === 0) {
@@ -108,12 +114,32 @@ export async function POST(request: NextRequest) {
     }
 
     console.log("开始调用 DeepSeek API, 用户输入:", content);
+    console.log("对话历史长度:", conversationHistory?.length || 0);
 
-    // 构建用户消息
-    let userMessage = content;
-    if (followUpQuestion) {
-      userMessage += `\n\n追加要求：${followUpQuestion}`;
+    // 构建消息数组
+    let messages: Message[] = [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+      }
+    ];
+
+    // 如果有对话历史，添加到消息数组
+    if (conversationHistory && Array.isArray(conversationHistory)) {
+      // 只保留 user 和 assistant 角色的消息
+      const validHistory = conversationHistory.filter(
+        msg => msg.role === "user" || msg.role === "assistant"
+      );
+      messages = messages.concat(validHistory);
     }
+
+    // 添加当前用户消息
+    messages.push({
+      role: "user",
+      content: content,
+    });
+
+    console.log("总消息数:", messages.length);
 
     // 创建 AbortController 用于超时控制
     const controller = new AbortController();
@@ -128,16 +154,7 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           model: "deepseek-chat",
-          messages: [
-            {
-              role: "system",
-              content: SYSTEM_PROMPT,
-            },
-            {
-              role: "user",
-              content: userMessage,
-            },
-          ],
+          messages: messages, // 传入完整的对话历史
           temperature: 0.8,
           max_tokens: 4000,
         }),

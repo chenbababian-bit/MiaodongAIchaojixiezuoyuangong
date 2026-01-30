@@ -308,6 +308,11 @@ export function XiaohongshuWritingPage() {
   const [articleTheme, setArticleTheme] = useState(""); // 文章主题
   const [articleFollowUp, setArticleFollowUp] = useState(""); // 追问/补充要求（可选）
 
+  // 公众号文章对话历史状态
+  const [articleConversationHistory, setArticleConversationHistory] = useState<
+    Array<{ role: "user" | "assistant"; content: string }>
+  >([]);
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -647,10 +652,10 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
       } else if (templateId === "109") {
         // 公众号文章专用API
         apiEndpoint = "/api/official-account-article";
-        // 构建请求体，包含文章主题和可选的追问
+        // 构建请求体，包含文章主题和对话历史
         requestBody = {
           content: articleTheme,
-          followUpQuestion: articleFollowUp || undefined
+          conversationHistory: articleConversationHistory
         };
       } else if (templateId === "6" || templateId === "103") {
         // 小红书爆款标题专用API
@@ -706,6 +711,17 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
 
       setCurrentResult(data.result);
 
+      // 如果是公众号文章模板，更新对话历史
+      if (templateId === "109") {
+        setArticleConversationHistory([
+          ...articleConversationHistory,
+          { role: "user", content: articleTheme },
+          { role: "assistant", content: data.result },
+        ]);
+        // 清空当前输入，准备下一次追问
+        setArticleTheme("");
+      }
+
       // 添加到历史记录
       try {
         const contentForHistory = templateId === "101"
@@ -751,6 +767,15 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     } catch (err) {
       console.error("复制失败:", err);
     }
+  };
+
+  // 清空公众号文章对话历史（新对话）
+  const handleNewConversation = () => {
+    setArticleConversationHistory([]);
+    setCurrentResult("");
+    setArticleTheme("");
+    setArticleFollowUp("");
+    setError("");
   };
 
   // 删除历史记录
@@ -1456,39 +1481,89 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
             ) : templateId === "109" ? (
               <>
                 {/* 公众号文章专用表单 */}
+
+                {/* 对话历史管理 */}
+                {articleConversationHistory.length > 0 && (
+                  <div className="bg-gradient-to-r from-blue-50 to-indigo-50 dark:from-blue-950/30 dark:to-indigo-950/30 rounded-lg p-4 mb-4 border border-blue-200 dark:border-blue-800">
+                    <div className="flex items-center justify-between mb-2">
+                      <div className="flex items-center gap-2">
+                        <MessageCircle className="h-4 w-4 text-blue-600 dark:text-blue-400" />
+                        <span className="text-sm font-medium text-blue-700 dark:text-blue-300">
+                          💬 对话历史 ({articleConversationHistory.length / 2} 轮)
+                        </span>
+                      </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={handleNewConversation}
+                        className="text-red-500 hover:text-red-600 hover:bg-red-50 dark:hover:bg-red-950/20"
+                      >
+                        <RefreshCw className="h-4 w-4 mr-1" />
+                        新对话
+                      </Button>
+                    </div>
+                    <p className="text-xs text-blue-600 dark:text-blue-400">
+                      ✨ AI 会基于完整的对话历史进行回答，确保上下文连贯。点击"新对话"开始全新的文章创作。
+                    </p>
+                  </div>
+                )}
+
                 {/* 文章主题 */}
                 <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    📝 文章主题
+                  <label className="text-sm font-medium text-foreground mb-2 flex items-center justify-between">
+                    <span>📝 文章主题</span>
+                    {articleConversationHistory.length === 0 && (
+                      <span className="text-xs text-gray-500">首次创作</span>
+                    )}
+                    {articleConversationHistory.length > 0 && (
+                      <span className="text-xs text-blue-600 dark:text-blue-400">继续追问</span>
+                    )}
                   </label>
                   <Input
-                    placeholder="例如：如何从零开始养成早起习惯、职场新人如何高效复盘..."
+                    placeholder={
+                      articleConversationHistory.length === 0
+                        ? "例如：如何从零开始养成早起习惯、职场新人如何高效复盘..."
+                        : "例如：能不能针对第4部分补充更多具体步骤？"
+                    }
                     value={articleTheme}
                     onChange={(e) => setArticleTheme(e.target.value)}
                   />
                 </div>
 
-                {/* 追问/补充要求（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💡 追问/补充要求（可选）
-                  </label>
-                  <Textarea
-                    placeholder="如果你对生成的大纲有特殊要求，可以在这里补充说明，比如：需要更多案例、希望增加某个环节的内容等..."
-                    className="min-h-[100px] resize-none"
-                    value={articleFollowUp}
-                    onChange={(e) => setArticleFollowUp(e.target.value)}
-                  />
-                </div>
+                {/* 追问/补充要求（可选） - 仅在首次创作时显示 */}
+                {articleConversationHistory.length === 0 && (
+                  <div>
+                    <label className="text-sm font-medium text-foreground mb-2 flex items-center">
+                      💡 补充要求（可选）
+                    </label>
+                    <Textarea
+                      placeholder="如果你对生成的大纲有特殊要求，可以在这里补充说明，比如：需要更多案例、希望增加某个环节的内容等..."
+                      className="min-h-[100px] resize-none"
+                      value={articleFollowUp}
+                      onChange={(e) => setArticleFollowUp(e.target.value)}
+                    />
+                  </div>
+                )}
 
                 {/* 继续提问提示 */}
                 <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
                   <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
-                    💬 <strong>提示：</strong>生成大纲后，你可以在下方继续提问修改，比如：
-                    <br />• "能不能针对第4部分补充更多具体步骤？"
-                    <br />• "可以增加一些心理学原理的解释吗？"
-                    <br />• "能不能提供更多实用工具推荐？"
-                    <br />• "案例部分能不能更详细一些？"
+                    💬 <strong>提示：</strong>
+                    {articleConversationHistory.length === 0 ? (
+                      <>
+                        生成大纲后，你可以继续提问修改，比如：
+                        <br />• "能不能针对第4部分补充更多具体步骤？"
+                        <br />• "可以增加一些心理学原理的解释吗？"
+                        <br />• "能不能提供更多实用工具推荐？"
+                        <br />• "案例部分能不能更详细一些？"
+                      </>
+                    ) : (
+                      <>
+                        你正在进行第 {articleConversationHistory.length / 2 + 1} 轮对话，AI 会记住之前的所有内容。
+                        <br />• 可以直接说"第4部分"、"刚才的案例"等，AI 会理解
+                        <br />• 想开始新的文章创作？点击上方"新对话"按钮
+                      </>
+                    )}
                   </p>
                 </div>
               </>
