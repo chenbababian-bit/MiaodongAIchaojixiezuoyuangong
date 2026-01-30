@@ -5,7 +5,10 @@
  * - 使用适配器模式，支持本地存储和云端数据库的无缝切换
  * - 通过环境变量控制存储方式
  * - 本地测试使用 localStorage，上线后切换到数据库
+ * - 自动将旧ID转换为规范ID，确保历史记录统一
  */
+
+import { getCanonicalId } from './template-config';
 
 // 历史记录数据结构
 export interface HistoryItem {
@@ -15,6 +18,16 @@ export interface HistoryItem {
   content: string;
   result: string;
   timestamp: Date;
+}
+
+/**
+ * 规范化模板ID
+ * 将旧ID转换为规范ID，确保历史记录统一
+ */
+function normalizeTemplateId(templateId: string | number): string {
+  const numId = typeof templateId === 'string' ? parseInt(templateId) : templateId;
+  const canonicalId = getCanonicalId(numId);
+  return canonicalId.toString();
 }
 
 // 存储适配器接口
@@ -74,17 +87,30 @@ class LocalStorageAdapter implements StorageAdapter {
   }
 
   async getHistory(templateId: string): Promise<HistoryItem[]> {
+    // 规范化模板ID
+    const canonicalId = normalizeTemplateId(templateId);
+
     const allHistory = this.readAllHistory();
+
+    // 获取所有可能的ID（包括规范ID和旧ID）
+    // 这样可以合并使用不同ID保存的历史记录
     return allHistory
-      .filter(item => item.templateId === templateId)
+      .filter(item => {
+        const itemCanonicalId = normalizeTemplateId(item.templateId);
+        return itemCanonicalId === canonicalId;
+      })
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
   }
 
   async addHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): Promise<HistoryItem> {
     const allHistory = this.readAllHistory();
 
+    // 规范化模板ID，确保使用规范ID保存
+    const canonicalId = normalizeTemplateId(item.templateId);
+
     const newItem: HistoryItem = {
       ...item,
+      templateId: canonicalId, // 使用规范ID
       id: Date.now(),
       timestamp: new Date(),
     };
@@ -92,7 +118,12 @@ class LocalStorageAdapter implements StorageAdapter {
     allHistory.unshift(newItem);
 
     // 限制每个模板最多保存 50 条历史记录
-    const templateHistory = allHistory.filter(h => h.templateId === item.templateId);
+    // 注意：这里需要考虑所有规范化后相同的ID
+    const templateHistory = allHistory.filter(h => {
+      const hCanonicalId = normalizeTemplateId(h.templateId);
+      return hCanonicalId === canonicalId;
+    });
+
     if (templateHistory.length > 50) {
       const oldestId = templateHistory[templateHistory.length - 1].id;
       const filteredHistory = allHistory.filter(h => h.id !== oldestId);
@@ -111,14 +142,52 @@ class LocalStorageAdapter implements StorageAdapter {
   }
 
   async clearHistory(templateId: string): Promise<void> {
+    // 规范化模板ID
+    const canonicalId = normalizeTemplateId(templateId);
+
     const allHistory = this.readAllHistory();
-    const filteredHistory = allHistory.filter(item => item.templateId !== templateId);
+
+    // 清除所有规范化后ID相同的历史记录
+    const filteredHistory = allHistory.filter(item => {
+      const itemCanonicalId = normalizeTemplateId(item.templateId);
+      return itemCanonicalId !== canonicalId;
+    });
+
     this.saveAllHistory(filteredHistory);
   }
 
   async getAllHistory(): Promise<HistoryItem[]> {
     return this.readAllHistory()
       .sort((a, b) => b.timestamp.getTime() - a.timestamp.getTime());
+  }
+
+  /**
+   * 迁移历史记录ID
+   * 将所有旧ID的历史记录更新为规范ID
+   */
+  migrateHistoryIds(): void {
+    if (typeof window === 'undefined') return;
+
+    const allHistory = this.readAllHistory();
+    let hasChanges = false;
+
+    const migratedHistory = allHistory.map(item => {
+      const canonicalId = normalizeTemplateId(item.templateId);
+      if (canonicalId !== item.templateId) {
+        hasChanges = true;
+        console.log(`迁移历史记录: ${item.templateId} → ${canonicalId}`);
+        return {
+          ...item,
+          templateId: canonicalId,
+        };
+      }
+      return item;
+    });
+
+    if (hasChanges) {
+      this.saveAllHistory(migratedHistory);
+      console.log('✅ 历史记录ID迁移完成');
+    }
   }
 }
 
@@ -232,6 +301,13 @@ class HistoryStorageManager {
     } else {
       console.log('💾 使用本地存储历史记录');
       this.adapter = new LocalStorageAdapter();
+
+      // 自动迁移历史记录ID（仅在本地存储时执行）
+      if (typeof window !== 'undefined') {
+        setTimeout(() => {
+          (this.adapter as LocalStorageAdapter).migrateHistoryIds();
+        }, 1000);
+      }
     }
   }
 
@@ -247,8 +323,11 @@ class HistoryStorageManager {
     content: string,
     result: string
   ): Promise<HistoryItem> {
+    // 规范化模板ID
+    const canonicalId = normalizeTemplateId(templateId);
+
     return this.adapter.addHistory({
-      templateId,
+      templateId: canonicalId,
       templateTitle,
       content,
       result,
