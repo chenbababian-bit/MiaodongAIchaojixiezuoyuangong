@@ -29,6 +29,7 @@ import {
   RefreshCw,
   Save,
   X,
+  Plus,
 } from "lucide-react";
 import {
   Select,
@@ -53,7 +54,6 @@ import { getTemplateById, getCanonicalId, isLegacyId } from "@/lib/template-conf
 // 顶部筛选标签
 const topFilters = [
   { id: "hot", label: "热门写作" },
-  { id: "favorite", label: "收藏最多" },
   { id: "newest", label: "最新推出" },
   { id: "featured", label: "平台精选" },
 ];
@@ -318,6 +318,18 @@ export function XiaohongshuWritingPage() {
     Array<{ role: "user" | "assistant"; content: string }>
   >([]);
 
+  // 小红书模板对话历史状态
+  const [xiaohongshuConversationHistory, setXiaohongshuConversationHistory] = useState<
+    Array<{ role: "user" | "assistant"; content: string }>
+  >([]);
+
+  // 小红书模板修改内容输入
+  const [xiaohongshuModifyInput, setXiaohongshuModifyInput] = useState("");
+
+  // 小红书模板修改轮次计数（最多3轮）
+  const [xiaohongshuModifyCount, setXiaohongshuModifyCount] = useState(0);
+
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -552,7 +564,11 @@ export function XiaohongshuWritingPage() {
 👥 人物 & 天数：${travelCompanion === "couple" ? "情侣" : travelCompanion === "friends" ? "闺蜜" : travelCompanion === "family" ? "亲子" : travelCompanion === "solo" ? "独狼" : "其他"}，玩${travelDays}天
 🎨 风格偏好：${travelStyle === "budget" ? "极致省钱干货" : "氛围感大片文案"}
 ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        requestBody = { content: travelInfo };
+        const content = xiaohongshuModifyInput.trim() || travelInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "104") {
         // 账号简介专用API
         apiEndpoint = "/api/xiaohongshu-profile";
@@ -577,7 +593,11 @@ ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
 ${profileSkills ? `💡 特殊技能/经历：${profileSkills}\n` : ""}🎯 目标粉丝：${audienceMap[profileAudience] || profileAudience}
 ✨ 理想人设：${personaMap[profilePersona] || profilePersona}
 ${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        requestBody = { content: profileInfo };
+        const content = xiaohongshuModifyInput.trim() || profileInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "105") {
         // SEO关键词布局专用API
         apiEndpoint = "/api/xiaohongshu-seo";
@@ -606,7 +626,11 @@ ${painPointsText}
 3️⃣ 优化目标：
 ${seoGoal}
 ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n${contentInput}` : ""}`;
-        requestBody = { content: seoInfo };
+        const content = xiaohongshuModifyInput.trim() || seoInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "106") {
         // 小红书风格排版专用API
         apiEndpoint = "/api/xiaohongshu-style";
@@ -621,7 +645,11 @@ ${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n$
 🎯 目标受众：${styleAudience}
 🎨 期望风格：${styleTypeMap[styleType] || styleType}
 ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        requestBody = { content: styleInfo };
+        const content = xiaohongshuModifyInput.trim() || styleInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "107") {
         // 产品种草笔记专用API
         apiEndpoint = "/api/product-review";
@@ -634,7 +662,11 @@ ${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补
 
 🎯 使用场景：${productScene || "待补充"}
 ${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
-        requestBody = { content: productInfo };
+        const content = xiaohongshuModifyInput.trim() || productInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "108") {
         // 好物推荐专用API
         apiEndpoint = "/api/product-recommendation";
@@ -653,7 +685,11 @@ ${recommendTargetAudience || "待补充"}
 3. 🎨 希望什么风格？
 ${recommendStyle ? styleMap[recommendStyle] || recommendStyle : "待补充"}
 ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
-        requestBody = { content: recommendInfo };
+        const content = xiaohongshuModifyInput.trim() || recommendInfo;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "109" || templateId === "201" || templateId === "204") {
         // 公众号文章专用API（统一使用上下文功能）
         apiEndpoint = "/api/official-account-article";
@@ -662,10 +698,23 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           content: articleTheme,
           conversationHistory: articleConversationHistory
         };
+      } else if (templateId === "102") {
+        // 小红书爆款文案专用API
+        apiEndpoint = "/api/xiaohongshu";
+        // 如果有修改请求，使用修改内容；否则使用原始内容
+        const content = xiaohongshuModifyInput.trim() || contentInput;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
-        requestBody = { content: contentInput };
+        const content = xiaohongshuModifyInput.trim() || contentInput;
+        requestBody = {
+          content: content,
+          conversationHistory: xiaohongshuConversationHistory
+        };
       } else if (templateId === "201") {
         // 公众号文章撰写（统一使用新ID）
         apiEndpoint = "/api/official-account-article";
@@ -730,6 +779,50 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
         setArticleTheme("");
       }
 
+      // 如果是小红书模板，更新对话历史
+      const xiaohongshuTemplateIds = ["101", "102", "103", "104", "105", "106", "107", "108"];
+      if (xiaohongshuTemplateIds.includes(templateId)) {
+        // 构建用户输入内容（用于对话历史）
+        let userContent = "";
+        if (xiaohongshuModifyInput.trim()) {
+          // 如果是修改请求
+          userContent = xiaohongshuModifyInput;
+        } else {
+          // 如果是首次生成，根据模板类型构建内容
+          if (templateId === "101") {
+            userContent = `目的地：${travelDestination}，预算：${travelBudget}，同行人：${travelCompanion}，天数：${travelDays}，风格：${travelStyle}`;
+          } else if (templateId === "102") {
+            userContent = contentInput;
+          } else if (templateId === "103") {
+            userContent = contentInput;
+          } else if (templateId === "104") {
+            userContent = `职业：${profileCareer}，内容方向：${profileContent}，目标粉丝：${profileAudience}，理想人设：${profilePersona}`;
+          } else if (templateId === "105") {
+            userContent = `内容类型：${seoContentType}，粉丝数：${seoFansCount}，互动量：${seoInteractionRate}`;
+          } else if (templateId === "106") {
+            userContent = `主题：${styleTheme}，受众：${styleAudience}，风格：${styleType}`;
+          } else if (templateId === "107") {
+            userContent = `产品：${productName}，品类：${productCategory}，卖点：${productFeatures}`;
+          } else if (templateId === "108") {
+            userContent = `产品：${recommendProductName}，赛道：${recommendProductCategory}，风格：${recommendStyle}`;
+          }
+        }
+
+        setXiaohongshuConversationHistory([
+          ...xiaohongshuConversationHistory,
+          { role: "user", content: userContent },
+          { role: "assistant", content: data.result },
+        ]);
+
+        // 如果是修改请求，增加修改轮次
+        if (xiaohongshuModifyInput.trim()) {
+          setXiaohongshuModifyCount(xiaohongshuModifyCount + 1);
+        }
+
+        // 清空修改输入
+        setXiaohongshuModifyInput("");
+      }
+
       // 添加到历史记录
       try {
         const contentForHistory = templateId === "101"
@@ -784,6 +877,51 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     setArticleTheme("");
     setArticleFollowUp("");
     setError("");
+  };
+
+  // 清空小红书模板对话历史（新对话）
+  const handleXiaohongshuNewConversation = () => {
+    setXiaohongshuConversationHistory([]);
+    setCurrentResult("");
+    setXiaohongshuModifyInput("");
+    setXiaohongshuModifyCount(0);
+    setError("");
+    // 清空所有表单输入
+    setContentInput("");
+    setTravelDestination("");
+    setTravelBudget("");
+    setTravelCompanion("");
+    setTravelDays("");
+    setTravelStyle("");
+    setProfileCareer("");
+    setProfileContent("");
+    setProfileSkills("");
+    setProfileAudience("");
+    setProfilePersona("");
+    setSeoContentType("");
+    setSeoFansCount("");
+    setSeoInteractionRate("");
+    setSeoOperationTime("");
+    setSeoPostFrequency("");
+    setSeoPainPoints([]);
+    setSeoGoal("");
+    setStyleTheme("");
+    setStyleAudience("");
+    setStyleType("");
+    setStyleDraft("");
+    setProductName("");
+    setProductCategory("");
+    setProductBrand("");
+    setProductPrice("");
+    setProductFeatures("");
+    setProductAudience("");
+    setProductScene("");
+    setRecommendProductName("");
+    setRecommendProductCategory("");
+    setRecommendProductFeatures("");
+    setRecommendTargetAudience("");
+    setRecommendStyle("");
+    setRecommendExtraInfo("");
   };
 
   // 删除历史记录
@@ -1684,6 +1822,63 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   initialContent={currentResult}
                   className="flex-1"
                 />
+
+                {/* 小红书模板对话历史和修改功能 */}
+                {["101", "102", "103", "104", "105", "106", "107", "108"].includes(templateId) && xiaohongshuConversationHistory.length > 0 && (
+                  <div className="border-t border-border px-4 py-3 bg-muted/30">
+                    <div className="text-xs text-muted-foreground mb-2">
+                      对话轮次：{xiaohongshuModifyCount + 1}/3
+                    </div>
+
+                    {/* 修改输入框 */}
+                    {xiaohongshuModifyCount < 3 && (
+                      <div className="space-y-2">
+                        <textarea
+                          value={xiaohongshuModifyInput}
+                          onChange={(e) => setXiaohongshuModifyInput(e.target.value)}
+                          placeholder="如需修改，请输入修改要求（例如：让文案更活泼一些、增加emoji表情等）"
+                          className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background resize-none focus:outline-none focus:ring-2 focus:ring-ring"
+                          rows={2}
+                        />
+                        <div className="flex items-center gap-2">
+                          <Button
+                            size="sm"
+                            onClick={handleSubmit}
+                            disabled={isLoading || !xiaohongshuModifyInput.trim()}
+                            className="h-8"
+                          >
+                            <RefreshCw className="h-4 w-4 mr-1" />
+                            提交修改
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={handleXiaohongshuNewConversation}
+                            className="h-8"
+                          >
+                            <Plus className="h-4 w-4 mr-1" />
+                            重新开始
+                          </Button>
+                        </div>
+                      </div>
+                    )}
+
+                    {xiaohongshuModifyCount >= 3 && (
+                      <div className="text-sm text-muted-foreground">
+                        已达到最大修改次数（3次），请
+                        <Button
+                          variant="link"
+                          size="sm"
+                          onClick={handleXiaohongshuNewConversation}
+                          className="h-auto p-0 ml-1"
+                        >
+                          重新开始新对话
+                        </Button>
+                      </div>
+                    )}
+                  </div>
+                )}
+
                 {/* 底部操作按钮 */}
                 <div className="border-t border-border px-4 py-3 flex items-center justify-between bg-card">
                   <div className="flex items-center gap-2">

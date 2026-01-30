@@ -76,7 +76,7 @@ const SYSTEM_PROMPT = `# Role: 小红书爆款种草专家 (XHS Viral Copywriter
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { content } = body;
+    const { content, conversationHistory } = body;
 
     if (!content) {
       return NextResponse.json(
@@ -92,6 +92,25 @@ export async function POST(request: NextRequest) {
       );
     }
 
+    // 构建消息数组
+    const messages: Array<{ role: string; content: string }> = [
+      {
+        role: "system",
+        content: SYSTEM_PROMPT,
+      },
+    ];
+
+    // 如果有对话历史，添加到消息数组中
+    if (conversationHistory && Array.isArray(conversationHistory)) {
+      messages.push(...conversationHistory);
+    }
+
+    // 添加当前用户消息
+    messages.push({
+      role: "user",
+      content: content,
+    });
+
     // 调用 DeepSeek API
     const response = await fetch(DEEPSEEK_API_URL, {
       method: "POST",
@@ -101,16 +120,7 @@ export async function POST(request: NextRequest) {
       },
       body: JSON.stringify({
         model: "deepseek-chat",
-        messages: [
-          {
-            role: "system",
-            content: SYSTEM_PROMPT,
-          },
-          {
-            role: "user",
-            content: content,
-          },
-        ],
+        messages: messages,
         temperature: 0.7,
         max_tokens: 4000,
       }),

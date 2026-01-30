@@ -87,7 +87,6 @@ const categories = [
 // 侧边筛选
 const sideFilters = [
   { id: "hot", label: "热门写作", icon: Flame },
-  { id: "favorite", label: "收藏最多", icon: Star },
   { id: "newest", label: "最新推出", icon: Calendar },
   { id: "featured", label: "平台精选", icon: Target },
 ];
@@ -193,100 +192,6 @@ const templates = [
     users: 1339,
     category: "营销/品牌",
     featured: false,
-  },
-];
-
-// 收藏最多模板
-const favoriteTemplates = [
-  {
-    id: 11,
-    icon: "xiaohongshu",
-    iconBg: "bg-red-500",
-    title: "小红书爆款文案",
-    desc: "创作出能够吸引用户注意力、引发共鸣、促进互动的自媒体文案...",
-    users: 5417,
-    category: "自媒体/自媒体文案",
-  },
-  {
-    id: 12,
-    icon: "wechat",
-    iconBg: "bg-green-500",
-    title: "公众号文章撰写",
-    desc: "创作高质量的公众号文章，提升文章的吸引力和传播力...",
-    users: 3777,
-    category: "自媒体/自媒体文案",
-  },
-  {
-    id: 13,
-    icon: "video",
-    iconBg: "bg-amber-500",
-    title: "短视频爆款文案",
-    desc: "设计出能够迅速吸引观众注意力并激发他们情感共鸣的短视频文案...",
-    users: 2239,
-    category: "自媒体/短视频文案",
-  },
-  {
-    id: 14,
-    icon: "speech",
-    iconBg: "bg-teal-500",
-    title: "致辞稿",
-    desc: "撰写一篇符合政务工作要求、主题明确、内容充实、语言得体的致辞稿...",
-    users: 1607,
-    category: "通用写作/政务公文",
-  },
-  {
-    id: 15,
-    icon: "business",
-    iconBg: "bg-purple-500",
-    title: "商业计划书",
-    desc: "为客户撰写一份详细、全面、具有可行性的商业计划书...",
-    users: 1316,
-    category: "金融保险/风险投资",
-  },
-  {
-    id: 2,
-    icon: "report",
-    iconBg: "bg-emerald-500",
-    title: "汇报材料",
-    desc: "撰写一份全面、准确、有针对性的政务汇报材料，为上级决策提供依据...",
-    users: 3470,
-    category: "通用写作/政务公文",
-  },
-  {
-    id: 16,
-    icon: "news",
-    iconBg: "bg-blue-500",
-    title: "新闻稿",
-    desc: "撰写准确、清晰、具有影响力的政务新闻稿，及时传达政务信息...",
-    users: 885,
-    category: "通用写作/政务公文",
-  },
-  {
-    id: 17,
-    icon: "letter",
-    iconBg: "bg-purple-500",
-    title: "感谢信",
-    desc: "撰写一封符合政务规范、情感真挚、表达清晰的感谢信...",
-    users: 983,
-    category: "通用写作/政务公文",
-  },
-  {
-    id: 10,
-    icon: "brand",
-    iconBg: "bg-pink-500",
-    title: "品牌定位报告",
-    desc: "撰写一份详细、准确且具有操作性的品牌定位报告，为品牌的发展提供有力的指导...",
-    users: 1339,
-    category: "营销/品牌",
-  },
-  {
-    id: 6,
-    icon: "title",
-    iconBg: "bg-red-500",
-    title: "小红书爆款标题",
-    desc: "设计出能够吸引目标受众、提高点击率和互动率的标题...",
-    users: 1471,
-    category: "自媒体/自媒体文案",
   },
 ];
 
@@ -556,7 +461,6 @@ export function WritingPage() {
 
   // 创建各个区域的引用
   const hotRef = useRef<HTMLDivElement>(null);
-  const favoriteRef = useRef<HTMLDivElement>(null);
   const newestRef = useRef<HTMLDivElement>(null);
   const featuredRef = useRef<HTMLDivElement>(null);
   const contentRef = useRef<HTMLDivElement>(null);
@@ -592,7 +496,6 @@ export function WritingPage() {
     // 观察所有区域
     const sections = [
       hotRef.current,
-      favoriteRef.current,
       newestRef.current,
       featuredRef.current,
     ];
@@ -616,7 +519,6 @@ export function WritingPage() {
   const scrollToSection = (filterId: string) => {
     const refMap: { [key: string]: React.RefObject<HTMLDivElement | null> } = {
       hot: hotRef,
-      favorite: favoriteRef,
       newest: newestRef,
       featured: featuredRef,
     };
@@ -744,21 +646,6 @@ export function WritingPage() {
               {templates.map((template) => (
                 <TemplateCard key={`hot-${template.id}`} template={template} />
               ))}
-            </div>
-          </div>
-
-          {/* 收藏最多 Section */}
-          <div ref={favoriteRef} data-section="favorite" className="mb-12 scroll-mt-6">
-            <h2 className="text-base font-semibold text-foreground mb-4">收藏最多</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-              {favoriteTemplates
-                .filter((template) =>
-                  activeCategory === "home" ||
-                  activeCategory === "media" ? template.category?.includes("自媒体") : true
-                )
-                .map((template) => (
-                  <TemplateCard key={template.id} template={template} />
-                ))}
             </div>
           </div>
 

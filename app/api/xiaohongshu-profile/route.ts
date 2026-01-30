@@ -172,6 +172,7 @@ const SYSTEM_PROMPT = `# 角色(Role): 小红书简介优化大师
 // 请求数据接口
 interface ProfileRequest {
   content: string; // 用户输入的描述内容
+  conversationHistory?: Array<{ role: string; content: string }>; // 对话历史
 }
 
 // 设置最大执行时间
@@ -180,7 +181,7 @@ export const maxDuration = 60;
 export async function POST(request: NextRequest) {
   try {
     const body = await request.json();
-    const { content }: ProfileRequest = body;
+    const { content, conversationHistory }: ProfileRequest = body;
 
     // 验证必填字段
     if (!content || typeof content !== "string" || content.trim().length === 0) {
@@ -206,6 +207,25 @@ export async function POST(request: NextRequest) {
     const timeoutId = setTimeout(() => controller.abort(), 55000); // 55秒超时
 
     try {
+      // 构建消息数组
+      const messages: Array<{ role: string; content: string }> = [
+        {
+          role: "system",
+          content: SYSTEM_PROMPT,
+        },
+      ];
+
+      // 如果有对话历史，添加到消息数组中
+      if (conversationHistory && Array.isArray(conversationHistory)) {
+        messages.push(...conversationHistory);
+      }
+
+      // 添加当前用户消息
+      messages.push({
+        role: "user",
+        content: content,
+      });
+
       const response = await fetch(DEEPSEEK_API_URL, {
         method: "POST",
         headers: {
@@ -214,16 +234,7 @@ export async function POST(request: NextRequest) {
         },
         body: JSON.stringify({
           model: "deepseek-chat",
-          messages: [
-            {
-              role: "system",
-              content: SYSTEM_PROMPT,
-            },
-            {
-              role: "user",
-              content: content,
-            },
-          ],
+          messages: messages,
           temperature: 0.8,
           max_tokens: 4000,
         }),
