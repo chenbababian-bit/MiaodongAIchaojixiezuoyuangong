@@ -514,7 +514,7 @@ export function XiaohongshuWritingPage() {
         setError("请至少填写产品名称、产品赛道或核心卖点中的一项");
         return;
       }
-    } else if (templateId === "109") {
+    } else if (templateId === "109" || templateId === "201" || templateId === "204") {
       // 公众号文章表单验证（所有字段都是可选的，用户根据需求填选）
       // 不进行必填验证，但至少需要有文章主题
       if (!articleTheme.trim()) {
@@ -649,8 +649,8 @@ ${recommendTargetAudience || "待补充"}
 ${recommendStyle ? styleMap[recommendStyle] || recommendStyle : "待补充"}
 ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
         requestBody = { content: recommendInfo };
-      } else if (templateId === "109") {
-        // 公众号文章专用API
+      } else if (templateId === "109" || templateId === "201" || templateId === "204") {
+        // 公众号文章专用API（统一使用上下文功能）
         apiEndpoint = "/api/official-account-article";
         // 构建请求体，包含文章主题和对话历史
         requestBody = {
@@ -712,7 +712,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
       setCurrentResult(data.result);
 
       // 如果是公众号文章模板，更新对话历史
-      if (templateId === "109") {
+      if (templateId === "109" || templateId === "201" || templateId === "204") {
         setArticleConversationHistory([
           ...articleConversationHistory,
           { role: "user", content: articleTheme },
@@ -736,7 +736,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           ? `${productName || productCategory} | ${productAudience || "通用"} | ${productScene || "日常使用"}`
           : templateId === "108"
           ? `${recommendProductName || recommendProductCategory} | ${recommendTargetAudience || "通用"} | ${recommendStyle || "真诚分享"}`
-          : templateId === "109"
+          : (templateId === "109" || templateId === "201" || templateId === "204")
           ? `${articleTheme}${articleFollowUp ? " | 追问: " + articleFollowUp.substring(0, 20) + "..." : ""}`
           : contentInput;
 
@@ -868,7 +868,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 ? "🌟 嗨呀！我是你的小红书爆款文案搭子！把产品变成让人忍不住点赞收藏的种草笔记！无论是美妆护肤、数码家电还是生活好物，我都能写出让人心动下单的文案～准备好一起整个爆款出来了吗？🚀"
                 : templateId === "108"
                 ? "👋 哈喽宝子们！我是你们的小红书爆款种草专家呱呱！✨ 不管你是想推美妆神仙水🧴、硬核黑科技💻，还是家居好物🛋️，我都能帮你把草种到用户的心坎里！🌱 把信息甩给我，剩下的爆款文案交给我来搞定！💪🔥"
-                : templateId === "109"
+                : templateId === "109" || templateId === "201" || templateId === "204"
                 ? "📝 你好！我是公众号爆款文章-大纲架构师！我擅长深度拆解主题、逻辑构建、场景化痛点挖掘和实操方法论转化。基于经过验证的'七步高转化逻辑框架'，我将为你生成逻辑严密、读者粘性强且具有高度可执行性的文章大纲。准备好打造高质量公众号文章了吗？✨"
                 : templateId === "6" || templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
@@ -1478,7 +1478,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   </p>
                 </div>
               </>
-            ) : templateId === "109" ? (
+            ) : templateId === "109" || templateId === "201" || templateId === "204" ? (
               <>
                 {/* 公众号文章专用表单 */}
 
