@@ -58,10 +58,10 @@ const topFilters = [
   { id: "featured", label: "平台精选" },
 ];
 
-// 左侧写作模板列表
+// 左侧写作模板列表（使用统一的规范ID）
 const sideTemplates = [
   {
-    id: 1,
+    id: 102, // 统一为规范ID（原ID: 1）
     icon: "xiaohongshu",
     iconBg: "bg-red-500",
     title: "小红书爆款文案",
@@ -77,7 +77,7 @@ const sideTemplates = [
     active: false,
   },
   {
-    id: 3,
+    id: 201, // 统一为规范ID（原ID: 3）
     icon: "wechat",
     iconBg: "bg-green-500",
     title: "公众号文章撰写",
@@ -101,7 +101,7 @@ const sideTemplates = [
     active: false,
   },
   {
-    id: 6,
+    id: 103, // 统一为规范ID（原ID: 6）
     icon: "title",
     iconBg: "bg-red-500",
     title: "小红书爆款标题",
@@ -136,23 +136,13 @@ const sideTemplates = [
 
 // 示例提问 - 根据模板ID动态显示
 const examplePromptsByTemplate: Record<string, string[]> = {
-  // 小红书爆款文案 (templateId = "1" 或 "102")
-  "1": [
-    "我是一名时尚博主，想要创作一篇关于秋季穿搭的小红书笔记，目标受众是25-35岁的都市女性",
-    "我开了一家咖啡店，想要在小红书上分享我们的特色拿铁和店铺氛围，吸引年轻人打卡",
-    "我是护肤达人，想要分享一套适合干皮的冬季护肤routine，需要专业又接地气的文案"
-  ],
+  // 小红书爆款文案 (templateId = "102")
   "102": [
     "我是一名时尚博主，想要创作一篇关于秋季穿搭的小红书笔记，目标受众是25-35岁的都市女性",
     "我开了一家咖啡店，想要在小红书上分享我们的特色拿铁和店铺氛围，吸引年轻人打卡",
     "我是护肤达人，想要分享一套适合干皮的冬季护肤routine，需要专业又接地气的文案"
   ],
-  // 小红书爆款标题 (templateId = "6" 或 "103")
-  "6": [
-    "我写了一篇关于日本京都旅游攻略的笔记，内容包括小众景点、美食推荐和省钱技巧，帮我设计吸引人的标题",
-    "我的笔记是分享平价好用的国货彩妆测评，想要一个能让人忍不住点进来的标题",
-    "我整理了一份大学生兼职避坑指南，包含10种靠谱的赚钱方式，需要一个高点击率的标题"
-  ],
+  // 小红书爆款标题 (templateId = "103")
   "103": [
     "我写了一篇关于日本京都旅游攻略的笔记，内容包括小众景点、美食推荐和省钱技巧，帮我设计吸引人的标题",
     "我的笔记是分享平价好用的国货彩妆测评，想要一个能让人忍不住点进来的标题",
@@ -672,14 +662,17 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           content: articleTheme,
           conversationHistory: articleConversationHistory
         };
-      } else if (templateId === "6" || templateId === "103") {
+      } else if (templateId === "103") {
         // 小红书爆款标题专用API
         apiEndpoint = "/api/xiaohongshu-title";
         requestBody = { content: contentInput };
-      } else if (templateId === "3") {
-        // 公众号文章撰写
-        apiEndpoint = "/api/wechat-article";
-        requestBody = { content: contentInput };
+      } else if (templateId === "201") {
+        // 公众号文章撰写（统一使用新ID）
+        apiEndpoint = "/api/official-account-article";
+        requestBody = {
+          content: contentInput,
+          conversationHistory: []
+        };
       } else if (templateId === "4" || templateId === "9") {
         // 短视频相关模板，注意：实际应该跳转到视频页面，这里作为兜底
         apiEndpoint = "/api/video";
@@ -885,9 +878,9 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 ? "👋 哈喽宝子们！我是你们的小红书爆款种草专家呱呱！✨ 不管你是想推美妆神仙水🧴、硬核黑科技💻，还是家居好物🛋️，我都能帮你把草种到用户的心坎里！🌱 把信息甩给我，剩下的爆款文案交给我来搞定！💪🔥"
                 : templateId === "109" || templateId === "201" || templateId === "204"
                 ? "📝 你好！我是公众号爆款文章-大纲架构师！我擅长深度拆解主题、逻辑构建、场景化痛点挖掘和实操方法论转化。基于经过验证的'七步高转化逻辑框架'，我将为你生成逻辑严密、读者粘性强且具有高度可执行性的文章大纲。准备好打造高质量公众号文章了吗？✨"
-                : templateId === "6" || templateId === "103"
+                : templateId === "103"
                 ? "👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！请告诉我你的笔记内容主题、目标人群和账号定位，让我为你创作3-5个不同风格的标题方案！🚀"
-                : templateId === "1" || templateId === "102"
+                : templateId === "102"
                 ? "👋 你好呀！我是你的小红书爆款文案大师，拥有50年内容创作经验，已经帮助无数创作者打造出10w+点赞的爆款笔记。我精通小红书平台的流量密码，深谙用户心理，能够为你量身定制高互动、高转化的优质文案！✨"
                 : `欢迎来到${templateTitle}创作空间！让我们一起探索如何创作出能够吸引用户注意力的内容。请告诉我你想要聚焦的主题或领域，让我们开始创作吧！`
               }
