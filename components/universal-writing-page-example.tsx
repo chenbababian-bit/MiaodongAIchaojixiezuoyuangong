@@ -13,7 +13,7 @@
 import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import {
-  getTemplateConfig,
+  getTemplateById,
   getTemplateApiEndpoint,
   getTemplateRoutePath,
   getTemplatesByCategory,
@@ -39,7 +39,7 @@ export function UniversalWritingPage({
   const [error, setError] = useState("");
 
   // 从配置获取当前模板信息
-  const templateConfig = getTemplateConfig(templateId);
+  const templateConfig = templateId ? getTemplateById(parseInt(templateId)) : null;
   const categoryTemplates = getTemplatesByCategory(category);
 
   // 智能创作 - 使用配置驱动的API端点
@@ -88,8 +88,8 @@ export function UniversalWritingPage({
   };
 
   // 模板点击处理 - 使用配置驱动的路由跳转
-  const handleTemplateClick = (clickedTemplateId: string) => {
-    const config = getTemplateConfig(clickedTemplateId);
+  const handleTemplateClick = (clickedTemplateId: number) => {
+    const config = getTemplateById(clickedTemplateId);
     if (!config) return;
 
     // 从配置获取路由路径，无需硬编码
@@ -112,7 +112,7 @@ export function UniversalWritingPage({
               key={template.id}
               onClick={() => handleTemplateClick(template.id)}
               className={
-                templateId === template.id ? "bg-primary" : "hover:bg-muted"
+                templateId === template.id.toString() ? "bg-primary" : "hover:bg-muted"
               }
             >
               <div className={template.iconBg}>{template.icon}</div>
@@ -137,7 +137,7 @@ export function UniversalWritingPage({
           />
 
           {/* 根据配置动态渲染自定义字段 */}
-          {templateConfig?.customFields?.videoType && (
+          {templateConfig?.customFields?.some(field => field.name === 'videoType') && (
             <select>
               <option>口播</option>
               <option>剧情</option>
@@ -145,7 +145,7 @@ export function UniversalWritingPage({
             </select>
           )}
 
-          {templateConfig?.customFields?.audience && (
+          {templateConfig?.customFields?.some(field => field.name === 'audience') && (
             <input placeholder="目标观众" />
           )}
 

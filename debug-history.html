@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史记录诊断工具</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            border-bottom: 2px solid #e74c3c;
+            padding-bottom: 10px;
+        }
+        .section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f9f9f9;
+            border-left: 4px solid #3498db;
+        }
+        .section h2 {
+            margin-top: 0;
+            color: #2c3e50;
+        }
+        pre {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        button {
+            background: #e74c3c;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #c0392b;
+        }
+        .success {
+            color: #27ae60;
+            font-weight: bold;
+        }
+        .error {
+            color: #e74c3c;
+            font-weight: bold;
+        }
+        .info {
+            color: #3498db;
+            font-weight: bold;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔍 历史记录诊断工具</h1>
+
+        <div class="section">
+            <h2>1. 检查 localStorage</h2>
+            <button onclick="checkLocalStorage()">检查存储</button>
+            <div id="storage-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>2. 查看所有历史记录</h2>
+            <button onclick="viewAllHistory()">查看历史</button>
+            <div id="history-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>3. 测试 ID 规范化</h2>
+            <button onclick="testIdNormalization()">测试规范化</button>
+            <div id="normalization-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>4. 添加测试数据</h2>
+            <button onclick="addTestData()">添加测试历史记录</button>
+            <div id="test-data-result"></div>
+        </div>
+
+        <div class="section">
+            <h2>5. 清空历史记录</h2>
+            <button onclick="clearHistory()">清空所有历史</button>
+            <div id="clear-result"></div>
+        </div>
+    </div>
+
+    <script>
+        const STORAGE_KEY = 'ai_writing_history';
+
+        function checkLocalStorage() {
+            const result = document.getElementById('storage-result');
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (!data) {
+                    result.innerHTML = '<p class="error">❌ localStorage 中没有找到历史记录数据</p>';
+                } else {
+                    const parsed = JSON.parse(data);
+                    result.innerHTML = `
+                        <p class="success">✅ 找到历史记录数据</p>
+                        <p class="info">记录数量: ${parsed.length}</p>
+                        <pre>${JSON.stringify(parsed, null, 2)}</pre>
+                    `;
+                }
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        function viewAllHistory() {
+            const result = document.getElementById('history-result');
+            try {
+                const data = localStorage.getItem(STORAGE_KEY);
+                if (!data) {
+                    result.innerHTML = '<p class="error">❌ 没有历史记录</p>';
+                    return;
+                }
+
+                const history = JSON.parse(data);
+                if (history.length === 0) {
+                    result.innerHTML = '<p class="error">❌ 历史记录为空</p>';
+                    return;
+                }
+
+                let html = '<p class="success">✅ 历史记录列表:</p><table border="1" cellpadding="5" style="width:100%; border-collapse: collapse;">';
+                html += '<tr><th>ID</th><th>模板ID</th><th>标题</th><th>时间</th></tr>';
+
+                history.forEach(item => {
+                    html += `<tr>
+                        <td>${item.id}</td>
+                        <td>${item.templateId}</td>
+                        <td>${item.templateTitle}</td>
+                        <td>${new Date(item.timestamp).toLocaleString('zh-CN')}</td>
+                    </tr>`;
+                });
+
+                html += '</table>';
+                result.innerHTML = html;
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        function testIdNormalization() {
+            const result = document.getElementById('normalization-result');
+
+            // 模拟 getCanonicalId 函数
+            const TEMPLATE_REGISTRY = {
+                102: {
+                    id: 102,
+                    legacyIds: [1, 11],
+                    title: "小红书爆款文案"
+                },
+                103: {
+                    id: 103,
+                    legacyIds: [6],
+                    title: "小红书爆款标题"
+                }
+            };
+
+            function getTemplateById(id) {
+                if (TEMPLATE_REGISTRY[id]) {
+                    return TEMPLATE_REGISTRY[id];
+                }
+                for (const template of Object.values(TEMPLATE_REGISTRY)) {
+                    if (template.legacyIds?.includes(id)) {
+                        return template;
+                    }
+                }
+                return null;
+            }
+
+            function getCanonicalId(id) {
+                const template = getTemplateById(id);
+                return template?.id || id;
+            }
+
+            const testCases = [1, 11, 102, 6, 103, 999];
+            let html = '<p class="info">📊 ID 规范化测试结果:</p><table border="1" cellpadding="5" style="width:100%; border-collapse: collapse;">';
+            html += '<tr><th>输入ID</th><th>规范ID</th><th>模板标题</th></tr>';
+
+            testCases.forEach(id => {
+                const canonicalId = getCanonicalId(id);
+                const template = getTemplateById(canonicalId);
+                html += `<tr>
+                    <td>${id}</td>
+                    <td>${canonicalId}</td>
+                    <td>${template?.title || '未找到'}</td>
+                </tr>`;
+            });
+
+            html += '</table>';
+            result.innerHTML = html;
+        }
+
+        function addTestData() {
+            const result = document.getElementById('test-data-result');
+            try {
+                const testHistory = [
+                    {
+                        id: Date.now(),
+                        templateId: "1",  // 使用旧ID
+                        templateTitle: "小红书爆款文案",
+                        content: "测试内容 - 使用ID 1",
+                        result: "这是一个测试结果",
+                        timestamp: new Date().toISOString()
+                    },
+                    {
+                        id: Date.now() + 1,
+                        templateId: "102",  // 使用新ID
+                        templateTitle: "小红书爆款文案",
+                        content: "测试内容 - 使用ID 102",
+                        result: "这是另一个测试结果",
+                        timestamp: new Date().toISOString()
+                    }
+                ];
+
+                localStorage.setItem(STORAGE_KEY, JSON.stringify(testHistory));
+                result.innerHTML = '<p class="success">✅ 已添加测试数据！请刷新页面查看历史记录。</p>';
+            } catch (error) {
+                result.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+            }
+        }
+
+        function clearHistory() {
+            const result = document.getElementById('clear-result');
+            if (confirm('确定要清空所有历史记录吗？')) {
+                try {
+                    localStorage.removeItem(STORAGE_KEY);
+                    result.innerHTML = '<p class="success">✅ 历史记录已清空</p>';
+                } catch (error) {
+                    result.innerHTML = `<p class="error">❌ 错误: ${error.message}</p>`;
+                }
+            }
+        }
+    </script>
+</body>
+</html>
