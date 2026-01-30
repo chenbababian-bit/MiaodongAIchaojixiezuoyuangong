@@ -48,6 +48,7 @@ import {
   zhihuTemplates,
   privateTemplates,
 } from "@/components/media-page"; // 从media-page导入模板数据
+import { getTemplateById, getCanonicalId, isLegacyId } from "@/lib/template-config";
 
 // 顶部筛选标签
 const topFilters = [
@@ -241,6 +242,20 @@ export function XiaohongshuWritingPage() {
   const templateTitle = searchParams.get("title") || "小红书爆款文案";
   const templateId = searchParams.get("template") || "1";
   const source = searchParams.get("source") || "hot"; // 获取source参数
+
+  // 自动重定向旧ID到新ID
+  useEffect(() => {
+    const numId = parseInt(templateId);
+    const canonicalId = getCanonicalId(numId);
+    const template = getTemplateById(canonicalId);
+
+    if (template && canonicalId !== numId) {
+      // 如果是旧ID，重定向到规范ID
+      console.warn(`Legacy ID ${numId} detected, redirecting to canonical ID ${canonicalId}`);
+      const newUrl = `${template.routePath}?template=${canonicalId}&title=${encodeURIComponent(template.title)}&source=${source}`;
+      router.replace(newUrl);
+    }
+  }, [templateId, router, source]);
 
   const [activeFilter, setActiveFilter] = useState("hot");
   const [activeTemplate, setActiveTemplate] = useState(parseInt(templateId));
