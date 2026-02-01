@@ -482,16 +482,50 @@ export function XiaohongshuWritingPage() {
     ));
   };
 
+  // Markdown转纯文本
+  const markdownToPlainText = (markdown: string): string => {
+    return markdown
+      // 移除标题标记
+      .replace(/^#{1,6}\s+/gm, '')
+      // 移除粗体和斜体
+      .replace(/\*\*\*(.+?)\*\*\*/g, '$1')
+      .replace(/\*\*(.+?)\*\*/g, '$1')
+      .replace(/\*(.+?)\*/g, '$1')
+      .replace(/___(.+?)___/g, '$1')
+      .replace(/__(.+?)__/g, '$1')
+      .replace(/_(.+?)_/g, '$1')
+      // 移除链接，保留文本
+      .replace(/\[(.+?)\]\(.+?\)/g, '$1')
+      // 移除图片
+      .replace(/!\[.*?\]\(.+?\)/g, '')
+      // 移除代码块
+      .replace(/```[\s\S]*?```/g, '')
+      .replace(/`(.+?)`/g, '$1')
+      // 移除引用
+      .replace(/^>\s+/gm, '')
+      // 移除列表标记
+      .replace(/^[\*\-\+]\s+/gm, '')
+      .replace(/^\d+\.\s+/gm, '')
+      // 移除水平线
+      .replace(/^[\-\*_]{3,}$/gm, '')
+      // 清理多余空行
+      .replace(/\n{3,}/g, '\n\n')
+      .trim();
+  };
+
   // 输入框高度自适应
   const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInputValue(e.target.value);
 
-    // 计算高度
+    // 重置高度以获取正确的scrollHeight
     const target = e.target;
-    target.style.height = 'auto';
+    target.style.height = '60px';
+
+    // 计算新高度
     const scrollHeight = target.scrollHeight;
     const newHeight = Math.min(Math.max(scrollHeight, 60), 150);
     setInputHeight(newHeight);
+    target.style.height = `${newHeight}px`;
   };
 
   // Enter发送，Shift+Enter换行
@@ -562,6 +596,10 @@ export function XiaohongshuWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+
+      // 将AI回复转换为纯文本并同步到富文本编辑器
+      const plainText = markdownToPlainText(data.result);
+      setCurrentResult(plainText);
 
       // 更新对话历史
       setXiaohongshuConversationHistory(prev => [
@@ -1148,66 +1186,67 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
   return (
     <div className="flex h-[calc(100vh-56px)]">
       {templateId === "102" ? (
-        /* 模板102：对话框布局 */
-        <div className="w-full flex flex-col">
-          {/* 顶部标题栏 */}
-          <div className="border-b border-border p-4">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push(getBackPath())}
-                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="text-sm font-medium">返回</span>
-                </button>
-                <h1 className="text-lg font-semibold text-foreground">
-                  {templateTitle}
-                </h1>
-              </div>
-              <Button
-                variant="outline"
-                size="sm"
-                onClick={handleXiaohongshuNewConversation}
-                className="h-8"
-              >
-                <Plus className="h-4 w-4 mr-1" />
-                新建对话
-              </Button>
-            </div>
-          </div>
-
-          {/* 对话消息区域 */}
-          <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
-            <div className="max-w-4xl mx-auto space-y-4">
-              {messages.map((msg) => (
-                <MessageBubble
-                  key={msg.id}
-                  role={msg.role}
-                  content={msg.content}
-                  isCollapsed={msg.isCollapsed}
-                  onToggleCollapse={() => handleToggleCollapse(msg.id)}
-                  isRichText={msg.role === 'assistant' && msg.id !== 'welcome' && !msg.id.startsWith('welcome-')}
-                />
-              ))}
-
-              {/* 加载状态 */}
-              {isLoading && (
-                <div className="flex justify-start">
-                  <div className="bg-muted rounded-lg p-4 shadow-sm">
-                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                  </div>
+        /* 模板102：左右分栏布局 */
+        <>
+          {/* 左侧：对话框区域 (50%) */}
+          <div className="w-[50%] flex flex-col border-r border-border">
+            {/* 顶部标题栏 */}
+            <div className="border-b border-border p-4">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-4">
+                  <button
+                    onClick={() => router.push(getBackPath())}
+                    className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                  >
+                    <ChevronLeft className="h-4 w-4" />
+                    <span className="text-sm font-medium">返回</span>
+                  </button>
+                  <h1 className="text-lg font-semibold text-foreground">
+                    {templateTitle}
+                  </h1>
                 </div>
-              )}
-
-              {/* 滚动锚点 */}
-              <div ref={messagesEndRef} />
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={handleXiaohongshuNewConversation}
+                  className="h-8"
+                >
+                  <Plus className="h-4 w-4 mr-1" />
+                  新建对话
+                </Button>
+              </div>
             </div>
-          </div>
 
-          {/* 底部输入区域 */}
-          <div className="border-t border-border p-4 bg-background">
-            <div className="max-w-4xl mx-auto">
+            {/* 对话消息区域 */}
+            <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
+              <div className="space-y-4">
+                {messages.map((msg) => (
+                  <MessageBubble
+                    key={msg.id}
+                    role={msg.role}
+                    content={msg.content}
+                    isCollapsed={msg.isCollapsed}
+                    onToggleCollapse={() => handleToggleCollapse(msg.id)}
+                    isRichText={false}
+                  />
+                ))}
+
+                {/* 加载状态 */}
+                {isLoading && (
+                  <div className="flex justify-start">
+                    <div className="bg-muted rounded-lg p-4 shadow-sm">
+                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                    </div>
+                  </div>
+                )}
+
+                {/* 滚动锚点 */}
+                <div ref={messagesEndRef} />
+              </div>
+            </div>
+
+            {/* 底部输入区域 */}
+            <div className="border-t border-border p-4 bg-background">
               <div className="flex gap-2 items-end">
                 <textarea
                   ref={inputRef}
@@ -1223,7 +1262,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   onClick={handleSendMessage}
                   disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 3}
                   size="lg"
-                  className="h-[60px] px-6"
+                  className="px-6"
+                  style={{ height: `${inputHeight}px` }}
                 >
                   {isLoading ? (
                     <Loader2 className="h-5 w-5 animate-spin" />
@@ -1250,7 +1290,44 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
               </div>
             </div>
           </div>
-        </div>
+
+          {/* 右侧：文本编辑器区域 (50%) */}
+          <div className="w-[50%] flex flex-col bg-card">
+            {/* 编辑器标题栏 */}
+            <div className="border-b border-border p-4">
+              <div className="flex items-center justify-between">
+                <h2 className="text-sm font-medium text-foreground">文本编辑器</h2>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="outline"
+                    size="sm"
+                    onClick={() => {
+                      navigator.clipboard.writeText(currentResult);
+                    }}
+                    disabled={!currentResult}
+                  >
+                    <Copy className="h-4 w-4 mr-1" />
+                    复制
+                  </Button>
+                </div>
+              </div>
+            </div>
+
+            {/* 富文本编辑器 */}
+            <div className="flex-1 overflow-hidden">
+              {currentResult ? (
+                <RichTextEditor
+                  initialContent={currentResult}
+                  className="h-full"
+                />
+              ) : (
+                <div className="flex items-center justify-center h-full text-muted-foreground">
+                  <p className="text-sm">AI生成的内容将显示在这里</p>
+                </div>
+              )}
+            </div>
+          </div>
+        </>
       ) : (
         /* 其他模板：原有的左右分栏布局 */
         <>
