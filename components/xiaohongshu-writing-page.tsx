@@ -1056,7 +1056,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
         setHistory((prev) => [newHistoryItem, ...prev]);
       } catch (historyError) {
         console.error('保存历史记录失败:', historyError);
-        // 历史记录保存失败不影响主流程
+        // 显示历史记录保存失败的错误
+        setError(historyError instanceof Error ? historyError.message : "添加历史记录失败");
       }
     } catch (err) {
       setError(err instanceof Error ? err.message : "创作失败，请重试");
