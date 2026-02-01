@@ -541,8 +541,8 @@ export function XiaohongshuWritingPage() {
     if (!inputValue.trim() || isLoading) return;
 
     // 检查修改次数限制
-    if (xiaohongshuModifyCount >= 3) {
-      setError("已达到最大修改次数（3次），请点击\"新建对话\"开始新的创作");
+    if (xiaohongshuModifyCount >= 5) {
+      setError("已达到最大修改次数（5次），请点击\"新建对话\"开始新的创作");
       return;
     }
 
@@ -1292,7 +1292,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 3}
+                    disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 5}
                     size="lg"
                     className="px-6"
                     style={{ height: `${inputHeight}px` }}
@@ -1313,8 +1313,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 {/* 对话轮次提示 */}
                 <div className="flex items-center justify-between mt-2">
                   <p className="text-xs text-muted-foreground">
-                    对话轮次：{xiaohongshuModifyCount}/3
-                    {xiaohongshuModifyCount >= 3 && " - 已达到最大轮次，请新建对话"}
+                    对话轮次：{xiaohongshuModifyCount}/5
+                    {xiaohongshuModifyCount >= 5 && " - 已达到最大轮次，请新建对话"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     💡 提示：Enter发送，Shift+Enter换行
@@ -2246,11 +2246,11 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 {["101", "102", "103", "104", "105", "106", "107", "108"].includes(templateId) && xiaohongshuConversationHistory.length > 0 && (
                   <div className="border-t border-border px-4 py-3 bg-muted/30">
                     <div className="text-xs text-muted-foreground mb-2">
-                      对话轮次：{xiaohongshuModifyCount + 1}/3
+                      对话轮次：{xiaohongshuModifyCount + 1}/5
                     </div>
 
                     {/* 修改输入框 */}
-                    {xiaohongshuModifyCount < 3 && (
+                    {xiaohongshuModifyCount < 5 && (
                       <div className="space-y-2">
                         <textarea
                           value={xiaohongshuModifyInput}
@@ -2282,9 +2282,9 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                       </div>
                     )}
 
-                    {xiaohongshuModifyCount >= 3 && (
+                    {xiaohongshuModifyCount >= 5 && (
                       <div className="text-sm text-muted-foreground">
-                        已达到最大修改次数（3次），请
+                        已达到最大修改次数（5次），请
                         <Button
                           variant="link"
                           size="sm"
