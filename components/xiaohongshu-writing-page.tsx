@@ -984,19 +984,30 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
             <h1 className="text-lg font-semibold text-foreground">
               {templateTitle}
             </h1>
-            <Button
-              variant="link"
-              size="sm"
-              className="text-primary p-0 h-auto"
-              onClick={() => {
-                const examples = getExamplePrompts(templateId);
-                const nextIndex = (currentExampleIndex + 1) % examples.length;
-                handleExampleClick(examples[currentExampleIndex]);
-                setCurrentExampleIndex(nextIndex);
-              }}
-            >
-              插入示例 {currentExampleIndex + 1}/{getExamplePrompts(templateId).length}
-            </Button>
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleXiaohongshuNewConversation}
+                className="h-8"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                新建对话
+              </Button>
+              <Button
+                variant="link"
+                size="sm"
+                className="text-primary p-0 h-auto"
+                onClick={() => {
+                  const examples = getExamplePrompts(templateId);
+                  const nextIndex = (currentExampleIndex + 1) % examples.length;
+                  handleExampleClick(examples[currentExampleIndex]);
+                  setCurrentExampleIndex(nextIndex);
+                }}
+              >
+                插入示例 {currentExampleIndex + 1}/{getExamplePrompts(templateId).length}
+              </Button>
+            </div>
           </div>
 
           {/* Description */}
@@ -1735,26 +1746,6 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 {error}
               </div>
             )}
-
-            {/* Model Selection */}
-            <div>
-              <Select value={selectedModel} onValueChange={setSelectedModel}>
-                <SelectTrigger className="w-full">
-                  <SelectValue placeholder="选择模型" />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="fast">
-                    厉害猫AI-极速模型 (消耗0.2算力/1000字符)
-                  </SelectItem>
-                  <SelectItem value="standard">
-                    厉害猫AI-标准模型 (消耗0.5算力/1000字符)
-                  </SelectItem>
-                  <SelectItem value="advanced">
-                    厉害猫AI-高级模型 (消耗1.0算力/1000字符)
-                  </SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
 
             {/* Submit Button */}
             <Button
