@@ -26,7 +26,7 @@ async function getAuthenticatedUser(request: NextRequest) {
 
 export async function DELETE(
   request: NextRequest,
-  { params }: { params: { id: string } }
+  { params }: { params: Promise<{ id: string }> }
 ) {
   try {
     // 验证用户登录
@@ -38,7 +38,8 @@ export async function DELETE(
       )
     }
 
-    const id = params.id
+    // Next.js 15: params 是 Promise，需要 await
+    const { id } = await params
 
     // 删除历史记录（RLS会自动确保只能删除自己的记录）
     const { error } = await supabase
