@@ -1,7 +1,7 @@
 "use client";
 
-import { Button } from "@/components/ui/button";
 import { Grid3X3, Sun } from "lucide-react";
+import { UserInfo } from "@/components/user-info";
 
 export function AppHeader() {
   return (
@@ -22,9 +22,7 @@ export function AppHeader() {
         <button className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition-colors">
           <Sun className="h-4 w-4" />
         </button>
-        <Button size="sm" className="h-8 px-4 text-sm">
-          登录/注册
-        </Button>
+        <UserInfo />
       </div>
     </header>
   );
