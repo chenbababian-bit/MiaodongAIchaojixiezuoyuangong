@@ -88,6 +88,8 @@ class LocalStorageAdapter implements StorageAdapter {
       localStorage.setItem(this.STORAGE_KEY, JSON.stringify(history));
     } catch (error) {
       console.error('保存历史记录失败:', error);
+      // 抛出异常，让调用方知道保存失败
+      throw new Error('保存历史记录失败：' + (error instanceof Error ? error.message : '存储空间不足或浏览器限制'));
     }
   }
 
