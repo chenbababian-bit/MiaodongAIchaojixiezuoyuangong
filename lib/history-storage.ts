@@ -206,23 +206,77 @@ class LocalStorageAdapter implements StorageAdapter {
 
 /**
  * Database 适配器
- * 用于生产环境，数据存储在云端数据库
- *
- * 注意：这是预留接口，上线时需要实现具体的数据库逻辑
+ * 用于生产环境，数据存储在云端数据库（Supabase）
  */
 class DatabaseAdapter implements StorageAdapter {
   private readonly API_BASE = '/api/history';
 
+  /**
+   * 获取认证token
+   * 从Supabase获取当前用户的session token
+   */
+  private async getAuthToken(): Promise<string | null> {
+    if (typeof window === 'undefined') return null;
+
+    try {
+      // 动态导入supabase客户端，避免服务端执行
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+      return session?.access_token || null;
+    } catch (error) {
+      console.error('获取认证token失败:', error);
+      return null;
+    }
+  }
+
+  /**
+   * 获取带认证的请求头
+   */
+  private async getAuthHeaders(): Promise<HeadersInit> {
+    const token = await this.getAuthToken();
+    const headers: HeadersInit = {
+      'Content-Type': 'application/json',
+    };
+
+    if (token) {
+      headers['Authorization'] = `Bearer ${token}`;
+    }
+
+    return headers;
+  }
+
+  /**
+   * 映射数据库字段到HistoryItem
+   * 数据库使用created_at，前端使用timestamp
+   */
+  private mapToHistoryItem(item: any): HistoryItem {
+    return {
+      id: item.id,
+      templateId: item.template_id,
+      templateTitle: item.template_title,
+      content: item.content,
+      result: item.result,
+      timestamp: new Date(item.created_at || item.timestamp),
+    };
+  }
+
   async getHistory(templateId: string): Promise<HistoryItem[]> {
     try {
-      const response = await fetch(`${this.API_BASE}?templateId=${templateId}`);
-      if (!response.ok) throw new Error('获取历史记录失败');
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(`${this.API_BASE}?templateId=${templateId}`, {
+        headers,
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.warn('未登录，无法获取历史记录');
+          return [];
+        }
+        throw new Error('获取历史记录失败');
+      }
 
       const data = await response.json();
-      return data.map((item: any) => ({
-        ...item,
-        timestamp: new Date(item.timestamp),
-      }));
+      return data.map(this.mapToHistoryItem);
     } catch (error) {
       console.error('获取历史记录失败:', error);
       return [];
@@ -231,19 +285,27 @@ class DatabaseAdapter implements StorageAdapter {
 
   async addHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): Promise<HistoryItem> {
     try {
+      const headers = await this.getAuthHeaders();
       const response = await fetch(this.API_BASE, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(item),
+        headers,
+        body: JSON.stringify({
+          templateId: item.templateId,
+          templateTitle: item.templateTitle,
+          content: item.content,
+          result: item.result,
+        }),
       });
 
-      if (!response.ok) throw new Error('添加历史记录失败');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('未登录，无法保存历史记录');
+        }
+        throw new Error('添加历史记录失败');
+      }
 
       const data = await response.json();
-      return {
-        ...data,
-        timestamp: new Date(data.timestamp),
-      };
+      return this.mapToHistoryItem(data);
     } catch (error) {
       console.error('添加历史记录失败:', error);
       throw error;
@@ -252,11 +314,18 @@ class DatabaseAdapter implements StorageAdapter {
 
   async deleteHistory(id: number): Promise<void> {
     try {
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.API_BASE}/${id}`, {
         method: 'DELETE',
+        headers,
       });
 
-      if (!response.ok) throw new Error('删除历史记录失败');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('未登录，无法删除历史记录');
+        }
+        throw new Error('删除历史记录失败');
+      }
     } catch (error) {
       console.error('删除历史记录失败:', error);
       throw error;
@@ -265,13 +334,19 @@ class DatabaseAdapter implements StorageAdapter {
 
   async clearHistory(templateId: string): Promise<void> {
     try {
+      const headers = await this.getAuthHeaders();
       const response = await fetch(`${this.API_BASE}/clear`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers,
         body: JSON.stringify({ templateId }),
       });
 
-      if (!response.ok) throw new Error('清空历史记录失败');
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('未登录，无法清空历史记录');
+        }
+        throw new Error('清空历史记录失败');
+      }
     } catch (error) {
       console.error('清空历史记录失败:', error);
       throw error;
@@ -280,14 +355,21 @@ class DatabaseAdapter implements StorageAdapter {
 
   async getAllHistory(): Promise<HistoryItem[]> {
     try {
-      const response = await fetch(this.API_BASE);
-      if (!response.ok) throw new Error('获取所有历史记录失败');
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(this.API_BASE, {
+        headers,
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          console.warn('未登录，无法获取历史记录');
+          return [];
+        }
+        throw new Error('获取所有历史记录失败');
+      }
 
       const data = await response.json();
-      return data.map((item: any) => ({
-        ...item,
-        timestamp: new Date(item.timestamp),
-      }));
+      return data.map(this.mapToHistoryItem);
     } catch (error) {
       console.error('获取所有历史记录失败:', error);
       return [];
