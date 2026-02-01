@@ -1187,24 +1187,26 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     <div className="flex h-[calc(100vh-56px)]">
       {templateId === "102" ? (
         /* 模板102：左右分栏布局 */
-        <>
-          {/* 左侧：对话框区域 (50%) */}
-          <div className="w-[50%] flex flex-col border-r border-border">
-            {/* 顶部标题栏 */}
-            <div className="border-b border-border p-4">
-              <div className="flex items-center justify-between">
-                <div className="flex items-center gap-4">
-                  <button
-                    onClick={() => router.push(getBackPath())}
-                    className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                  >
-                    <ChevronLeft className="h-4 w-4" />
-                    <span className="text-sm font-medium">返回</span>
-                  </button>
-                  <h1 className="text-lg font-semibold text-foreground">
-                    {templateTitle}
-                  </h1>
-                </div>
+        <div className="w-full flex flex-col">
+          {/* 统一的顶部标题栏 */}
+          <div className="border-b border-border p-4">
+            <div className="flex items-center justify-between">
+              {/* 左侧：返回 + 标题 */}
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => router.push(getBackPath())}
+                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="text-sm font-medium">返回</span>
+                </button>
+                <h1 className="text-lg font-semibold text-foreground">
+                  {templateTitle}
+                </h1>
+              </div>
+
+              {/* 中间：新建对话 + 历史记录 */}
+              <div className="flex items-center gap-2">
                 <Button
                   variant="outline"
                   size="sm"
@@ -1214,120 +1216,181 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   <Plus className="h-4 w-4 mr-1" />
                   新建对话
                 </Button>
-              </div>
-            </div>
-
-            {/* 对话消息区域 */}
-            <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
-              <div className="space-y-4">
-                {messages.map((msg) => (
-                  <MessageBubble
-                    key={msg.id}
-                    role={msg.role}
-                    content={msg.content}
-                    isCollapsed={msg.isCollapsed}
-                    onToggleCollapse={() => handleToggleCollapse(msg.id)}
-                    isRichText={false}
-                  />
-                ))}
-
-                {/* 加载状态 */}
-                {isLoading && (
-                  <div className="flex justify-start">
-                    <div className="bg-muted rounded-lg p-4 shadow-sm">
-                      <Loader2 className="h-5 w-5 animate-spin text-primary" />
-                    </div>
-                  </div>
-                )}
-
-                {/* 滚动锚点 */}
-                <div ref={messagesEndRef} />
-              </div>
-            </div>
-
-            {/* 底部输入区域 */}
-            <div className="border-t border-border p-4 bg-background">
-              <div className="flex gap-2 items-end">
-                <textarea
-                  ref={inputRef}
-                  value={inputValue}
-                  onChange={handleInputChange}
-                  onKeyDown={handleKeyDown}
-                  placeholder="输入您的需求...（Enter发送，Shift+Enter换行）"
-                  className="flex-1 resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
-                  style={{ height: `${inputHeight}px`, maxHeight: '150px', overflowY: 'auto' }}
-                  disabled={isLoading}
-                />
                 <Button
-                  onClick={handleSendMessage}
-                  disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 3}
-                  size="lg"
-                  className="px-6"
-                  style={{ height: `${inputHeight}px` }}
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setResultTab("history")}
+                  className="h-8"
                 >
-                  {isLoading ? (
-                    <Loader2 className="h-5 w-5 animate-spin" />
-                  ) : (
-                    <Send className="h-5 w-5" />
-                  )}
+                  <Calendar className="h-4 w-4 mr-1" />
+                  历史记录
                 </Button>
               </div>
 
-              {/* 错误提示 */}
-              {error && (
-                <p className="text-sm text-destructive mt-2">{error}</p>
-              )}
-
-              {/* 对话轮次提示 */}
-              <div className="flex items-center justify-between mt-2">
-                <p className="text-xs text-muted-foreground">
-                  对话轮次：{xiaohongshuModifyCount}/3
-                  {xiaohongshuModifyCount >= 3 && " - 已达到最大轮次，请新建对话"}
-                </p>
-                <p className="text-xs text-muted-foreground">
-                  💡 提示：Enter发送，Shift+Enter换行
-                </p>
+              {/* 右侧：文本编辑器标题 + 复制 */}
+              <div className="flex items-center gap-2">
+                <span className="text-sm font-medium text-muted-foreground">文本编辑器</span>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => {
+                    navigator.clipboard.writeText(currentResult);
+                  }}
+                  disabled={!currentResult}
+                >
+                  <Copy className="h-4 w-4 mr-1" />
+                  复制
+                </Button>
               </div>
             </div>
           </div>
 
-          {/* 右侧：文本编辑器区域 (50%) */}
-          <div className="w-[50%] flex flex-col bg-card">
-            {/* 编辑器标题栏 */}
-            <div className="border-b border-border p-4">
-              <div className="flex items-center justify-between">
-                <h2 className="text-sm font-medium text-foreground">文本编辑器</h2>
-                <div className="flex items-center gap-2">
+          {/* 主内容区域：左右分栏 */}
+          <div className="flex flex-1 overflow-hidden">
+            {/* 左侧：对话框区域 (50%) */}
+            <div className="w-[50%] flex flex-col border-r border-border">
+              {/* 对话消息区域 */}
+              <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
+                <div className="space-y-4">
+                  {messages.map((msg) => (
+                    <MessageBubble
+                      key={msg.id}
+                      role={msg.role}
+                      content={msg.content}
+                      isCollapsed={msg.isCollapsed}
+                      onToggleCollapse={() => handleToggleCollapse(msg.id)}
+                      isRichText={false}
+                    />
+                  ))}
+
+                  {/* 加载状态 */}
+                  {isLoading && (
+                    <div className="flex justify-start">
+                      <div className="bg-muted rounded-lg p-4 shadow-sm">
+                        <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                      </div>
+                    </div>
+                  )}
+
+                  {/* 滚动锚点 */}
+                  <div ref={messagesEndRef} />
+                </div>
+              </div>
+
+              {/* 底部输入区域 */}
+              <div className="border-t border-border p-4 bg-background">
+                <div className="flex gap-2 items-end">
+                  <textarea
+                    ref={inputRef}
+                    value={inputValue}
+                    onChange={handleInputChange}
+                    onKeyDown={handleKeyDown}
+                    placeholder="输入您的需求...（Enter发送，Shift+Enter换行）"
+                    className="flex-1 resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                    style={{ height: `${inputHeight}px`, maxHeight: '150px', overflowY: 'auto' }}
+                    disabled={isLoading}
+                  />
                   <Button
-                    variant="outline"
-                    size="sm"
-                    onClick={() => {
-                      navigator.clipboard.writeText(currentResult);
-                    }}
-                    disabled={!currentResult}
+                    onClick={handleSendMessage}
+                    disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 3}
+                    size="lg"
+                    className="px-6"
+                    style={{ height: `${inputHeight}px` }}
                   >
-                    <Copy className="h-4 w-4 mr-1" />
-                    复制
+                    {isLoading ? (
+                      <Loader2 className="h-5 w-5 animate-spin" />
+                    ) : (
+                      <Send className="h-5 w-5" />
+                    )}
                   </Button>
                 </div>
+
+                {/* 错误提示 */}
+                {error && (
+                  <p className="text-sm text-destructive mt-2">{error}</p>
+                )}
+
+                {/* 对话轮次提示 */}
+                <div className="flex items-center justify-between mt-2">
+                  <p className="text-xs text-muted-foreground">
+                    对话轮次：{xiaohongshuModifyCount}/3
+                    {xiaohongshuModifyCount >= 3 && " - 已达到最大轮次，请新建对话"}
+                  </p>
+                  <p className="text-xs text-muted-foreground">
+                    💡 提示：Enter发送，Shift+Enter换行
+                  </p>
+                </div>
               </div>
             </div>
 
-            {/* 富文本编辑器 */}
-            <div className="flex-1 overflow-hidden">
-              {currentResult ? (
-                <RichTextEditor
-                  initialContent={currentResult}
-                  className="h-full"
-                />
-              ) : (
-                <div className="flex items-center justify-center h-full text-muted-foreground">
-                  <p className="text-sm">AI生成的内容将显示在这里</p>
+            {/* 右侧：文本编辑器/历史记录区域 (50%) */}
+            <div className="w-[50%] flex flex-col bg-card">
+              {resultTab === "current" ? (
+                /* 文本编辑器 */
+                <div className="flex-1 overflow-hidden">
+                  {currentResult ? (
+                    <RichTextEditor
+                      initialContent={currentResult}
+                      className="h-full"
+                    />
+                  ) : (
+                    <div className="flex items-center justify-center h-full text-muted-foreground">
+                      <p className="text-sm">AI生成的内容将显示在这里</p>
+                    </div>
+                  )}
                 </div>
+              ) : (
+                /* 历史记录 */
+                <ScrollArea className="flex-1">
+                  {history.length > 0 ? (
+                    <div className="p-4 space-y-3">
+                      {history.map((item) => (
+                        <div
+                          key={item.id}
+                          className="border border-border rounded-lg p-3 hover:bg-muted/50 transition-colors cursor-pointer"
+                          onClick={() => {
+                            handleLoadHistory(item);
+                            setResultTab("current");
+                          }}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <span className="text-xs text-muted-foreground">
+                              {formatTime(item.timestamp)}
+                            </span>
+                            <button
+                              onClick={(e) => {
+                                e.stopPropagation();
+                                handleDeleteHistory(item.id);
+                              }}
+                              className="text-muted-foreground hover:text-destructive transition-colors"
+                            >
+                              <X className="h-3 w-3" />
+                            </button>
+                          </div>
+                          <p className="text-sm text-foreground line-clamp-2 mb-2">
+                            {item.content}
+                          </p>
+                          <p className="text-xs text-muted-foreground line-clamp-2">
+                            {item.result.substring(0, 100)}...
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full p-6">
+                      <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                        <Calendar className="h-10 w-10 text-muted-foreground/50" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        暂无历史创作记录
+                      </p>
+                    </div>
+                  )}
+                </ScrollArea>
               )}
             </div>
           </div>
-        </>
+        </div>
       ) : (
         /* 其他模板：原有的左右分栏布局 */
         <>
