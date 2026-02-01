@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -30,7 +30,9 @@ import {
   Save,
   X,
   Plus,
+  Send,
 } from "lucide-react";
+import { MessageBubble } from "@/components/message-bubble";
 import {
   Select,
   SelectContent,
@@ -160,6 +162,16 @@ const examplePromptsByTemplate: Record<string, string[]> = {
 const getExamplePrompts = (templateId: string): string[] => {
   return examplePromptsByTemplate[templateId] || examplePromptsByTemplate["default"];
 };
+
+// 小红书模板102的AI欢迎消息
+const XIAOHONGSHU_WELCOME_MESSAGE = `👋 你好呀！我是你的小红书爆款文案大师，拥有50年内容创作经验，已经帮助无数创作者打造出10w+点赞的爆款笔记。我擅长洞悉用户心理，深谙流量密码，高转化的优质文案！✨
+
+请告诉我：
+1. 你想创作什么主题的小红书笔记？
+2. 你的目标受众是谁？
+3. 你希望达到什么效果？
+
+我会为你量身定制爆款文案！🚀`;
 
 // 旧的示例提问（保留用于兼容）
 const examplePrompts = [
@@ -329,6 +341,17 @@ export function XiaohongshuWritingPage() {
   // 小红书模板修改轮次计数（最多3轮）
   const [xiaohongshuModifyCount, setXiaohongshuModifyCount] = useState(0);
 
+  // 小红书模板102对话框专用状态
+  const [messages, setMessages] = useState<Array<{
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    isCollapsed: boolean;
+  }>>([]);
+  const [inputValue, setInputValue] = useState('');
+  const [inputHeight, setInputHeight] = useState(60);
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+  const inputRef = useRef<HTMLTextAreaElement>(null);
 
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
@@ -428,6 +451,151 @@ export function XiaohongshuWritingPage() {
 
   const handleExampleClick = (text: string) => {
     setContentInput(text);
+  };
+
+  // 模板102对话框专用函数
+  // 初始化欢迎消息
+  useEffect(() => {
+    if (templateId === "102" && messages.length === 0) {
+      setMessages([{
+        id: 'welcome',
+        role: 'assistant',
+        content: XIAOHONGSHU_WELCOME_MESSAGE,
+        isCollapsed: false
+      }]);
+    }
+  }, [templateId]);
+
+  // 滚动到底部
+  const scrollToBottom = () => {
+    setTimeout(() => {
+      messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
+    }, 100);
+  };
+
+  // 收起/展开消息
+  const handleToggleCollapse = (messageId: string) => {
+    setMessages(prev => prev.map(msg =>
+      msg.id === messageId
+        ? { ...msg, isCollapsed: !msg.isCollapsed }
+        : msg
+    ));
+  };
+
+  // 输入框高度自适应
+  const handleInputChange = (e: React.ChangeEvent<HTMLTextAreaElement>) => {
+    setInputValue(e.target.value);
+
+    // 计算高度
+    const target = e.target;
+    target.style.height = 'auto';
+    const scrollHeight = target.scrollHeight;
+    const newHeight = Math.min(Math.max(scrollHeight, 60), 150);
+    setInputHeight(newHeight);
+  };
+
+  // Enter发送，Shift+Enter换行
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === 'Enter' && !e.shiftKey) {
+      e.preventDefault();
+      handleSendMessage();
+    }
+  };
+
+  // 发送消息（模板102专用）
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
+
+    // 检查修改次数限制
+    if (xiaohongshuModifyCount >= 3) {
+      setError("已达到最大修改次数（3次），请点击\"新建对话\"开始新的创作");
+      return;
+    }
+
+    const userContent = inputValue.trim();
+
+    // 添加用户消息
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: userContent,
+      isCollapsed: false
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    // 清空输入框
+    setInputValue('');
+    setInputHeight(60);
+    if (inputRef.current) {
+      inputRef.current.style.height = '60px';
+    }
+
+    // 调用API
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch("/api/xiaohongshu", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: userContent,
+          conversationHistory: xiaohongshuConversationHistory
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API请求失败');
+      }
+
+      const data = await response.json();
+
+      if (!data.success || !data.result) {
+        throw new Error(data.error || '生成失败');
+      }
+
+      // 添加AI回复
+      const aiMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: data.result,
+        isCollapsed: false
+      };
+      setMessages(prev => [...prev, aiMessage]);
+
+      // 更新对话历史
+      setXiaohongshuConversationHistory(prev => [
+        ...prev,
+        { role: 'user', content: userContent },
+        { role: 'assistant', content: data.result }
+      ]);
+
+      // 增加修改次数
+      setXiaohongshuModifyCount(prev => prev + 1);
+
+      // 滚动到底部
+      scrollToBottom();
+
+      // 保存到历史记录
+      await historyStorage.addHistory(
+        templateId,
+        templateTitle,
+        userContent,
+        data.result
+      );
+
+      // 重新加载历史记录
+      const historyData = await historyStorage.getHistory(templateId);
+      setHistory(historyData);
+
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "发送失败，请重试");
+      // 如果失败，移除用户消息
+      setMessages(prev => prev.filter(msg => msg.id !== userMessage.id));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   // 智能创作
@@ -886,6 +1054,19 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     setXiaohongshuModifyInput("");
     setXiaohongshuModifyCount(0);
     setError("");
+
+    // 模板102：重置消息列表为欢迎消息
+    if (templateId === "102") {
+      setMessages([{
+        id: 'welcome-' + Date.now(),
+        role: 'assistant',
+        content: XIAOHONGSHU_WELCOME_MESSAGE,
+        isCollapsed: false
+      }]);
+      setInputValue('');
+      setInputHeight(60);
+    }
+
     // 清空所有表单输入
     setContentInput("");
     setTravelDestination("");
@@ -966,6 +1147,113 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
+      {templateId === "102" ? (
+        /* 模板102：对话框布局 */
+        <div className="w-full flex flex-col">
+          {/* 顶部标题栏 */}
+          <div className="border-b border-border p-4">
+            <div className="flex items-center justify-between">
+              <div className="flex items-center gap-4">
+                <button
+                  onClick={() => router.push(getBackPath())}
+                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
+                >
+                  <ChevronLeft className="h-4 w-4" />
+                  <span className="text-sm font-medium">返回</span>
+                </button>
+                <h1 className="text-lg font-semibold text-foreground">
+                  {templateTitle}
+                </h1>
+              </div>
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={handleXiaohongshuNewConversation}
+                className="h-8"
+              >
+                <Plus className="h-4 w-4 mr-1" />
+                新建对话
+              </Button>
+            </div>
+          </div>
+
+          {/* 对话消息区域 */}
+          <div className="flex-1 overflow-y-auto p-6 bg-muted/20">
+            <div className="max-w-4xl mx-auto space-y-4">
+              {messages.map((msg) => (
+                <MessageBubble
+                  key={msg.id}
+                  role={msg.role}
+                  content={msg.content}
+                  isCollapsed={msg.isCollapsed}
+                  onToggleCollapse={() => handleToggleCollapse(msg.id)}
+                  isRichText={msg.role === 'assistant' && msg.id !== 'welcome' && !msg.id.startsWith('welcome-')}
+                />
+              ))}
+
+              {/* 加载状态 */}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-lg p-4 shadow-sm">
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  </div>
+                </div>
+              )}
+
+              {/* 滚动锚点 */}
+              <div ref={messagesEndRef} />
+            </div>
+          </div>
+
+          {/* 底部输入区域 */}
+          <div className="border-t border-border p-4 bg-background">
+            <div className="max-w-4xl mx-auto">
+              <div className="flex gap-2 items-end">
+                <textarea
+                  ref={inputRef}
+                  value={inputValue}
+                  onChange={handleInputChange}
+                  onKeyDown={handleKeyDown}
+                  placeholder="输入您的需求...（Enter发送，Shift+Enter换行）"
+                  className="flex-1 resize-none rounded-lg border border-input bg-background px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-primary transition-all"
+                  style={{ height: `${inputHeight}px`, maxHeight: '150px', overflowY: 'auto' }}
+                  disabled={isLoading}
+                />
+                <Button
+                  onClick={handleSendMessage}
+                  disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 3}
+                  size="lg"
+                  className="h-[60px] px-6"
+                >
+                  {isLoading ? (
+                    <Loader2 className="h-5 w-5 animate-spin" />
+                  ) : (
+                    <Send className="h-5 w-5" />
+                  )}
+                </Button>
+              </div>
+
+              {/* 错误提示 */}
+              {error && (
+                <p className="text-sm text-destructive mt-2">{error}</p>
+              )}
+
+              {/* 对话轮次提示 */}
+              <div className="flex items-center justify-between mt-2">
+                <p className="text-xs text-muted-foreground">
+                  对话轮次：{xiaohongshuModifyCount}/3
+                  {xiaohongshuModifyCount >= 3 && " - 已达到最大轮次，请新建对话"}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  💡 提示：Enter发送，Shift+Enter换行
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      ) : (
+        /* 其他模板：原有的左右分栏布局 */
+        <>
       {/* Center - Form Area */}
       <div className="w-[60%] flex flex-col overflow-hidden">
         {/* Main Form Content */}
@@ -2046,6 +2334,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           </Button>
         </div>
       </div>
+      </>
+      )}
     </div>
   );
 }
