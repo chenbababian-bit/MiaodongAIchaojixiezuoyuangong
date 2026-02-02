@@ -10,13 +10,21 @@
 
 import { getCanonicalId } from './template-config';
 
+// 对话消息结构
+export interface ConversationMessage {
+  role: 'user' | 'assistant';
+  content: string;
+  timestamp?: Date;
+}
+
 // 历史记录数据结构
 export interface HistoryItem {
   id: number;
   templateId: string;
   templateTitle: string;
-  content: string;
-  result: string;
+  content: string;  // 保留用于向后兼容（首次用户输入）
+  result: string;   // 保留用于向后兼容（最终AI结果）
+  conversations?: ConversationMessage[];  // 完整对话记录（新增）
   timestamp: Date;
 }
 
@@ -42,6 +50,9 @@ export interface StorageAdapter {
 
   // 添加历史记录
   addHistory(item: Omit<HistoryItem, 'id' | 'timestamp'>): Promise<HistoryItem>;
+
+  // 更新历史记录（新增）
+  updateHistory(id: number, item: Partial<Omit<HistoryItem, 'id' | 'timestamp'>>): Promise<HistoryItem>;
 
   // 删除历史记录
   deleteHistory(id: number): Promise<void>;
@@ -154,6 +165,28 @@ class LocalStorageAdapter implements StorageAdapter {
     const allHistory = this.readAllHistory();
     const filteredHistory = allHistory.filter(item => item.id !== id);
     this.saveAllHistory(filteredHistory);
+  }
+
+  async updateHistory(id: number, updates: Partial<Omit<HistoryItem, 'id' | 'timestamp'>>): Promise<HistoryItem> {
+    const allHistory = this.readAllHistory();
+    const index = allHistory.findIndex(item => item.id === id);
+
+    if (index === -1) {
+      throw new Error('历史记录不存在');
+    }
+
+    // 更新记录
+    const updatedItem: HistoryItem = {
+      ...allHistory[index],
+      ...updates,
+      id: allHistory[index].id,  // 保持ID不变
+      timestamp: allHistory[index].timestamp,  // 保持原始时间戳
+    };
+
+    allHistory[index] = updatedItem;
+    this.saveAllHistory(allHistory);
+
+    return updatedItem;
   }
 
   async clearHistory(templateId: string): Promise<void> {
@@ -334,6 +367,30 @@ class DatabaseAdapter implements StorageAdapter {
     }
   }
 
+  async updateHistory(id: number, updates: Partial<Omit<HistoryItem, 'id' | 'timestamp'>>): Promise<HistoryItem> {
+    try {
+      const headers = await this.getAuthHeaders();
+      const response = await fetch(`${this.API_BASE}/${id}`, {
+        method: 'PATCH',
+        headers,
+        body: JSON.stringify(updates),
+      });
+
+      if (!response.ok) {
+        if (response.status === 401) {
+          throw new Error('未登录，无法更新历史记录');
+        }
+        throw new Error('更新历史记录失败');
+      }
+
+      const data = await response.json();
+      return this.mapToHistoryItem(data);
+    } catch (error) {
+      console.error('更新历史记录失败:', error);
+      throw error;
+    }
+  }
+
   async clearHistory(templateId: string): Promise<void> {
     try {
       const headers = await this.getAuthHeaders();
@@ -436,7 +493,8 @@ class HistoryStorageManager {
     templateId: string,
     templateTitle: string,
     content: string,
-    result: string
+    result: string,
+    conversations?: ConversationMessage[]
   ): Promise<HistoryItem> {
     // 规范化模板ID
     const canonicalId = normalizeTemplateId(templateId);
@@ -447,7 +505,21 @@ class HistoryStorageManager {
       templateTitle,
       content,
       result,
+      conversations,
     });
+  }
+
+  // 更新历史记录（新增）
+  async updateHistory(
+    id: number,
+    updates: {
+      content?: string;
+      result?: string;
+      conversations?: ConversationMessage[];
+    }
+  ): Promise<HistoryItem> {
+    const adapter = await this.getAdapter();
+    return adapter.updateHistory(id, updates);
   }
 
   // 删除历史记录
