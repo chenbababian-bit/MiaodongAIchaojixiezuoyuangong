@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -18,6 +18,16 @@ import {
   Loader2,
 } from "lucide-react";
 import { MessageBubble } from "@/components/message-bubble";
+import { supabase } from "@/lib/supabase";
+import {
+  createConversation,
+  getConversations,
+  getConversationWithMessages,
+  addMessage,
+  deleteAllConversations,
+  generateConversationTitle,
+  type Conversation as DBConversation,
+} from "@/lib/conversations";
 
 interface Conversation {
   id: string;
@@ -28,6 +38,8 @@ interface Conversation {
 export function LongTextPage() {
   const [activeTab, setActiveTab] = useState<"qa" | "role">("qa");
   const [conversations, setConversations] = useState<Conversation[]>([]);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [userId, setUserId] = useState<string | null>(null);
   const [inputValue, setInputValue] = useState("");
   const [deepThink, setDeepThink] = useState(false);
   const [aiChart, setAiChart] = useState(false);
@@ -45,17 +57,92 @@ export function LongTextPage() {
   const [error, setError] = useState("");
   const messagesEndRef = useRef<HTMLDivElement>(null);
 
-  const handleNewConversation = () => {
-    const newConvo: Conversation = {
-      id: Date.now().toString(),
-      title: "新会话",
-      time: new Date().toLocaleTimeString(),
+  // 获取当前用户
+  useEffect(() => {
+    const getUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+        // 加载对话列表
+        loadConversations(user.id);
+      }
     };
-    setConversations([newConvo, ...conversations]);
+    getUser();
+  }, []);
+
+  // 加载对话列表
+  const loadConversations = async (uid: string) => {
+    const dbConversations = await getConversations(uid, activeTab);
+    const formattedConversations: Conversation[] = dbConversations.map(conv => ({
+      id: conv.id,
+      title: conv.title,
+      time: new Date(conv.updated_at).toLocaleString('zh-CN', {
+        month: '2-digit',
+        day: '2-digit',
+        hour: '2-digit',
+        minute: '2-digit'
+      })
+    }));
+    setConversations(formattedConversations);
   };
 
-  const handleClearAll = () => {
-    setConversations([]);
+  // 当切换tab时重新加载对话列表
+  useEffect(() => {
+    if (userId) {
+      loadConversations(userId);
+    }
+  }, [activeTab, userId]);
+
+  // 加载对话的历史消息
+  const loadConversationMessages = async (conversationId: string) => {
+    const conversation = await getConversationWithMessages(conversationId);
+    if (conversation) {
+      setCurrentConversationId(conversationId);
+      const formattedMessages = conversation.messages.map(msg => ({
+        id: msg.id,
+        role: msg.role,
+        content: msg.content,
+        isCollapsed: false
+      }));
+      setMessages(formattedMessages);
+      setError("");
+      // 滚动到底部
+      setTimeout(scrollToBottom, 100);
+    } else {
+      setError("加载对话失败");
+    }
+  };
+
+  const handleNewConversation = async () => {
+    if (!userId) {
+      setError("请先登录");
+      return;
+    }
+
+    // 创建新对话
+    const newConv = await createConversation(userId, "新会话", activeTab);
+    if (newConv) {
+      setCurrentConversationId(newConv.id);
+      setMessages([]);
+      setError("");
+      // 重新加载对话列表
+      loadConversations(userId);
+    } else {
+      setError("创建对话失败");
+    }
+  };
+
+  const handleClearAll = async () => {
+    if (!userId) return;
+
+    const success = await deleteAllConversations(userId, activeTab);
+    if (success) {
+      setConversations([]);
+      setMessages([]);
+      setCurrentConversationId(null);
+    } else {
+      setError("删除对话失败");
+    }
   };
 
   // 滚动到底部
@@ -74,9 +161,29 @@ export function LongTextPage() {
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
+    if (!userId) {
+      setError("请先登录");
+      return;
+    }
+
     const userContent = inputValue.trim();
 
-    // 添加用户消息
+    // 如果没有当前对话，先创建一个
+    let convId = currentConversationId;
+    if (!convId) {
+      const title = generateConversationTitle(userContent);
+      const newConv = await createConversation(userId, title, activeTab);
+      if (!newConv) {
+        setError("创建对话失败");
+        return;
+      }
+      convId = newConv.id;
+      setCurrentConversationId(convId);
+      // 重新加载对话列表
+      loadConversations(userId);
+    }
+
+    // 添加用户消息到UI
     const userMessage = {
       id: Date.now().toString(),
       role: 'user' as const,
@@ -113,7 +220,7 @@ export function LongTextPage() {
         throw new Error(data.error || '生成失败');
       }
 
-      // 添加AI回复
+      // 添加AI回复到UI
       const aiMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant' as const,
@@ -121,6 +228,13 @@ export function LongTextPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+
+      // 保存用户消息和AI回复到数据库
+      await addMessage(convId, 'user', userContent);
+      await addMessage(convId, 'assistant', data.result);
+
+      // 重新加载对话列表（更新时间）
+      loadConversations(userId);
 
       // 滚动到底部
       setTimeout(scrollToBottom, 100);
@@ -189,7 +303,13 @@ export function LongTextPage() {
               {conversations.map((convo) => (
                 <div
                   key={convo.id}
-                  className="p-3 rounded-lg bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
+                  onClick={() => loadConversationMessages(convo.id)}
+                  className={cn(
+                    "p-3 rounded-lg cursor-pointer transition-colors",
+                    currentConversationId === convo.id
+                      ? "bg-primary/10 border border-primary"
+                      : "bg-muted/50 hover:bg-muted"
+                  )}
                 >
                   <p className="text-sm font-medium text-foreground truncate">
                     {convo.title}
