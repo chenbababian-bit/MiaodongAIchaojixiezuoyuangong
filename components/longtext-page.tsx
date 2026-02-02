@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,9 @@ import {
   Send,
   ChevronDown,
   Database,
+  Loader2,
 } from "lucide-react";
+import { MessageBubble } from "@/components/message-bubble";
 
 interface Conversation {
   id: string;
@@ -32,6 +34,17 @@ export function LongTextPage() {
   const [wordCount, setWordCount] = useState("3000字");
   const [searchEnabled, setSearchEnabled] = useState(false);
 
+  // 消息状态管理
+  const [messages, setMessages] = useState<Array<{
+    id: string;
+    role: 'user' | 'assistant';
+    content: string;
+    isCollapsed: boolean;
+  }>>([]);
+  const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState("");
+  const messagesEndRef = useRef<HTMLDivElement>(null);
+
   const handleNewConversation = () => {
     const newConvo: Conversation = {
       id: Date.now().toString(),
@@ -43,6 +56,82 @@ export function LongTextPage() {
 
   const handleClearAll = () => {
     setConversations([]);
+  };
+
+  // 滚动到底部
+  const scrollToBottom = () => {
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
+  // 消息折叠/展开
+  const handleToggleCollapse = (messageId: string) => {
+    setMessages(prev => prev.map(msg =>
+      msg.id === messageId ? { ...msg, isCollapsed: !msg.isCollapsed } : msg
+    ));
+  };
+
+  // 发送消息处理函数
+  const handleSendMessage = async () => {
+    if (!inputValue.trim() || isLoading) return;
+
+    const userContent = inputValue.trim();
+
+    // 添加用户消息
+    const userMessage = {
+      id: Date.now().toString(),
+      role: 'user' as const,
+      content: userContent,
+      isCollapsed: false
+    };
+    setMessages(prev => [...prev, userMessage]);
+
+    // 清空输入框
+    setInputValue('');
+
+    // 调用API
+    setIsLoading(true);
+    setError('');
+
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          content: userContent,
+          deepThink,
+          searchEnabled
+        }),
+      });
+
+      if (!response.ok) {
+        throw new Error('API请求失败');
+      }
+
+      const data = await response.json();
+
+      if (!data.success || !data.result) {
+        throw new Error(data.error || '生成失败');
+      }
+
+      // 添加AI回复
+      const aiMessage = {
+        id: (Date.now() + 1).toString(),
+        role: 'assistant' as const,
+        content: data.result,
+        isCollapsed: false
+      };
+      setMessages(prev => [...prev, aiMessage]);
+
+      // 滚动到底部
+      setTimeout(scrollToBottom, 100);
+
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "发送失败，请重试");
+      // 如果失败，移除用户消息
+      setMessages(prev => prev.filter(msg => msg.id !== userMessage.id));
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -128,19 +217,59 @@ export function LongTextPage() {
 
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col bg-background">
-        {/* Chat Area (Empty State) */}
-        <div className="flex-1 flex items-center justify-center">
-          <div className="text-center">
-            <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
-              <Sparkles className="h-8 w-8 text-primary" />
+        {/* Chat Area */}
+        <div className="flex-1 overflow-y-auto p-6">
+          {messages.length === 0 ? (
+            // 空状态
+            <div className="h-full flex items-center justify-center">
+              <div className="text-center">
+                <div className="inline-flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mb-4">
+                  <Sparkles className="h-8 w-8 text-primary" />
+                </div>
+                <h2 className="text-lg font-medium text-foreground mb-2">
+                  开始新的对话
+                </h2>
+                <p className="text-sm text-muted-foreground max-w-sm">
+                  输入您的问题或需求，AI助手将为您提供专业的解答和创作支持
+                </p>
+              </div>
             </div>
-            <h2 className="text-lg font-medium text-foreground mb-2">
-              开始新的对话
-            </h2>
-            <p className="text-sm text-muted-foreground max-w-sm">
-              输入您的问题或需求，AI助手将为您提供专业的解答和创作支持
-            </p>
-          </div>
+          ) : (
+            // 消息列表
+            <div className="space-y-4 max-w-4xl mx-auto w-full">
+              {messages.map((msg) => (
+                <MessageBubble
+                  key={msg.id}
+                  role={msg.role}
+                  content={msg.content}
+                  isCollapsed={msg.isCollapsed}
+                  onToggleCollapse={() => handleToggleCollapse(msg.id)}
+                  isRichText={false}
+                />
+              ))}
+
+              {/* 加载状态 */}
+              {isLoading && (
+                <div className="flex justify-start">
+                  <div className="bg-muted rounded-lg p-4 shadow-sm">
+                    <Loader2 className="h-5 w-5 animate-spin text-primary" />
+                  </div>
+                </div>
+              )}
+
+              {/* 错误提示 */}
+              {error && (
+                <div className="flex justify-center">
+                  <div className="bg-destructive/10 text-destructive rounded-lg p-4 text-sm">
+                    {error}
+                  </div>
+                </div>
+              )}
+
+              {/* 滚动锚点 */}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
         </div>
 
         {/* Input Area */}
@@ -220,7 +349,8 @@ export function LongTextPage() {
             <Button
               size="sm"
               className="absolute bottom-3 right-3 gap-2"
-              disabled={!inputValue.trim()}
+              disabled={!inputValue.trim() || isLoading}
+              onClick={handleSendMessage}
             >
               <Send className="h-4 w-4" />
               发送
