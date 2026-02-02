@@ -120,9 +120,9 @@ export function LongTextPage() {
     }
 
     // 创建新对话
-    const newConv = await createConversation(userId, "新会话", activeTab);
-    if (newConv) {
-      setCurrentConversationId(newConv.id);
+    const newConvId = await createConversation(userId, "新会话", activeTab);
+    if (newConvId) {
+      setCurrentConversationId(newConvId);
       setMessages([]);
       setError("");
       // 重新加载对话列表
@@ -172,12 +172,12 @@ export function LongTextPage() {
     let convId = currentConversationId;
     if (!convId) {
       const title = generateConversationTitle(userContent);
-      const newConv = await createConversation(userId, title, activeTab);
-      if (!newConv) {
+      const newConvId = await createConversation(userId, title, activeTab);
+      if (!newConvId) {
         setError("创建对话失败");
         return;
       }
-      convId = newConv.id;
+      convId = newConvId;
       setCurrentConversationId(convId);
       // 重新加载对话列表
       loadConversations(userId);

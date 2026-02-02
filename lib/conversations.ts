@@ -4,11 +4,25 @@ import { supabase } from './supabase';
 // 类型定义
 // ============================================
 
+// 小红书细粒度类型
+export type XiaohongshuType =
+  | 'xiaohongshu-travel'
+  | 'xiaohongshu-copywriting'
+  | 'xiaohongshu-title'
+  | 'xiaohongshu-profile'
+  | 'xiaohongshu-seo'
+  | 'xiaohongshu-style'
+  | 'xiaohongshu-product'
+  | 'xiaohongshu-recommendation';
+
+// 对话类型
+export type ConversationType = 'qa' | 'role' | XiaohongshuType;
+
 export interface Conversation {
   id: string;
   user_id: string;
   title: string;
-  type: 'qa' | 'role';
+  type: ConversationType;
   created_at: string;
   updated_at: string;
 }
@@ -35,8 +49,8 @@ export interface ConversationWithMessages extends Conversation {
 export async function createConversation(
   userId: string,
   title: string,
-  type: 'qa' | 'role' = 'qa'
-): Promise<Conversation | null> {
+  type: ConversationType = 'qa'
+): Promise<string> {
   try {
     const { data, error } = await supabase
       .from('conversations')
@@ -50,22 +64,26 @@ export async function createConversation(
 
     if (error) {
       console.error('创建对话失败:', error);
-      return null;
+      throw new Error('创建对话失败');
     }
 
-    return data;
+    return data.id;
   } catch (error) {
     console.error('创建对话异常:', error);
-    return null;
+    throw error;
   }
 }
 
 /**
  * 获取用户的所有对话列表
+ * @param userId 用户ID
+ * @param type 精确匹配的对话类型（可选）
+ * @param typePrefix 类型前缀过滤（可选），例如 'xiaohongshu' 会匹配所有 xiaohongshu-* 类型
  */
 export async function getConversations(
   userId: string,
-  type?: 'qa' | 'role'
+  type?: ConversationType,
+  typePrefix?: string
 ): Promise<Conversation[]> {
   try {
     let query = supabase
@@ -76,6 +94,8 @@ export async function getConversations(
 
     if (type) {
       query = query.eq('type', type);
+    } else if (typePrefix) {
+      query = query.like('type', `${typePrefix}%`);
     }
 
     const { data, error } = await query;
@@ -182,10 +202,14 @@ export async function deleteConversation(conversationId: string): Promise<boolea
 
 /**
  * 删除所有对话
+ * @param userId 用户ID
+ * @param type 精确匹配的对话类型（可选）
+ * @param typePrefix 类型前缀过滤（可选），例如 'xiaohongshu' 会匹配所有 xiaohongshu-* 类型
  */
 export async function deleteAllConversations(
   userId: string,
-  type?: 'qa' | 'role'
+  type?: ConversationType,
+  typePrefix?: string
 ): Promise<boolean> {
   try {
     let query = supabase
@@ -195,6 +219,8 @@ export async function deleteAllConversations(
 
     if (type) {
       query = query.eq('type', type);
+    } else if (typePrefix) {
+      query = query.like('type', `${typePrefix}%`);
     }
 
     const { error } = await query;
@@ -326,4 +352,30 @@ export function generateConversationTitle(firstMessage: string): string {
     return firstMessage;
   }
   return firstMessage.substring(0, maxLength) + '...';
+}
+
+/**
+ * 根据小红书模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的小红书对话类型
+ */
+export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuType {
+  const templateMap: Record<number, XiaohongshuType> = {
+    101: 'xiaohongshu-travel',        // 旅游攻略
+    102: 'xiaohongshu-copywriting',   // 爆款文案
+    103: 'xiaohongshu-title',         // 爆款标题
+    104: 'xiaohongshu-profile',       // 个人简介
+    105: 'xiaohongshu-seo',           // SEO优化
+    106: 'xiaohongshu-style',         // 风格改写
+    107: 'xiaohongshu-product',       // 产品种草
+    108: 'xiaohongshu-recommendation', // 好物推荐
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的小红书模板ID: ${templateId}，使用默认类型 xiaohongshu-copywriting`);
+    return 'xiaohongshu-copywriting';
+  }
+
+  return type;
 }

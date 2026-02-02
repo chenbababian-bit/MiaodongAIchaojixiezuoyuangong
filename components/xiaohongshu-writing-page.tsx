@@ -33,6 +33,14 @@ import {
   Send,
 } from "lucide-react";
 import { MessageBubble } from "@/components/message-bubble";
+import { supabase } from "@/lib/supabase";
+import {
+  createConversation,
+  getConversations,
+  addMessage,
+  getXiaohongshuTypeByTemplateId,
+  type Conversation as DBConversation,
+} from "@/lib/conversations";
 import {
   Select,
   SelectContent,
@@ -351,6 +359,12 @@ export function XiaohongshuWritingPage() {
   const messagesEndRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLTextAreaElement>(null);
 
+  // 用户认证和历史记录状态
+  const [userId, setUserId] = useState<string | null>(null);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+  const [historyConversations, setHistoryConversations] = useState<DBConversation[]>([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+
   // 根据source参数动态获取模板列表
   const getTemplatesFromSource = () => {
     if (source === "hot") {
@@ -432,6 +446,36 @@ export function XiaohongshuWritingPage() {
       setActiveTemplate(parseInt(templateId));
     }
   }, [templateId]);
+
+  // 获取当前用户
+  useEffect(() => {
+    const getCurrentUser = async () => {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user) {
+        setUserId(user.id);
+      }
+    };
+    getCurrentUser();
+  }, []);
+
+  // 加载历史记录
+  useEffect(() => {
+    const loadHistory = async () => {
+      if (!userId) return;
+
+      setIsLoadingHistory(true);
+      try {
+        const conversations = await getConversations(userId, undefined, 'xiaohongshu');
+        setHistoryConversations(conversations);
+      } catch (error) {
+        console.error('加载历史记录失败:', error);
+      } finally {
+        setIsLoadingHistory(false);
+      }
+    };
+
+    loadHistory();
+  }, [userId]);
 
   const handleExampleClick = (text: string) => {
     setContentInput(text);
@@ -594,6 +638,35 @@ export function XiaohongshuWritingPage() {
 
       // 增加修改次数
       setXiaohongshuModifyCount(prev => prev + 1);
+
+      // 如果用户已登录且没有当前对话ID，自动创建对话并保存
+      if (userId && !currentConversationId) {
+        try {
+          const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
+          const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+          const convId = await createConversation(userId, title, conversationType);
+          setCurrentConversationId(convId);
+
+          // 保存消息到数据库
+          await addMessage(convId, 'user', userContent);
+          await addMessage(convId, 'assistant', data.result);
+
+          // 刷新历史记录列表
+          const conversations = await getConversations(userId, undefined, 'xiaohongshu');
+          setHistoryConversations(conversations);
+        } catch (dbError) {
+          console.error('保存到数据库失败:', dbError);
+          // 不影响用户体验，继续显示结果
+        }
+      } else if (userId && currentConversationId) {
+        // 如果已有对话ID，直接保存消息
+        try {
+          await addMessage(currentConversationId, 'user', userContent);
+          await addMessage(currentConversationId, 'assistant', data.result);
+        } catch (dbError) {
+          console.error('保存消息失败:', dbError);
+        }
+      }
 
       // 滚动到底部
       scrollToBottom();
@@ -1033,6 +1106,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     setXiaohongshuModifyInput("");
     setXiaohongshuModifyCount(0);
     setError("");
+    setCurrentConversationId(null); // 重置对话ID
 
     // 模板102：重置消息列表为欢迎消息
     if (templateId === "102") {
@@ -1264,14 +1338,95 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
               ) : (
                 /* 历史记录 */
                 <ScrollArea className="flex-1">
-                  <div className="flex flex-col items-center justify-center h-full p-6">
-                    <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                      <Calendar className="h-10 w-10 text-muted-foreground/50" />
+                  {isLoadingHistory ? (
+                    <div className="flex flex-col items-center justify-center h-full p-6">
+                      <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+                      <p className="text-sm text-muted-foreground">加载历史记录中...</p>
                     </div>
-                    <p className="text-sm text-muted-foreground">
-                      暂无历史创作记录
-                    </p>
-                  </div>
+                  ) : historyConversations.length > 0 ? (
+                    <div className="p-4 space-y-3">
+                      {historyConversations.map((conversation) => (
+                        <div
+                          key={conversation.id}
+                          className="p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                          onClick={async () => {
+                            // 加载历史对话
+                            try {
+                              const { getConversationWithMessages } = await import('@/lib/conversations');
+                              const conv = await getConversationWithMessages(conversation.id);
+
+                              if (conv && conv.messages) {
+                                // 恢复对话历史
+                                const history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+                                const msgs = conv.messages.map(msg => {
+                                  history.push({
+                                    role: msg.role as 'user' | 'assistant',
+                                    content: msg.content
+                                  });
+                                  return {
+                                    id: msg.id,
+                                    role: msg.role as 'user' | 'assistant',
+                                    content: msg.content,
+                                    isCollapsed: false
+                                  };
+                                });
+
+                                setXiaohongshuConversationHistory(history);
+                                setMessages(msgs);
+                                setCurrentConversationId(conversation.id);
+
+                                // 显示最后一条AI回复
+                                const lastAssistantMsg = conv.messages
+                                  .filter(m => m.role === 'assistant')
+                                  .pop();
+                                if (lastAssistantMsg) {
+                                  const plainText = markdownToPlainText(lastAssistantMsg.content);
+                                  setCurrentResult(plainText);
+                                }
+
+                                // 切换到当前创作结果标签
+                                setResultTab('current');
+                              }
+                            } catch (error) {
+                              console.error('加载对话失败:', error);
+                              alert('加载对话失败，请重试');
+                            }
+                          }}
+                        >
+                          <div className="flex items-start justify-between mb-2">
+                            <h3 className="text-sm font-medium text-foreground line-clamp-1">
+                              {conversation.title}
+                            </h3>
+                            <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                              {new Date(conversation.created_at).toLocaleDateString('zh-CN', {
+                                month: 'numeric',
+                                day: 'numeric',
+                                hour: '2-digit',
+                                minute: '2-digit'
+                              })}
+                            </span>
+                          </div>
+                          <p className="text-xs text-muted-foreground">
+                            点击查看完整对话
+                          </p>
+                        </div>
+                      ))}
+                    </div>
+                  ) : (
+                    <div className="flex flex-col items-center justify-center h-full p-6">
+                      <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                        <Calendar className="h-10 w-10 text-muted-foreground/50" />
+                      </div>
+                      <p className="text-sm text-muted-foreground">
+                        暂无历史创作记录
+                      </p>
+                      {!userId && (
+                        <p className="text-xs text-muted-foreground mt-2">
+                          请先登录以保存和查看历史记录
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </ScrollArea>
               )}
             </div>
@@ -2248,9 +2403,48 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                     <Button
                       size="sm"
                       className="h-8"
-                      onClick={() => {
+                      onClick={async () => {
                         // 保存到历史记录
-                        alert("已保存");
+                        if (!userId) {
+                          alert("请先登录后再保存");
+                          return;
+                        }
+
+                        if (!currentResult) {
+                          alert("没有内容可保存");
+                          return;
+                        }
+
+                        try {
+                          let convId = currentConversationId;
+
+                          // 如果没有当前对话ID，创建新对话
+                          if (!convId) {
+                            const title = currentResult.slice(0, 30) + (currentResult.length > 30 ? '...' : '');
+                            const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+                            convId = await createConversation(userId, title, conversationType);
+                            setCurrentConversationId(convId);
+
+                            // 保存对话历史
+                            for (let i = 0; i < xiaohongshuConversationHistory.length; i += 2) {
+                              const userMsg = xiaohongshuConversationHistory[i];
+                              const assistantMsg = xiaohongshuConversationHistory[i + 1];
+                              if (userMsg && assistantMsg) {
+                                await addMessage(convId, 'user', userMsg.content);
+                                await addMessage(convId, 'assistant', assistantMsg.content);
+                              }
+                            }
+                          }
+
+                          // 刷新历史记录列表
+                          const conversations = await getConversations(userId, undefined, 'xiaohongshu');
+                          setHistoryConversations(conversations);
+
+                          alert("保存成功！");
+                        } catch (error) {
+                          console.error('保存失败:', error);
+                          alert("保存失败，请重试");
+                        }
                       }}
                     >
                       <Save className="h-4 w-4 mr-1" />
@@ -2281,14 +2475,99 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           ) : (
             // 历史创作结果
             <ScrollArea className="h-full">
-              <div className="flex flex-col items-center justify-center h-full p-6">
-                <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                  <Calendar className="h-10 w-10 text-muted-foreground/50" />
+              {isLoadingHistory ? (
+                <div className="flex flex-col items-center justify-center h-full p-6">
+                  <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+                  <p className="text-sm text-muted-foreground">加载历史记录中...</p>
                 </div>
-                <p className="text-sm text-muted-foreground">
-                  暂无历史创作记录
-                </p>
-              </div>
+              ) : historyConversations.length > 0 ? (
+                <div className="p-4 space-y-3">
+                  {historyConversations.map((conversation) => (
+                    <div
+                      key={conversation.id}
+                      className="p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+                      onClick={async () => {
+                        // 加载历史对话
+                        try {
+                          const { getConversationWithMessages } = await import('@/lib/conversations');
+                          const conv = await getConversationWithMessages(conversation.id);
+
+                          if (conv && conv.messages) {
+                            // 恢复对话历史
+                            const history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+                            conv.messages.forEach(msg => {
+                              history.push({
+                                role: msg.role as 'user' | 'assistant',
+                                content: msg.content
+                              });
+                            });
+                            setXiaohongshuConversationHistory(history);
+
+                            // 恢复消息列表(模板102)
+                            if (templateId === "102") {
+                              const msgs = conv.messages.map(msg => ({
+                                id: msg.id,
+                                role: msg.role as 'user' | 'assistant',
+                                content: msg.content,
+                                isCollapsed: false
+                              }));
+                              setMessages(msgs);
+                            }
+
+                            // 设置当前对话ID
+                            setCurrentConversationId(conversation.id);
+
+                            // 显示最后一条AI回复
+                            const lastAssistantMsg = conv.messages
+                              .filter(m => m.role === 'assistant')
+                              .pop();
+                            if (lastAssistantMsg) {
+                              setCurrentResult(lastAssistantMsg.content);
+                            }
+
+                            // 切换到当前创作结果标签
+                            setResultTab('current');
+                          }
+                        } catch (error) {
+                          console.error('加载对话失败:', error);
+                          alert('加载对话失败，请重试');
+                        }
+                      }}
+                    >
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="text-sm font-medium text-foreground line-clamp-1">
+                          {conversation.title}
+                        </h3>
+                        <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                          {new Date(conversation.created_at).toLocaleDateString('zh-CN', {
+                            month: 'numeric',
+                            day: 'numeric',
+                            hour: '2-digit',
+                            minute: '2-digit'
+                          })}
+                        </span>
+                      </div>
+                      <p className="text-xs text-muted-foreground">
+                        点击查看完整对话
+                      </p>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <div className="flex flex-col items-center justify-center h-full p-6">
+                  <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                    <Calendar className="h-10 w-10 text-muted-foreground/50" />
+                  </div>
+                  <p className="text-sm text-muted-foreground">
+                    暂无历史创作记录
+                  </p>
+                  {!userId && (
+                    <p className="text-xs text-muted-foreground mt-2">
+                      请先登录以保存和查看历史记录
+                    </p>
+                  )}
+                </div>
+              )}
             </ScrollArea>
           )}
         </div>

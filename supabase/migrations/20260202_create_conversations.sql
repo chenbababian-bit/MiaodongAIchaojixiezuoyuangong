@@ -14,7 +14,18 @@ CREATE TABLE IF NOT EXISTS conversations (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
   title TEXT NOT NULL,
-  type TEXT NOT NULL CHECK (type IN ('qa', 'role')),
+  type TEXT NOT NULL CHECK (type IN (
+    'qa',
+    'role',
+    'xiaohongshu-travel',
+    'xiaohongshu-copywriting',
+    'xiaohongshu-title',
+    'xiaohongshu-profile',
+    'xiaohongshu-seo',
+    'xiaohongshu-style',
+    'xiaohongshu-product',
+    'xiaohongshu-recommendation'
+  )),
   created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
   updated_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
