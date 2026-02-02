@@ -381,12 +381,11 @@ class DatabaseAdapter implements StorageAdapter {
 
 /**
  * 存储管理器
- * 根据环境变量和用户登录状态自动选择合适的存储适配器
+ * 根据环境变量控制存储方式
  *
- * 智能降级策略：
- * 1. 如果配置使用数据库且用户已登录 → 使用数据库存储
- * 2. 如果配置使用数据库但用户未登录 → 降级到本地存储
- * 3. 如果配置使用本地存储 → 使用本地存储
+ * 存储策略：
+ * 1. 如果配置使用数据库 → 强制使用数据库存储（需要登录）
+ * 2. 如果配置使用本地存储 → 使用本地存储（无需登录）
  */
 class HistoryStorageManager {
   private databaseAdapter: DatabaseAdapter;
@@ -399,7 +398,7 @@ class HistoryStorageManager {
     // 生产环境：USE_DATABASE=true
     this.useDatabase = process.env.NEXT_PUBLIC_USE_DATABASE === 'true';
 
-    // 初始化两个适配器，根据情况动态选择
+    // 初始化适配器
     this.databaseAdapter = new DatabaseAdapter();
     this.localAdapter = new LocalStorageAdapter();
 
@@ -408,39 +407,22 @@ class HistoryStorageManager {
       this.localAdapter.migrateHistoryIds();
     }
 
-    console.log(`📊 存储配置: ${this.useDatabase ? '数据库优先（未登录时降级到本地）' : '本地存储'}`);
+    console.log(`📊 存储配置: ${this.useDatabase ? '云端数据库存储（需要登录）' : '本地存储'}`);
   }
 
   /**
    * 获取当前应该使用的适配器
-   * 如果配置使用数据库，先检查用户是否登录
-   * 未登录时自动降级到本地存储
+   * 如果配置使用数据库，直接返回数据库适配器（需要登录）
+   * 如果配置使用本地存储，返回本地存储适配器
    */
   private async getAdapter(): Promise<StorageAdapter> {
     if (!this.useDatabase) {
       return this.localAdapter;
     }
 
-    // 检查用户是否登录
-    try {
-      if (typeof window === 'undefined') {
-        return this.localAdapter;
-      }
-
-      const { supabase } = await import('@/lib/supabase');
-      const { data: { session } } = await supabase.auth.getSession();
-
-      if (session?.access_token) {
-        console.log('✅ 用户已登录，使用数据库存储');
-        return this.databaseAdapter;
-      } else {
-        console.log('⚠️ 用户未登录，降级到本地存储');
-        return this.localAdapter;
-      }
-    } catch (error) {
-      console.warn('检查登录状态失败，降级到本地存储:', error);
-      return this.localAdapter;
-    }
+    // 使用数据库存储，直接返回数据库适配器
+    // DatabaseAdapter 内部会处理未登录的情况（抛出401错误）
+    return this.databaseAdapter;
   }
 
   // 获取指定模板的历史记录
