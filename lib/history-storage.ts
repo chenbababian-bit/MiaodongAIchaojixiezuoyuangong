@@ -381,34 +381,72 @@ class DatabaseAdapter implements StorageAdapter {
 
 /**
  * 存储管理器
- * 根据环境变量自动选择合适的存储适配器
+ * 根据环境变量和用户登录状态自动选择合适的存储适配器
+ *
+ * 智能降级策略：
+ * 1. 如果配置使用数据库且用户已登录 → 使用数据库存储
+ * 2. 如果配置使用数据库但用户未登录 → 降级到本地存储
+ * 3. 如果配置使用本地存储 → 使用本地存储
  */
 class HistoryStorageManager {
-  private adapter: StorageAdapter;
+  private databaseAdapter: DatabaseAdapter;
+  private localAdapter: LocalStorageAdapter;
+  private useDatabase: boolean;
 
   constructor() {
     // 通过环境变量控制存储方式
     // 本地测试：USE_DATABASE=false 或不设置
     // 生产环境：USE_DATABASE=true
-    const useDatabase = process.env.NEXT_PUBLIC_USE_DATABASE === 'true';
+    this.useDatabase = process.env.NEXT_PUBLIC_USE_DATABASE === 'true';
 
-    if (useDatabase) {
-      console.log('📊 使用数据库存储历史记录');
-      this.adapter = new DatabaseAdapter();
-    } else {
-      console.log('💾 使用本地存储历史记录');
-      this.adapter = new LocalStorageAdapter();
+    // 初始化两个适配器，根据情况动态选择
+    this.databaseAdapter = new DatabaseAdapter();
+    this.localAdapter = new LocalStorageAdapter();
 
-      // 立即执行历史记录ID迁移（不延迟）
-      if (typeof window !== 'undefined') {
-        (this.adapter as LocalStorageAdapter).migrateHistoryIds();
+    // 立即执行历史记录ID迁移（不延迟）
+    if (typeof window !== 'undefined') {
+      this.localAdapter.migrateHistoryIds();
+    }
+
+    console.log(`📊 存储配置: ${this.useDatabase ? '数据库优先（未登录时降级到本地）' : '本地存储'}`);
+  }
+
+  /**
+   * 获取当前应该使用的适配器
+   * 如果配置使用数据库，先检查用户是否登录
+   * 未登录时自动降级到本地存储
+   */
+  private async getAdapter(): Promise<StorageAdapter> {
+    if (!this.useDatabase) {
+      return this.localAdapter;
+    }
+
+    // 检查用户是否登录
+    try {
+      if (typeof window === 'undefined') {
+        return this.localAdapter;
       }
+
+      const { supabase } = await import('@/lib/supabase');
+      const { data: { session } } = await supabase.auth.getSession();
+
+      if (session?.access_token) {
+        console.log('✅ 用户已登录，使用数据库存储');
+        return this.databaseAdapter;
+      } else {
+        console.log('⚠️ 用户未登录，降级到本地存储');
+        return this.localAdapter;
+      }
+    } catch (error) {
+      console.warn('检查登录状态失败，降级到本地存储:', error);
+      return this.localAdapter;
     }
   }
 
   // 获取指定模板的历史记录
   async getHistory(templateId: string): Promise<HistoryItem[]> {
-    return this.adapter.getHistory(templateId);
+    const adapter = await this.getAdapter();
+    return adapter.getHistory(templateId);
   }
 
   // 添加历史记录
@@ -421,7 +459,8 @@ class HistoryStorageManager {
     // 规范化模板ID
     const canonicalId = normalizeTemplateId(templateId);
 
-    return this.adapter.addHistory({
+    const adapter = await this.getAdapter();
+    return adapter.addHistory({
       templateId: canonicalId,
       templateTitle,
       content,
@@ -431,17 +470,20 @@ class HistoryStorageManager {
 
   // 删除历史记录
   async deleteHistory(id: number): Promise<void> {
-    return this.adapter.deleteHistory(id);
+    const adapter = await this.getAdapter();
+    return adapter.deleteHistory(id);
   }
 
   // 清空指定模板的历史记录
   async clearHistory(templateId: string): Promise<void> {
-    return this.adapter.clearHistory(templateId);
+    const adapter = await this.getAdapter();
+    return adapter.clearHistory(templateId);
   }
 
   // 获取所有历史记录
   async getAllHistory(): Promise<HistoryItem[]> {
-    return this.adapter.getAllHistory();
+    const adapter = await this.getAdapter();
+    return adapter.getAllHistory();
   }
 }
 
