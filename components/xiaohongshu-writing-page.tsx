@@ -1144,7 +1144,14 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
 
               {/* 右侧：文本编辑器标题 + 复制 */}
               <div className="flex items-center gap-2">
-                <span className="text-sm font-medium text-muted-foreground">文本编辑器</span>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  onClick={() => router.push('/longtext')}
+                  className="text-sm font-medium text-muted-foreground hover:text-foreground"
+                >
+                  文本编辑器
+                </Button>
                 <Button
                   variant="outline"
                   size="sm"
