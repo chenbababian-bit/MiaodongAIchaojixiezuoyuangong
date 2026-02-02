@@ -32,7 +32,6 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
-import { historyStorage, HistoryItem } from "@/lib/history-storage";
 import { videoContentTemplates } from "@/lib/video-templates";
 
 // 顶部筛选标签
@@ -98,7 +97,6 @@ export function VideoWritingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentResult, setCurrentResult] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
 
   // 根据 URL 参数更新活动模板
@@ -106,20 +104,6 @@ export function VideoWritingPage() {
     if (templateId) {
       setActiveTemplate(parseInt(templateId));
     }
-  }, [templateId]);
-
-  // 加载历史记录
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const historyData = await historyStorage.getHistory(templateId);
-        setHistory(historyData);
-      } catch (error) {
-        console.error("加载历史记录失败:", error);
-      }
-    };
-
-    loadHistory();
   }, [templateId]);
 
   const handleExampleClick = (text: string) => {
@@ -159,19 +143,6 @@ export function VideoWritingPage() {
       }
 
       setCurrentResult(data.result);
-
-      // 添加到历史记录
-      try {
-        const newHistoryItem = await historyStorage.addHistory(
-          templateId,
-          templateTitle,
-          contentInput,
-          data.result
-        );
-        setHistory((prev) => [newHistoryItem, ...prev]);
-      } catch (historyError) {
-        console.error("保存历史记录失败:", historyError);
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "创作失败,请重试");
     } finally {
@@ -188,32 +159,6 @@ export function VideoWritingPage() {
     } catch (err) {
       console.error("复制失败:", err);
     }
-  };
-
-  // 删除历史记录
-  const handleDeleteHistory = async (id: number) => {
-    try {
-      await historyStorage.deleteHistory(id);
-      setHistory((prev) => prev.filter((item) => item.id !== id));
-    } catch (error) {
-      console.error("删除历史记录失败:", error);
-    }
-  };
-
-  // 加载历史记录到编辑器
-  const handleLoadHistory = (item: HistoryItem) => {
-    setCurrentResult(item.result);
-    setResultTab("current");
-  };
-
-  // 格式化时间
-  const formatTime = (date: Date) => {
-    return date.toLocaleString("zh-CN", {
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   // 根据source参数判断返回路径
@@ -624,73 +569,14 @@ export function VideoWritingPage() {
           ) : (
             // 历史创作结果
             <ScrollArea className="h-full">
-              {history.length > 0 ? (
-                <div className="p-4 space-y-4">
-                  {history.map((item) => (
-                    <div
-                      key={item.id}
-                      className="border border-border rounded-lg p-4 hover:border-primary/30 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-muted-foreground">
-                          {formatTime(item.timestamp)}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLoadHistory(item);
-                            }}
-                          >
-                            <FileText className="h-3 w-3 mr-1" />
-                            加载
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCopy(item.result);
-                            }}
-                          >
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-destructive hover:text-destructive"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteHistory(item.id);
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                      <p className="text-sm text-foreground font-medium mb-1 line-clamp-1">
-                        {item.content}
-                      </p>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {item.result.substring(0, 100)}...
-                      </p>
-                    </div>
-                  ))}
+              <div className="flex flex-col items-center justify-center h-full p-6">
+                <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                  <Calendar className="h-10 w-10 text-muted-foreground/50" />
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-6">
-                  <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                    <Calendar className="h-10 w-10 text-muted-foreground/50" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    暂无历史创作记录
-                  </p>
-                </div>
-              )}
+                <p className="text-sm text-muted-foreground">
+                  暂无历史创作记录
+                </p>
+              </div>
             </ScrollArea>
           )}
         </div>

@@ -42,7 +42,6 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
-import { historyStorage, HistoryItem } from "@/lib/history-storage";
 import {
   xiaohongshuTemplates,
   wechatTemplates,
@@ -270,7 +269,6 @@ export function XiaohongshuWritingPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [currentResult, setCurrentResult] = useState<string>("");
   const [error, setError] = useState<string>("");
-  const [history, setHistory] = useState<HistoryItem[]>([]);
   const [copied, setCopied] = useState(false);
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0); // 当前示例索引
 
@@ -433,20 +431,6 @@ export function XiaohongshuWritingPage() {
     if (templateId) {
       setActiveTemplate(parseInt(templateId));
     }
-  }, [templateId]);
-
-  // 加载历史记录
-  useEffect(() => {
-    const loadHistory = async () => {
-      try {
-        const historyData = await historyStorage.getHistory(templateId);
-        setHistory(historyData);
-      } catch (error) {
-        console.error('加载历史记录失败:', error);
-      }
-    };
-
-    loadHistory();
   }, [templateId]);
 
   const handleExampleClick = (text: string) => {
@@ -613,19 +597,6 @@ export function XiaohongshuWritingPage() {
 
       // 滚动到底部
       scrollToBottom();
-
-      // 保存到历史记录
-      await historyStorage.addHistory(
-        templateId,
-        templateTitle,
-        userContent,
-        data.result
-      );
-
-      // 重新加载历史记录
-      const historyData = await historyStorage.getHistory(templateId);
-      setHistory(historyData);
-
 
     } catch (err) {
       setError(err instanceof Error ? err.message : "发送失败，请重试");
@@ -1028,37 +999,6 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
         // 清空修改输入
         setXiaohongshuModifyInput("");
       }
-
-      // 添加到历史记录
-      try {
-        const contentForHistory = templateId === "101"
-          ? `${travelDestination} | ${travelCompanion} | ${travelDays}天 | ${travelStyle}`
-          : templateId === "104"
-          ? `${profileCareer} | ${profileContent} | ${profileAudience}`
-          : templateId === "105"
-          ? `${seoContentType} | ${seoFansCount}粉丝 | ${seoPainPoints.length}个痛点`
-          : templateId === "106"
-          ? `${styleTheme} | ${styleAudience} | ${styleType}`
-          : templateId === "107"
-          ? `${productName || productCategory} | ${productAudience || "通用"} | ${productScene || "日常使用"}`
-          : templateId === "108"
-          ? `${recommendProductName || recommendProductCategory} | ${recommendTargetAudience || "通用"} | ${recommendStyle || "真诚分享"}`
-          : (templateId === "109" || templateId === "201" || templateId === "204")
-          ? `${articleTheme}${articleFollowUp ? " | 追问: " + articleFollowUp.substring(0, 20) + "..." : ""}`
-          : contentInput;
-
-        const newHistoryItem = await historyStorage.addHistory(
-          templateId,
-          templateTitle,
-          contentForHistory,
-          data.result
-        );
-        setHistory((prev) => [newHistoryItem, ...prev]);
-      } catch (historyError) {
-        console.error('保存历史记录失败:', historyError);
-        // 显示历史记录保存失败的错误
-        setError(historyError instanceof Error ? historyError.message : "添加历史记录失败");
-      }
     } catch (err) {
       setError(err instanceof Error ? err.message : "创作失败，请重试");
     } finally {
@@ -1142,32 +1082,6 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     setRecommendTargetAudience("");
     setRecommendStyle("");
     setRecommendExtraInfo("");
-  };
-
-  // 删除历史记录
-  const handleDeleteHistory = async (id: number) => {
-    try {
-      await historyStorage.deleteHistory(id);
-      setHistory((prev) => prev.filter((item) => item.id !== id));
-    } catch (error) {
-      console.error('删除历史记录失败:', error);
-    }
-  };
-
-  // 加载历史记录到编辑器
-  const handleLoadHistory = (item: HistoryItem) => {
-    setCurrentResult(item.result);
-    setResultTab("current");
-  };
-
-  // 格式化时间
-  const formatTime = (date: Date) => {
-    return date.toLocaleString("zh-CN", {
-      month: "2-digit",
-      day: "2-digit",
-      hour: "2-digit",
-      minute: "2-digit",
-    });
   };
 
   // 根据source参数判断返回路径
@@ -1343,50 +1257,14 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
               ) : (
                 /* 历史记录 */
                 <ScrollArea className="flex-1">
-                  {history.length > 0 ? (
-                    <div className="p-4 space-y-3">
-                      {history.map((item) => (
-                        <div
-                          key={item.id}
-                          className="border border-border rounded-lg p-3 hover:bg-muted/50 transition-colors cursor-pointer"
-                          onClick={() => {
-                            handleLoadHistory(item);
-                            setResultTab("current");
-                          }}
-                        >
-                          <div className="flex items-start justify-between mb-2">
-                            <span className="text-xs text-muted-foreground">
-                              {formatTime(item.timestamp)}
-                            </span>
-                            <button
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                handleDeleteHistory(item.id);
-                              }}
-                              className="text-muted-foreground hover:text-destructive transition-colors"
-                            >
-                              <X className="h-3 w-3" />
-                            </button>
-                          </div>
-                          <p className="text-sm text-foreground line-clamp-2 mb-2">
-                            {item.content}
-                          </p>
-                          <p className="text-xs text-muted-foreground line-clamp-2">
-                            {item.result.substring(0, 100)}...
-                          </p>
-                        </div>
-                      ))}
+                  <div className="flex flex-col items-center justify-center h-full p-6">
+                    <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                      <Calendar className="h-10 w-10 text-muted-foreground/50" />
                     </div>
-                  ) : (
-                    <div className="flex flex-col items-center justify-center h-full p-6">
-                      <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                        <Calendar className="h-10 w-10 text-muted-foreground/50" />
-                      </div>
-                      <p className="text-sm text-muted-foreground">
-                        暂无历史创作记录
-                      </p>
-                    </div>
-                  )}
+                    <p className="text-sm text-muted-foreground">
+                      暂无历史创作记录
+                    </p>
+                  </div>
                 </ScrollArea>
               )}
             </div>
@@ -2396,73 +2274,14 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
           ) : (
             // 历史创作结果
             <ScrollArea className="h-full">
-              {history.length > 0 ? (
-                <div className="p-4 space-y-4">
-                  {history.map((item) => (
-                    <div
-                      key={item.id}
-                      className="border border-border rounded-lg p-4 hover:border-primary/30 transition-colors"
-                    >
-                      <div className="flex items-center justify-between mb-2">
-                        <span className="text-xs text-muted-foreground">
-                          {formatTime(item.timestamp)}
-                        </span>
-                        <div className="flex items-center gap-1">
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleLoadHistory(item);
-                            }}
-                          >
-                            <FileText className="h-3 w-3 mr-1" />
-                            加载
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleCopy(item.result);
-                            }}
-                          >
-                            <Copy className="h-3 w-3" />
-                          </Button>
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="h-6 px-2 text-destructive hover:text-destructive"
-                            onClick={(e) => {
-                              e.stopPropagation();
-                              handleDeleteHistory(item.id);
-                            }}
-                          >
-                            <X className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                      <p className="text-sm text-foreground font-medium mb-1 line-clamp-1">
-                        {item.content}
-                      </p>
-                      <p className="text-xs text-muted-foreground line-clamp-2">
-                        {item.result.substring(0, 100)}...
-                      </p>
-                    </div>
-                  ))}
+              <div className="flex flex-col items-center justify-center h-full p-6">
+                <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
+                  <Calendar className="h-10 w-10 text-muted-foreground/50" />
                 </div>
-              ) : (
-                <div className="flex flex-col items-center justify-center h-full p-6">
-                  <div className="w-24 h-24 mx-auto mb-4 bg-muted rounded-lg flex items-center justify-center">
-                    <Calendar className="h-10 w-10 text-muted-foreground/50" />
-                  </div>
-                  <p className="text-sm text-muted-foreground">
-                    暂无历史创作记录
-                  </p>
-                </div>
-              )}
+                <p className="text-sm text-muted-foreground">
+                  暂无历史创作记录
+                </p>
+              </div>
             </ScrollArea>
           )}
         </div>
