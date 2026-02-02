@@ -1147,7 +1147,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 <Button
                   variant="ghost"
                   size="sm"
-                  onClick={() => router.push('/longtext')}
+                  onClick={() => setResultTab("current")}
                   className="text-sm font-medium text-muted-foreground hover:text-foreground"
                 >
                   文本编辑器
