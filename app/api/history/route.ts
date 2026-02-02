@@ -91,7 +91,7 @@ export async function POST(request: NextRequest) {
 
     // 解析请求体
     const body = await request.json()
-    const { templateId, templateTitle, content, result } = body
+    const { templateId, templateTitle, content, result, conversations } = body
 
     // 验证必填字段
     if (!templateId || !templateTitle || !content || !result) {
@@ -101,23 +101,32 @@ export async function POST(request: NextRequest) {
       )
     }
 
+    // 构建插入数据
+    const insertData: any = {
+      user_id: user.id,
+      template_id: templateId,
+      template_title: templateTitle,
+      content,
+      result,
+    }
+
+    // 如果有 conversations 字段，也插入（可选）
+    if (conversations) {
+      insertData.conversations = conversations
+    }
+
     // 插入历史记录
     const { data, error } = await supabase
       .from('writing_history')
-      .insert({
-        user_id: user.id,
-        template_id: templateId,
-        template_title: templateTitle,
-        content,
-        result,
-      })
+      .insert(insertData)
       .select()
       .single()
 
     if (error) {
       console.error('添加历史记录失败:', error)
+      console.error('错误详情:', JSON.stringify(error, null, 2))
       return NextResponse.json(
-        { error: '添加历史记录失败' },
+        { error: '添加历史记录失败', details: error.message },
         { status: 500 }
       )
     }
