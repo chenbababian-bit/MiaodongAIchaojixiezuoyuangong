@@ -170,8 +170,19 @@ const getExamplePrompts = (templateId: string): string[] => {
   return examplePromptsByTemplate[templateId] || examplePromptsByTemplate["default"];
 };
 
-// 小红书模板102的AI欢迎消息
-const XIAOHONGSHU_WELCOME_MESSAGE = `👋 你好呀！我是你的小红书爆款文案大师，拥有50年内容创作经验，已经帮助无数创作者打造出10w+点赞的爆款笔记。我擅长洞悉用户心理，深谙流量密码，高转化的优质文案！✨
+// 小红书8个子类型的AI欢迎消息
+// 101: 旅游攻略
+const XIAOHONGSHU_TRAVEL_WELCOME = `👋 你好呀！我是你的小红书爆款旅游攻略架构师，不仅是一名旅游爱好者，更是一位精通小红书流量密码的内容架构师。我擅长将平淡的旅行经历转化为具有高情绪价值、强视觉冲击力和高收藏率的种草笔记。✨
+
+准备好了吗？让我们一起打造下一篇万赞笔记吧！🌟
+
+请告诉我：
+1. 📍 **目的地 & 预算**：想去哪？大概预算多少？
+2. 👥 **人物 & 天数**：和谁去？玩几天？（情侣/闺蜜/亲子/独狼）
+3. 🎨 **风格偏好**：想要【极致省钱干货】还是【氛围感大片文案】？`;
+
+// 102: 爆款文案
+const XIAOHONGSHU_COPYWRITING_WELCOME = `👋 你好呀！我是你的小红书爆款文案大师，拥有50年内容创作经验，已经帮助无数创作者打造出10w+点赞的爆款笔记。我擅长洞悉用户心理，深谙流量密码，高转化的优质文案！✨
 
 请告诉我：
 1. 你想创作什么主题的小红书笔记？
@@ -179,6 +190,118 @@ const XIAOHONGSHU_WELCOME_MESSAGE = `👋 你好呀！我是你的小红书爆�
 3. 你希望达到什么效果？
 
 我会为你量身定制爆款文案！🚀`;
+
+// 103: 爆款标题
+const XIAOHONGSHU_TITLE_WELCOME = `👋 你好呀！我是你的小红书爆款标题大师，拥有50年的标题创作经验，帮助过无数创作者打造出10w+阅读的爆款笔记！
+
+💡 **我能帮你做什么：**
+- ✨ 创作吸睛的爆款标题，提升点击率和曝光量
+- 📊 分析标题背后的流量密码和心理学原理
+- 🎯 针对不同赛道提供定制化标题策略
+- 🔧 优化现有标题，避开限流风险
+- 📚 教你建立标题创作思维体系
+
+**我的工作流程：**
+1️⃣ 先了解你的内容主题、目标人群和账号定位
+2️⃣ 为你创作3-5个不同风格的标题方案
+3️⃣ 详细讲解每个标题的创作技巧和预期效果
+4️⃣ 根据你的反馈持续优化，直到满意为止
+5️⃣ 附赠内容创作和运营建议，让标题与内容完美配合
+
+现在，请告诉我你想创作什么类型的内容？或者有什么标题需求？让我们一起打造爆款吧！🚀`;
+
+// 104: 账号简介
+const XIAOHONGSHU_PROFILE_WELCOME = `👋 你好呀！我是你的小红书简介优化大师，专注小红书个人IP打造的文案策划专家。我精通用户心理与平台算法，擅长将复杂的个人背景浓缩成一句话记忆点，让你的账号简介成为涨粉利器！✨
+
+在小红书这个内容竞争激烈的平台上，账号简介是用户决定是否关注你的关键3秒。数据显示，一个优质的简介能让关注转化率提升40%以上。
+
+我会为你提供3-5条不同风格的简介方案（亲和型/专业型/个性型/故事型），确保每条文案都符合"3秒看懂、5秒记住、想点关注"的标准。
+
+请告诉我：
+1. 👤 **职业/身份**：你是做什么的？
+2. 📝 **内容方向**：你主要分享什么内容？
+3. 💡 **特殊技能/经历**：有什么特别的经历或技能吗？（可选）
+4. 🎯 **目标粉丝**：你想吸引什么样的粉丝？
+5. ✨ **理想人设**：你希望给人什么样的印象？`;
+
+// 105: SEO关键词布局
+const XIAOHONGSHU_SEO_WELCOME = `👋 你好呀！我是你的小红书SEO关键词布局专家，专注于帮助创作者通过科学的关键词策略提升笔记曝光量和搜索排名！✨
+
+我能帮你解决：
+- 📈 笔记曝光量低，自然流量少
+- 🔍 搜索来源占比不到10%
+- 🎯 某些关键词想做但一直排不上去
+- ❓ 不知道该布局哪些关键词
+- 🔧 写好的笔记不知道如何优化
+
+请告诉我你的账号基本信息：
+1️⃣ **账号基本信息**：
+   - 内容类型（美妆/穿搭/美食/旅行等）
+   - 粉丝数
+   - 平均互动量
+   - 运营时长
+   - 发布频率
+
+2️⃣ **当前核心痛点**：你目前遇到的主要问题是什么？
+
+3️⃣ **优化目标**：你希望达到什么效果？（例如：月涨粉1000、核心词排进前5等）`;
+
+// 106: 风格改写
+const XIAOHONGSHU_STYLE_WELCOME = `哈喽！我是你的**小红书爆款内容操盘手** 🚀
+
+别让你的好内容被埋没！不管是**干货种草** 🌱、**情绪宣泄** 💢 还是 **硬核科普** 🧠，我都能帮你把流量拿捏得死死的。
+
+👉 **请告诉我你想写什么？**
+1. 📝 **主题/核心卖点**：你想写什么内容？
+2. 🎯 **目标受众**：你的目标读者是谁？
+3. 🎨 **期望风格**：你想要什么风格？
+   - 闺蜜夜话风（软萌亲切，适合美妆/情感）
+   - 清醒大女主风（犀利金句，适合职场/成长）
+   - 硬核极客风（参数对比，适合数码/家电）
+   - 发疯文学风（情绪夸张，适合吐槽/搞笑）
+4. 📄 **草稿内容**（可选）：如果你已经有初稿，可以粘贴给我，我来帮你优化排版和风格
+
+或者直接丢给我一段草稿，我来帮你'整容'！✨`;
+
+// 107: 产品种草
+const XIAOHONGSHU_PRODUCT_WELCOME = `嗨呀！我是你的小红书爆款文案搭子 🎯✨
+
+**我能帮你做什么？**
+把产品变成让人忍不住点赞收藏的种草笔记！无论是美妆护肤、数码家电还是生活好物，我都能写出让人心动下单的文案～
+
+**开始之前，请告诉我：**
+1. 📦 **产品名称**：你要种草什么产品？
+2. 🏷️ **产品品类**：属于什么类别？（美妆护肤/数码家电/生活好物等）
+3. 🎨 **品牌**：什么品牌？
+4. 💰 **价格区间**：大概什么价位？
+5. ⭐ **核心卖点**：产品最牛的3个优势是什么？
+6. 👥 **目标人群**：想推荐给谁？（学生党/上班族/宝妈等）
+7. 🎯 **使用场景**：什么时候用？解决什么问题？
+
+💬 **提示：**生成文案后，你可以继续提问进行优化哦～`;
+
+// 108: 好物推荐
+const XIAOHONGSHU_RECOMMENDATION_WELCOME = `哈喽宝子们！👋 我是你们的 **小红书爆款种草专家** 呱呱！✨
+
+不管你是想推 **美妆神仙水** 🧴、**硬核黑科技** 💻，还是 **家居好物** 🛋️，我都能帮你把草种到用户的心坎里！🌱
+
+快告诉我你要推什么？
+1. 📦 **产品是什么？**（最好带上核心卖点，越细越好！）
+   - 产品名称
+   - 所属赛道（美妆/数码/家居/食品等）
+   - 核心卖点
+
+2. 👥 **想推给谁看？**（学生党？打工人？精致妈妈？）
+
+3. 🎨 **希望什么风格？**
+   - 真诚分享（像闺蜜一样唠嗑）
+   - 硬核测评（专业大神测评）
+   - 搞笑吐槽（幽默风趣）
+
+💬 **提示：**生成文案后，你可以继续提问进行优化哦～`;
+
+// 保留旧的常量名以兼容现有代码
+const XIAOHONGSHU_WELCOME_MESSAGE = XIAOHONGSHU_COPYWRITING_WELCOME;
 
 // 旧的示例提问（保留用于兼容）
 const examplePrompts = [
@@ -280,74 +403,7 @@ export function XiaohongshuWritingPage() {
   const [copied, setCopied] = useState(false);
   const [currentExampleIndex, setCurrentExampleIndex] = useState(0); // 当前示例索引
 
-  // 旅游攻略专用表单状态
-  const [travelDestination, setTravelDestination] = useState("");
-  const [travelBudget, setTravelBudget] = useState("");
-  const [travelCompanion, setTravelCompanion] = useState("");
-  const [travelDays, setTravelDays] = useState("");
-  const [travelStyle, setTravelStyle] = useState("");
-
-  // 账号简介专用表单状态
-  const [profileCareer, setProfileCareer] = useState(""); // 职业/身份
-  const [profileContent, setProfileContent] = useState(""); // 内容方向
-  const [profileSkills, setProfileSkills] = useState(""); // 特殊技能/经历
-  const [profileAudience, setProfileAudience] = useState(""); // 目标粉丝
-  const [profilePersona, setProfilePersona] = useState(""); // 理想人设
-
-  // SEO关键词布局专用表单状态
-  const [seoContentType, setSeoContentType] = useState(""); // 内容类型
-  const [seoFansCount, setSeoFansCount] = useState(""); // 粉丝数
-  const [seoInteractionRate, setSeoInteractionRate] = useState(""); // 平均互动量
-  const [seoOperationTime, setSeoOperationTime] = useState(""); // 运营时长
-  const [seoPostFrequency, setSeoPostFrequency] = useState(""); // 发布频率
-  const [seoPainPoints, setSeoPainPoints] = useState<string[]>([]); // 核心痛点(多选)
-  const [seoGoal, setSeoGoal] = useState(""); // 优化目标
-
-  // 小红书风格排版专用表单状态
-  const [styleTheme, setStyleTheme] = useState(""); // 主题/核心卖点
-  const [styleAudience, setStyleAudience] = useState(""); // 目标受众
-  const [styleType, setStyleType] = useState(""); // 期望风格
-  const [styleDraft, setStyleDraft] = useState(""); // 草稿内容（可选）
-
-  // 产品种草笔记专用表单状态
-  const [productName, setProductName] = useState(""); // 产品名称
-  const [productCategory, setProductCategory] = useState(""); // 产品品类
-  const [productBrand, setProductBrand] = useState(""); // 品牌
-  const [productPrice, setProductPrice] = useState(""); // 价格区间
-  const [productFeatures, setProductFeatures] = useState(""); // 核心卖点
-  const [productAudience, setProductAudience] = useState(""); // 目标人群
-  const [productScene, setProductScene] = useState(""); // 使用场景
-  const [productRequirements, setProductRequirements] = useState(""); // 特殊要求（可选）
-
-  // 好物推荐专用表单状态
-  const [recommendProductName, setRecommendProductName] = useState(""); // 产品名称
-  const [recommendProductCategory, setRecommendProductCategory] = useState(""); // 产品赛道
-  const [recommendProductFeatures, setRecommendProductFeatures] = useState(""); // 核心卖点
-  const [recommendTargetAudience, setRecommendTargetAudience] = useState(""); // 目标人群
-  const [recommendStyle, setRecommendStyle] = useState(""); // 期望风格
-  const [recommendExtraInfo, setRecommendExtraInfo] = useState(""); // 补充信息（可选）
-
-  // 公众号文章专用表单状态
-  const [articleTheme, setArticleTheme] = useState(""); // 文章主题
-  const [articleFollowUp, setArticleFollowUp] = useState(""); // 追问/补充要求（可选）
-
-  // 公众号文章对话历史状态
-  const [articleConversationHistory, setArticleConversationHistory] = useState<
-    Array<{ role: "user" | "assistant"; content: string }>
-  >([]);
-
-  // 小红书模板对话历史状态
-  const [xiaohongshuConversationHistory, setXiaohongshuConversationHistory] = useState<
-    Array<{ role: "user" | "assistant"; content: string }>
-  >([]);
-
-  // 小红书模板修改内容输入
-  const [xiaohongshuModifyInput, setXiaohongshuModifyInput] = useState("");
-
-  // 小红书模板修改轮次计数（最多3轮）
-  const [xiaohongshuModifyCount, setXiaohongshuModifyCount] = useState(0);
-
-  // 小红书模板102对话框专用状态
+  // 统一的对话框状态（所有小红书子类型共用）
   const [messages, setMessages] = useState<Array<{
     id: string;
     role: 'user' | 'assistant';
@@ -465,7 +521,9 @@ export function XiaohongshuWritingPage() {
 
       setIsLoadingHistory(true);
       try {
-        const conversations = await getConversations(userId, undefined, 'xiaohongshu');
+        // 根据当前模板ID获取对应的子类型
+        const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+        const conversations = await getConversations(userId, undefined, conversationType);
         setHistoryConversations(conversations);
       } catch (error) {
         console.error('加载历史记录失败:', error);
@@ -475,20 +533,35 @@ export function XiaohongshuWritingPage() {
     };
 
     loadHistory();
-  }, [userId]);
+  }, [userId, activeTemplate]);
 
   const handleExampleClick = (text: string) => {
     setContentInput(text);
   };
 
-  // 模板102对话框专用函数
-  // 初始化欢迎消息
+  // 获取当前模板对应的欢迎消息
+  const getWelcomeMessage = (templateId: string): string => {
+    switch (templateId) {
+      case "101": return XIAOHONGSHU_TRAVEL_WELCOME;
+      case "102": return XIAOHONGSHU_COPYWRITING_WELCOME;
+      case "103": return XIAOHONGSHU_TITLE_WELCOME;
+      case "104": return XIAOHONGSHU_PROFILE_WELCOME;
+      case "105": return XIAOHONGSHU_SEO_WELCOME;
+      case "106": return XIAOHONGSHU_STYLE_WELCOME;
+      case "107": return XIAOHONGSHU_PRODUCT_WELCOME;
+      case "108": return XIAOHONGSHU_RECOMMENDATION_WELCOME;
+      default: return XIAOHONGSHU_COPYWRITING_WELCOME;
+    }
+  };
+
+  // 初始化欢迎消息（所有小红书子类型）
   useEffect(() => {
-    if (templateId === "102" && messages.length === 0) {
+    const xiaohongshuTemplateIds = ["101", "102", "103", "104", "105", "106", "107", "108"];
+    if (xiaohongshuTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
-        content: XIAOHONGSHU_WELCOME_MESSAGE,
+        content: getWelcomeMessage(templateId),
         isCollapsed: false
       }]);
     }
@@ -564,13 +637,40 @@ export function XiaohongshuWritingPage() {
     }
   };
 
-  // 发送消息（模板102专用）
+  // 获取当前模板对应的API端点
+  const getApiEndpoint = (templateId: string): string => {
+    switch (templateId) {
+      case "101": return "/api/travel-guide";
+      case "102": return "/api/xiaohongshu";
+      case "103": return "/api/xiaohongshu-title";
+      case "104": return "/api/xiaohongshu-profile";
+      case "105": return "/api/xiaohongshu-seo";
+      case "106": return "/api/xiaohongshu-style";
+      case "107": return "/api/product-review";
+      case "108": return "/api/product-recommendation";
+      default: return "/api/xiaohongshu";
+    }
+  };
+
+  // 统一的对话历史状态（替代xiaohongshuConversationHistory）
+  const [conversationHistory, setConversationHistory] = useState<
+    Array<{ role: "user" | "assistant"; content: string }>
+  >([]);
+
+  // 公众号文章相关状态（仅用于模板109, 201, 204）
+  const [articleConversationHistory, setArticleConversationHistory] = useState<
+    Array<{ role: "user" | "assistant"; content: string }>
+  >([]);
+  const [articleTheme, setArticleTheme] = useState("");
+  const [articleFollowUp, setArticleFollowUp] = useState("");
+
+  // 发送消息（所有小红书子类型统一使用）
   const handleSendMessage = async () => {
     if (!inputValue.trim() || isLoading) return;
 
     // 检查修改次数限制
-    if (xiaohongshuModifyCount >= 5) {
-      setError("已达到最大修改次数（5次），请点击\"新建对话\"开始新的创作");
+    if (conversationHistory.length >= 10) {
+      setError("已达到最大对话轮次（5轮），请点击\"新建对话\"开始新的创作");
       return;
     }
 
@@ -597,12 +697,13 @@ export function XiaohongshuWritingPage() {
     setError('');
 
     try {
-      const response = await fetch("/api/xiaohongshu", {
+      const apiEndpoint = getApiEndpoint(templateId);
+      const response = await fetch(apiEndpoint, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           content: userContent,
-          conversationHistory: xiaohongshuConversationHistory
+          conversationHistory: conversationHistory
         }),
       });
 
@@ -630,14 +731,11 @@ export function XiaohongshuWritingPage() {
       setCurrentResult(plainText);
 
       // 更新对话历史
-      setXiaohongshuConversationHistory(prev => [
+      setConversationHistory(prev => [
         ...prev,
         { role: 'user', content: userContent },
         { role: 'assistant', content: data.result }
       ]);
-
-      // 增加修改次数
-      setXiaohongshuModifyCount(prev => prev + 1);
 
       // 如果用户已登录且没有当前对话ID，自动创建对话并保存
       if (userId && !currentConversationId) {
@@ -652,7 +750,7 @@ export function XiaohongshuWritingPage() {
           await addMessage(convId, 'assistant', data.result);
 
           // 刷新历史记录列表
-          const conversations = await getConversations(userId, undefined, 'xiaohongshu');
+          const conversations = await getConversations(userId, undefined, conversationType);
           setHistoryConversations(conversations);
         } catch (dbError) {
           console.error('保存到数据库失败:', dbError);
@@ -680,404 +778,6 @@ export function XiaohongshuWritingPage() {
     }
   };
 
-  // 智能创作
-  const handleSubmit = async () => {
-    // 根据模板ID验证不同的输入
-    if (templateId === "101") {
-      // 旅游攻略表单验证
-      if (!travelDestination.trim()) {
-        setError("请输入目的地");
-        return;
-      }
-      if (!travelBudget.trim()) {
-        setError("请输入预算");
-        return;
-      }
-      if (!travelCompanion) {
-        setError("请选择同行人");
-        return;
-      }
-      if (!travelDays.trim()) {
-        setError("请输入旅行天数");
-        return;
-      }
-      if (!travelStyle) {
-        setError("请选择风格偏好");
-        return;
-      }
-    } else if (templateId === "104") {
-      // 账号简介表单验证
-      if (!profileCareer.trim()) {
-        setError("请输入职业/身份");
-        return;
-      }
-      if (!profileContent.trim()) {
-        setError("请输入内容方向");
-        return;
-      }
-      if (!profileAudience) {
-        setError("请选择目标粉丝");
-        return;
-      }
-      if (!profilePersona) {
-        setError("请选择理想人设");
-        return;
-      }
-    } else if (templateId === "105") {
-      // SEO关键词布局表单验证
-      if (!seoContentType.trim()) {
-        setError("请输入内容类型");
-        return;
-      }
-      if (!seoFansCount.trim()) {
-        setError("请输入粉丝数");
-        return;
-      }
-      if (!seoInteractionRate.trim()) {
-        setError("请输入平均互动量");
-        return;
-      }
-      if (!seoOperationTime.trim()) {
-        setError("请输入运营时长");
-        return;
-      }
-      if (!seoPostFrequency.trim()) {
-        setError("请输入发布频率");
-        return;
-      }
-      if (seoPainPoints.length === 0) {
-        setError("请至少选择一个核心痛点");
-        return;
-      }
-      if (!seoGoal.trim()) {
-        setError("请输入优化目标");
-        return;
-      }
-    } else if (templateId === "106") {
-      // 小红书风格排版表单验证
-      if (!styleTheme.trim()) {
-        setError("请输入主题/核心卖点");
-        return;
-      }
-      if (!styleAudience.trim()) {
-        setError("请输入目标受众");
-        return;
-      }
-      if (!styleType) {
-        setError("请选择期望风格");
-        return;
-      }
-    } else if (templateId === "107") {
-      // 产品种草笔记表单验证（所有字段都是可选的，用户根据需求填选）
-      // 不进行必填验证，但至少需要有一些基本信息
-      if (!productName.trim() && !productCategory.trim() && !productFeatures.trim()) {
-        setError("请至少填写产品名称、品类或核心卖点中的一项");
-        return;
-      }
-    } else if (templateId === "108") {
-      // 好物推荐表单验证（所有字段都是可选的，用户根据需求填选）
-      // 不进行必填验证，但至少需要有一些基本信息
-      if (!recommendProductName.trim() && !recommendProductCategory.trim() && !recommendProductFeatures.trim()) {
-        setError("请至少填写产品名称、产品赛道或核心卖点中的一项");
-        return;
-      }
-    } else if (templateId === "109" || templateId === "201" || templateId === "204") {
-      // 公众号文章表单验证（所有字段都是可选的，用户根据需求填选）
-      // 不进行必填验证，但至少需要有文章主题
-      if (!articleTheme.trim()) {
-        setError("请输入文章主题");
-        return;
-      }
-    } else {
-      // 其他模板的验证
-      if (!contentInput.trim()) {
-        setError("请输入文案主题或内容描述");
-        return;
-      }
-    }
-
-    setIsLoading(true);
-    setError("");
-    setCurrentResult("");
-    setResultTab("current");
-
-    try {
-      // 根据模板ID选择API端点
-      let apiEndpoint = "/api/xiaohongshu"; // 默认小红书API
-      let requestBody: any = {};
-
-      if (templateId === "101") {
-        // 旅游攻略专用API
-        apiEndpoint = "/api/travel-guide";
-        // 将表单数据组合成结构化的描述
-        const travelInfo = `📍 目的地 & 预算：${travelDestination}，预算${travelBudget}
-👥 人物 & 天数：${travelCompanion === "couple" ? "情侣" : travelCompanion === "friends" ? "闺蜜" : travelCompanion === "family" ? "亲子" : travelCompanion === "solo" ? "独狼" : "其他"}，玩${travelDays}天
-🎨 风格偏好：${travelStyle === "budget" ? "极致省钱干货" : "氛围感大片文案"}
-${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || travelInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "104") {
-        // 账号简介专用API
-        apiEndpoint = "/api/xiaohongshu-profile";
-        // 将表单数据组合成结构化的描述
-        const audienceMap: Record<string, string> = {
-          student: "学生党",
-          workplace: "职场人",
-          mom: "宝妈",
-          young: "年轻女性",
-          male: "男性群体",
-          other: "其他"
-        };
-        const personaMap: Record<string, string> = {
-          professional: "专业靠谱",
-          fun: "有趣好玩",
-          warm: "温暖治愈",
-          cool: "酷飒个性",
-          literary: "文艺清新"
-        };
-        const profileInfo = `👤 职业/身份：${profileCareer}
-📝 内容方向：${profileContent}
-${profileSkills ? `💡 特殊技能/经历：${profileSkills}\n` : ""}🎯 目标粉丝：${audienceMap[profileAudience] || profileAudience}
-✨ 理想人设：${personaMap[profilePersona] || profilePersona}
-${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || profileInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "105") {
-        // SEO关键词布局专用API
-        apiEndpoint = "/api/xiaohongshu-seo";
-        // 将表单数据组合成结构化的描述
-        const painPointsText = seoPainPoints.map(point => {
-          const painPointMap: Record<string, string> = {
-            "low-exposure": "笔记曝光量低,自然流量少",
-            "low-search": "搜索来源占比不到10%",
-            "no-ranking": "某些关键词想做但一直排不上去",
-            "no-keywords": "不知道该布局哪些关键词",
-            "no-optimization": "写好的笔记不知道如何优化"
-          };
-          return painPointMap[point] || point;
-        }).join("、");
-
-        const seoInfo = `1️⃣ 账号基本信息：
-- 内容类型：${seoContentType}
-- 粉丝数：${seoFansCount}
-- 平均互动量：${seoInteractionRate}
-- 运营时长：${seoOperationTime}
-- 发布频率：${seoPostFrequency}
-
-2️⃣ 当前核心痛点：
-${painPointsText}
-
-3️⃣ 优化目标：
-${seoGoal}
-${contentInput ? `\n补充说明（代表性笔记链接或其他信息）：\n${contentInput}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || seoInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "106") {
-        // 小红书风格排版专用API
-        apiEndpoint = "/api/xiaohongshu-style";
-        // 将表单数据组合成结构化的描述
-        const styleTypeMap: Record<string, string> = {
-          "girlfriend": "闺蜜夜话风",
-          "boss": "清醒大女主风",
-          "geek": "硬核极客风",
-          "crazy": "发疯文学风"
-        };
-        const styleInfo = `📝 主题/核心卖点：${styleTheme}
-🎯 目标受众：${styleAudience}
-🎨 期望风格：${styleTypeMap[styleType] || styleType}
-${styleDraft ? `\n草稿内容：\n${styleDraft}\n` : ""}${contentInput ? `\n补充说明：${contentInput}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || styleInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "107") {
-        // 产品种草笔记专用API
-        apiEndpoint = "/api/product-review";
-        // 将表单数据组合成结构化的描述
-        const productInfo = `📦 产品信息：${productName ? `${productName}` : ""}${productCategory ? ` | 品类：${productCategory}` : ""}${productBrand ? ` | 品牌：${productBrand}` : ""}${productPrice ? ` | 价格：${productPrice}` : ""}
-
-⭐ 核心卖点：${productFeatures || "待补充"}
-
-👥 目标人群：${productAudience || "待补充"}
-
-🎯 使用场景：${productScene || "待补充"}
-${productRequirements ? `\n💡 特殊要求：${productRequirements}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || productInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "108") {
-        // 好物推荐专用API
-        apiEndpoint = "/api/product-recommendation";
-        // 将表单数据组合成结构化的描述
-        const styleMap: Record<string, string> = {
-          "sincere": "真诚分享",
-          "hardcore": "硬核测评",
-          "funny": "搞笑吐槽"
-        };
-        const recommendInfo = `1. 📦 产品是什么？
-${recommendProductName ? `产品名称：${recommendProductName}` : ""}${recommendProductCategory ? `\n所属赛道：${recommendProductCategory}` : ""}${recommendProductFeatures ? `\n核心卖点：${recommendProductFeatures}` : ""}
-
-2. 👥 想推给谁看？
-${recommendTargetAudience || "待补充"}
-
-3. 🎨 希望什么风格？
-${recommendStyle ? styleMap[recommendStyle] || recommendStyle : "待补充"}
-${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
-        const content = xiaohongshuModifyInput.trim() || recommendInfo;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "109" || templateId === "201" || templateId === "204") {
-        // 公众号文章专用API（统一使用上下文功能）
-        apiEndpoint = "/api/official-account-article";
-        // 构建请求体，包含文章主题和对话历史
-        requestBody = {
-          content: articleTheme,
-          conversationHistory: articleConversationHistory
-        };
-      } else if (templateId === "102") {
-        // 小红书爆款文案专用API
-        apiEndpoint = "/api/xiaohongshu";
-        // 如果有修改请求，使用修改内容；否则使用原始内容
-        const content = xiaohongshuModifyInput.trim() || contentInput;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "103") {
-        // 小红书爆款标题专用API
-        apiEndpoint = "/api/xiaohongshu-title";
-        const content = xiaohongshuModifyInput.trim() || contentInput;
-        requestBody = {
-          content: content,
-          conversationHistory: xiaohongshuConversationHistory
-        };
-      } else if (templateId === "201") {
-        // 公众号文章撰写（统一使用新ID）
-        apiEndpoint = "/api/official-account-article";
-        requestBody = {
-          content: contentInput,
-          conversationHistory: []
-        };
-      } else if (templateId === "4" || templateId === "9") {
-        // 短视频相关模板，注意：实际应该跳转到视频页面，这里作为兜底
-        apiEndpoint = "/api/video";
-        requestBody = { content: contentInput };
-      } else {
-        requestBody = { content: contentInput };
-      }
-
-      const response = await fetch(apiEndpoint, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(requestBody),
-      });
-
-      // 先读取响应文本，然后尝试解析为JSON
-      const responseText = await response.text();
-
-      // 检查响应状态
-      if (!response.ok) {
-        let errorMessage = "请求失败";
-        try {
-          const data = JSON.parse(responseText);
-          errorMessage = data.error || `请求失败 (${response.status})`;
-        } catch (jsonError) {
-          // 如果不是JSON格式，直接使用文本内容
-          errorMessage = responseText || `请求失败 (${response.status})`;
-        }
-        throw new Error(errorMessage);
-      }
-
-      // 解析成功的响应
-      let data;
-      try {
-        data = JSON.parse(responseText);
-      } catch (jsonError) {
-        throw new Error("服务器返回了无效的响应格式");
-      }
-
-      if (!data.result) {
-        throw new Error("AI返回结果为空，请重试");
-      }
-
-      setCurrentResult(data.result);
-
-      // 如果是公众号文章模板，更新对话历史
-      if (templateId === "109" || templateId === "201" || templateId === "204") {
-        setArticleConversationHistory([
-          ...articleConversationHistory,
-          { role: "user", content: articleTheme },
-          { role: "assistant", content: data.result },
-        ]);
-        // 清空当前输入，准备下一次追问
-        setArticleTheme("");
-      }
-
-      // 如果是小红书模板，更新对话历史
-      const xiaohongshuTemplateIds = ["101", "102", "103", "104", "105", "106", "107", "108"];
-      if (xiaohongshuTemplateIds.includes(templateId)) {
-        // 构建用户输入内容（用于对话历史）
-        let userContent = "";
-        if (xiaohongshuModifyInput.trim()) {
-          // 如果是修改请求
-          userContent = xiaohongshuModifyInput;
-        } else {
-          // 如果是首次生成，根据模板类型构建内容
-          if (templateId === "101") {
-            userContent = `目的地：${travelDestination}，预算：${travelBudget}，同行人：${travelCompanion}，天数：${travelDays}，风格：${travelStyle}`;
-          } else if (templateId === "102") {
-            userContent = contentInput;
-          } else if (templateId === "103") {
-            userContent = contentInput;
-          } else if (templateId === "104") {
-            userContent = `职业：${profileCareer}，内容方向：${profileContent}，目标粉丝：${profileAudience}，理想人设：${profilePersona}`;
-          } else if (templateId === "105") {
-            userContent = `内容类型：${seoContentType}，粉丝数：${seoFansCount}，互动量：${seoInteractionRate}`;
-          } else if (templateId === "106") {
-            userContent = `主题：${styleTheme}，受众：${styleAudience}，风格：${styleType}`;
-          } else if (templateId === "107") {
-            userContent = `产品：${productName}，品类：${productCategory}，卖点：${productFeatures}`;
-          } else if (templateId === "108") {
-            userContent = `产品：${recommendProductName}，赛道：${recommendProductCategory}，风格：${recommendStyle}`;
-          }
-        }
-
-        setXiaohongshuConversationHistory([
-          ...xiaohongshuConversationHistory,
-          { role: "user", content: userContent },
-          { role: "assistant", content: data.result },
-        ]);
-
-        // 如果是修改请求，增加修改轮次
-        if (xiaohongshuModifyInput.trim()) {
-          setXiaohongshuModifyCount(xiaohongshuModifyCount + 1);
-        }
-
-        // 清空修改输入
-        setXiaohongshuModifyInput("");
-      }
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "创作失败，请重试");
-    } finally {
-      setIsLoading(false);
-    }
-  };
 
   // 复制结果
   const handleCopy = async (text: string) => {
@@ -1099,63 +799,28 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
     setError("");
   };
 
-  // 清空小红书模板对话历史（新对话）
+  // 清空小红书模板对话历史（新对话）- 适用于所有小红书子类型
   const handleXiaohongshuNewConversation = () => {
-    setXiaohongshuConversationHistory([]);
+    setConversationHistory([]);
     setCurrentResult("");
-    setXiaohongshuModifyInput("");
-    setXiaohongshuModifyCount(0);
     setError("");
     setCurrentConversationId(null); // 重置对话ID
+    setInputValue(""); // 清空输入框
 
-    // 模板102：重置消息列表为欢迎消息
-    if (templateId === "102") {
+    // 所有小红书子类型：重置消息列表为对应的欢迎消息
+    const xiaohongshuTemplateIds = ["101", "102", "103", "104", "105", "106", "107", "108"];
+    if (xiaohongshuTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
         role: 'assistant',
-        content: XIAOHONGSHU_WELCOME_MESSAGE,
+        content: getWelcomeMessage(templateId),
         isCollapsed: false
       }]);
-      setInputValue('');
-      setInputHeight(60);
+      setInputHeight(60); // 重置输入框高度
+      if (inputRef.current) {
+        inputRef.current.style.height = '60px';
+      }
     }
-
-    // 清空所有表单输入
-    setContentInput("");
-    setTravelDestination("");
-    setTravelBudget("");
-    setTravelCompanion("");
-    setTravelDays("");
-    setTravelStyle("");
-    setProfileCareer("");
-    setProfileContent("");
-    setProfileSkills("");
-    setProfileAudience("");
-    setProfilePersona("");
-    setSeoContentType("");
-    setSeoFansCount("");
-    setSeoInteractionRate("");
-    setSeoOperationTime("");
-    setSeoPostFrequency("");
-    setSeoPainPoints([]);
-    setSeoGoal("");
-    setStyleTheme("");
-    setStyleAudience("");
-    setStyleType("");
-    setStyleDraft("");
-    setProductName("");
-    setProductCategory("");
-    setProductBrand("");
-    setProductPrice("");
-    setProductFeatures("");
-    setProductAudience("");
-    setProductScene("");
-    setRecommendProductName("");
-    setRecommendProductCategory("");
-    setRecommendProductFeatures("");
-    setRecommendTargetAudience("");
-    setRecommendStyle("");
-    setRecommendExtraInfo("");
   };
 
   // 根据source参数判断返回路径
@@ -1174,8 +839,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {templateId === "102" ? (
-        /* 模板102：左右分栏布局 */
+      {["101", "102", "103", "104", "105", "106", "107", "108"].includes(templateId) ? (
+        /* 所有小红书子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
           <div className="border-b border-border p-4">
@@ -1288,7 +953,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   />
                   <Button
                     onClick={handleSendMessage}
-                    disabled={isLoading || !inputValue.trim() || xiaohongshuModifyCount >= 5}
+                    disabled={isLoading || !inputValue.trim()}
                     size="lg"
                     className="px-6"
                     style={{ height: `${inputHeight}px` }}
@@ -1309,8 +974,8 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 {/* 对话轮次提示 */}
                 <div className="flex items-center justify-between mt-2">
                   <p className="text-xs text-muted-foreground">
-                    对话轮次：{xiaohongshuModifyCount}/5
-                    {xiaohongshuModifyCount >= 5 && " - 已达到最大轮次，请新建对话"}
+                    对话轮次：{Math.floor(conversationHistory.length / 2)}/5
+                    {conversationHistory.length >= 10 && " - 已达到最大轮次，请新建对话"}
                   </p>
                   <p className="text-xs text-muted-foreground">
                     💡 提示：Enter发送，Shift+Enter换行
@@ -1371,7 +1036,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                                   };
                                 });
 
-                                setXiaohongshuConversationHistory(history);
+                                setConversationHistory(history);
                                 setMessages(msgs);
                                 setCurrentConversationId(conversation.id);
 
@@ -1505,606 +1170,9 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
             </p>
           </div>
 
-          {/* Input Form */}
+          {/* Input Form - 已移除，所有小红书子类型使用统一对话模式 */}
           <div className="space-y-4">
-            {/* 旅游攻略专用表单 */}
-            {templateId === "101" ? (
-              <>
-                {/* 目的地 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📍 目的地
-                  </label>
-                  <Input
-                    placeholder="例如：成都、大理、三亚..."
-                    value={travelDestination}
-                    onChange={(e) => setTravelDestination(e.target.value)}
-                  />
-                </div>
-
-                {/* 预算 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    💰 预算
-                  </label>
-                  <Input
-                    placeholder="例如：3000元、5000-8000元、穷游..."
-                    value={travelBudget}
-                    onChange={(e) => setTravelBudget(e.target.value)}
-                  />
-                </div>
-
-                {/* 同行人 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    👥 同行人
-                  </label>
-                  <Select value={travelCompanion} onValueChange={setTravelCompanion}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择同行人" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="couple">情侣</SelectItem>
-                      <SelectItem value="friends">闺蜜</SelectItem>
-                      <SelectItem value="family">亲子</SelectItem>
-                      <SelectItem value="solo">独狼</SelectItem>
-                      <SelectItem value="other">其他</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 旅行天数 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📅 旅行天数
-                  </label>
-                  <Input
-                    type="number"
-                    placeholder="例如：3、5、7..."
-                    value={travelDays}
-                    onChange={(e) => setTravelDays(e.target.value)}
-                    min="1"
-                  />
-                </div>
-
-                {/* 风格偏好 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎨 风格偏好
-                  </label>
-                  <Select value={travelStyle} onValueChange={setTravelStyle}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择风格偏好" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="budget">极致省钱干货</SelectItem>
-                      <SelectItem value="aesthetic">氛围感大片文案</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 额外描述（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    补充说明（可选）
-                  </label>
-                  <Textarea
-                    placeholder="您可以补充更多信息，比如特殊需求、想去的景点、饮食偏好等..."
-                    className="min-h-[100px] resize-none"
-                    value={contentInput}
-                    onChange={(e) => setContentInput(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : templateId === "104" ? (
-              <>
-                {/* 账号简介专用表单 */}
-                {/* 职业/身份 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    👤 职业/身份
-                  </label>
-                  <Input
-                    placeholder="例如：全职妈妈、UI设计师、在校大学生..."
-                    value={profileCareer}
-                    onChange={(e) => setProfileCareer(e.target.value)}
-                  />
-                </div>
-
-                {/* 内容方向 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📝 内容方向
-                  </label>
-                  <Input
-                    placeholder="例如：穿搭、美食、学习、职场、探店..."
-                    value={profileContent}
-                    onChange={(e) => setProfileContent(e.target.value)}
-                  />
-                </div>
-
-                {/* 特殊技能/经历 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💡 特殊技能/经历（可选）
-                  </label>
-                  <Textarea
-                    placeholder="有什么让你与众不同的地方？例如：5年摄影经验、去过30个国家、自学转行成功..."
-                    className="min-h-[80px] resize-none"
-                    value={profileSkills}
-                    onChange={(e) => setProfileSkills(e.target.value)}
-                  />
-                </div>
-
-                {/* 目标粉丝 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎯 目标粉丝
-                  </label>
-                  <Select value={profileAudience} onValueChange={setProfileAudience}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择目标粉丝群体" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="student">学生党</SelectItem>
-                      <SelectItem value="workplace">职场人</SelectItem>
-                      <SelectItem value="mom">宝妈</SelectItem>
-                      <SelectItem value="young">年轻女性</SelectItem>
-                      <SelectItem value="male">男性群体</SelectItem>
-                      <SelectItem value="other">其他</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 理想人设 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    ✨ 理想人设
-                  </label>
-                  <Select value={profilePersona} onValueChange={setProfilePersona}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择理想人设风格" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="professional">专业靠谱</SelectItem>
-                      <SelectItem value="fun">有趣好玩</SelectItem>
-                      <SelectItem value="warm">温暖治愈</SelectItem>
-                      <SelectItem value="cool">酷飒个性</SelectItem>
-                      <SelectItem value="literary">文艺清新</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 补充说明（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    补充说明（可选）
-                  </label>
-                  <Textarea
-                    placeholder="还有其他想补充的信息吗？比如你的成就、特色、想强调的点..."
-                    className="min-h-[80px] resize-none"
-                    value={contentInput}
-                    onChange={(e) => setContentInput(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : templateId === "105" ? (
-              <>
-                {/* SEO关键词布局专用表单 */}
-                {/* 内容类型 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📝 内容类型
-                  </label>
-                  <Input
-                    placeholder="例如：美妆测评、职场干货、旅行攻略、穿搭分享..."
-                    value={seoContentType}
-                    onChange={(e) => setSeoContentType(e.target.value)}
-                  />
-                </div>
-
-                {/* 粉丝数 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    👥 粉丝数
-                  </label>
-                  <Input
-                    placeholder="例如：500、2000、1万、5万..."
-                    value={seoFansCount}
-                    onChange={(e) => setSeoFansCount(e.target.value)}
-                  />
-                </div>
-
-                {/* 平均互动量 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    💬 平均互动量
-                  </label>
-                  <Input
-                    placeholder="例如：50赞10收藏、100-200互动、5%互动率..."
-                    value={seoInteractionRate}
-                    onChange={(e) => setSeoInteractionRate(e.target.value)}
-                  />
-                </div>
-
-                {/* 运营时长 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    ⏰ 运营时长
-                  </label>
-                  <Input
-                    placeholder="例如：3个月、半年、1年、2年..."
-                    value={seoOperationTime}
-                    onChange={(e) => setSeoOperationTime(e.target.value)}
-                  />
-                </div>
-
-                {/* 发布频率 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📅 发布频率
-                  </label>
-                  <Input
-                    placeholder="例如：每周3篇、每天1篇、不定期..."
-                    value={seoPostFrequency}
-                    onChange={(e) => setSeoPostFrequency(e.target.value)}
-                  />
-                </div>
-
-                {/* 核心痛点（多选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎯 当前核心痛点（可多选）
-                  </label>
-                  <div className="space-y-2">
-                    {[
-                      { value: "low-exposure", label: "笔记曝光量低,自然流量少" },
-                      { value: "low-search", label: "搜索来源占比不到10%" },
-                      { value: "no-ranking", label: "某些关键词想做但一直排不上去" },
-                      { value: "no-keywords", label: "不知道该布局哪些关键词" },
-                      { value: "no-optimization", label: "写好的笔记不知道如何优化" }
-                    ].map((option) => (
-                      <label key={option.value} className="flex items-center space-x-2 cursor-pointer">
-                        <input
-                          type="checkbox"
-                          checked={seoPainPoints.includes(option.value)}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSeoPainPoints([...seoPainPoints, option.value]);
-                            } else {
-                              setSeoPainPoints(seoPainPoints.filter(p => p !== option.value));
-                            }
-                          }}
-                          className="w-4 h-4 rounded border-gray-300"
-                        />
-                        <span className="text-sm">{option.label}</span>
-                      </label>
-                    ))}
-                  </div>
-                </div>
-
-                {/* 优化目标 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎯 优化目标
-                  </label>
-                  <Textarea
-                    placeholder="例如：月涨粉1000、核心词排进前5、搜索流量占比提升到30%..."
-                    className="min-h-[80px] resize-none"
-                    value={seoGoal}
-                    onChange={(e) => setSeoGoal(e.target.value)}
-                  />
-                </div>
-
-                {/* 补充说明（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    📎 补充说明（可选）
-                  </label>
-                  <Textarea
-                    placeholder="可以提供2-3篇代表性笔记链接，或其他想补充的信息..."
-                    className="min-h-[100px] resize-none"
-                    value={contentInput}
-                    onChange={(e) => setContentInput(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : templateId === "106" ? (
-              <>
-                {/* 小红书风格排版专用表单 */}
-                {/* 主题/核心卖点 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    📝 主题/核心卖点
-                  </label>
-                  <Input
-                    placeholder="例如：AI效率工具、秋季穿搭、护肤routine..."
-                    value={styleTheme}
-                    onChange={(e) => setStyleTheme(e.target.value)}
-                  />
-                </div>
-
-                {/* 目标受众 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎯 目标受众
-                  </label>
-                  <Input
-                    placeholder="例如：25-35岁都市女性、设计师群体、大学生..."
-                    value={styleAudience}
-                    onChange={(e) => setStyleAudience(e.target.value)}
-                  />
-                </div>
-
-                {/* 期望风格 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    <span className="text-red-500 mr-1">*</span>
-                    🎨 期望风格
-                  </label>
-                  <Select value={styleType} onValueChange={setStyleType}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择期望风格" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="girlfriend">闺蜜夜话风（软萌亲切，适合美妆/情感）</SelectItem>
-                      <SelectItem value="boss">清醒大女主风（犀利金句，适合职场/成长）</SelectItem>
-                      <SelectItem value="geek">硬核极客风（参数对比，适合数码/家电）</SelectItem>
-                      <SelectItem value="crazy">发疯文学风（情绪夸张，适合吐槽/搞笑）</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 草稿内容（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    📄 草稿内容（可选）
-                  </label>
-                  <Textarea
-                    placeholder="如果你已经有初稿，可以粘贴在这里，我来帮你优化排版和风格..."
-                    className="min-h-[120px] resize-none"
-                    value={styleDraft}
-                    onChange={(e) => setStyleDraft(e.target.value)}
-                  />
-                </div>
-
-                {/* 补充说明（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💡 补充说明（可选）
-                  </label>
-                  <Textarea
-                    placeholder="还有其他想补充的信息吗？比如特殊要求、参考案例等..."
-                    className="min-h-[80px] resize-none"
-                    value={contentInput}
-                    onChange={(e) => setContentInput(e.target.value)}
-                  />
-                </div>
-              </>
-            ) : templateId === "107" ? (
-              <>
-                {/* 产品种草笔记专用表单 */}
-                {/* 产品名称 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    📦 产品名称
-                  </label>
-                  <Input
-                    placeholder="例如：戴森吹风机、雅诗兰黛小棕瓶、iPhone 15 Pro..."
-                    value={productName}
-                    onChange={(e) => setProductName(e.target.value)}
-                  />
-                </div>
-
-                {/* 产品品类 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    🏷️ 产品品类
-                  </label>
-                  <Input
-                    placeholder="例如：美妆护肤、数码家电、生活好物、食品饮料..."
-                    value={productCategory}
-                    onChange={(e) => setProductCategory(e.target.value)}
-                  />
-                </div>
-
-                {/* 品牌 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    🎨 品牌
-                  </label>
-                  <Input
-                    placeholder="例如：戴森、雅诗兰黛、苹果、无印良品..."
-                    value={productBrand}
-                    onChange={(e) => setProductBrand(e.target.value)}
-                  />
-                </div>
-
-                {/* 价格区间 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💰 价格区间
-                  </label>
-                  <Input
-                    placeholder="例如：99元、300-500元、千元以内..."
-                    value={productPrice}
-                    onChange={(e) => setProductPrice(e.target.value)}
-                  />
-                </div>
-
-                {/* 核心卖点 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    ⭐ 核心卖点
-                  </label>
-                  <Textarea
-                    placeholder="请列出产品最牛的3个优势，例如：&#10;1. 超强吸力，3分钟吹干长发&#10;2. 智能温控，不伤发质&#10;3. 静音设计，深夜也能用"
-                    className="min-h-[100px] resize-none"
-                    value={productFeatures}
-                    onChange={(e) => setProductFeatures(e.target.value)}
-                  />
-                </div>
-
-                {/* 目标人群 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    👥 目标人群
-                  </label>
-                  <Input
-                    placeholder="例如：学生党、上班族、宝妈、精致女孩..."
-                    value={productAudience}
-                    onChange={(e) => setProductAudience(e.target.value)}
-                  />
-                </div>
-
-                {/* 使用场景 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    🎯 使用场景
-                  </label>
-                  <Textarea
-                    placeholder="什么时候用？解决什么问题？例如：&#10;- 早晨赶时间，快速造型&#10;- 约会前，打造精致发型&#10;- 健身后，快速吹干头发"
-                    className="min-h-[100px] resize-none"
-                    value={productScene}
-                    onChange={(e) => setProductScene(e.target.value)}
-                  />
-                </div>
-
-                {/* 特殊要求（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💡 特殊要求（可选）
-                  </label>
-                  <Textarea
-                    placeholder="有没有特别想强调的点？喜欢什么风格？例如：&#10;- 强调性价比&#10;- 突出颜值设计&#10;- 偏好真实体验感..."
-                    className="min-h-[100px] resize-none"
-                    value={productRequirements}
-                    onChange={(e) => setProductRequirements(e.target.value)}
-                  />
-                </div>
-
-                {/* 继续提问提示 */}
-                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
-                    💬 <strong>提示：</strong>生成文案后，你可以在下方继续提问，比如：
-                    <br />• "能不能再强调一下性价比？"
-                    <br />• "标题能不能更吸引人一点？"
-                    <br />• "能不能换个风格，更活泼一些？"
-                  </p>
-                </div>
-              </>
-            ) : templateId === "108" ? (
-              <>
-                {/* 好物推荐专用表单 */}
-                {/* 产品名称 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    📦 产品名称
-                  </label>
-                  <Input
-                    placeholder="例如：戴森吹风机、雅诗兰黛小棕瓶、iPhone 15 Pro..."
-                    value={recommendProductName}
-                    onChange={(e) => setRecommendProductName(e.target.value)}
-                  />
-                </div>
-
-                {/* 产品赛道 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    🏷️ 所属赛道
-                  </label>
-                  <Input
-                    placeholder="例如：美妆、数码、家居、食品..."
-                    value={recommendProductCategory}
-                    onChange={(e) => setRecommendProductCategory(e.target.value)}
-                  />
-                </div>
-
-                {/* 核心卖点 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    ⭐ 核心卖点
-                  </label>
-                  <Textarea
-                    placeholder="请列出产品最牛的优势，越细越好！例如：&#10;• 超强吸力，3分钟吹干长发&#10;• 智能温控，不伤发质&#10;• 静音设计，深夜也能用"
-                    className="min-h-[100px] resize-none"
-                    value={recommendProductFeatures}
-                    onChange={(e) => setRecommendProductFeatures(e.target.value)}
-                  />
-                </div>
-
-                {/* 目标人群 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    👥 目标人群
-                  </label>
-                  <Input
-                    placeholder="例如：学生党、打工人、精致妈妈..."
-                    value={recommendTargetAudience}
-                    onChange={(e) => setRecommendTargetAudience(e.target.value)}
-                  />
-                </div>
-
-                {/* 期望风格 */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    🎨 期望风格
-                  </label>
-                  <Select value={recommendStyle} onValueChange={setRecommendStyle}>
-                    <SelectTrigger>
-                      <SelectValue placeholder="请选择期望风格" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="sincere">真诚分享（像闺蜜一样唠嗑）</SelectItem>
-                      <SelectItem value="hardcore">硬核测评（专业大神测评）</SelectItem>
-                      <SelectItem value="funny">搞笑吐槽（幽默风趣）</SelectItem>
-                    </SelectContent>
-                  </Select>
-                </div>
-
-                {/* 补充信息（可选） */}
-                <div>
-                  <label className="text-sm font-medium text-foreground mb-2 flex items-center">
-                    💡 补充信息（可选）
-                  </label>
-                  <Textarea
-                    placeholder="还有其他想补充的信息吗？比如特别想强调的点、喜欢的风格等..."
-                    className="min-h-[100px] resize-none"
-                    value={recommendExtraInfo}
-                    onChange={(e) => setRecommendExtraInfo(e.target.value)}
-                  />
-                </div>
-
-                {/* 继续提问提示 */}
-                <div className="bg-blue-50 dark:bg-blue-950/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800">
-                  <p className="text-sm text-blue-700 dark:text-blue-300 leading-relaxed">
-                    💬 <strong>提示：</strong>生成文案后，你可以在下方继续提问，比如：
-                    <br />• "能不能再强调一下性价比？"
-                    <br />• "标题能不能更吸引人一点？"
-                    <br />• "能不能换个风格，更活泼一些？"
-                    <br />• "可以多提供几个标题选择吗？"
-                  </p>
-                </div>
-              </>
-            ) : templateId === "109" || templateId === "201" || templateId === "204" ? (
+            {templateId === "109" || templateId === "201" || templateId === "204" ? (
               <>
                 {/* 公众号文章专用表单 */}
 
@@ -2215,23 +1283,6 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                 {error}
               </div>
             )}
-
-            {/* Submit Button */}
-            <Button
-              className="w-full h-11 text-base"
-              size="lg"
-              onClick={handleSubmit}
-              disabled={isLoading}
-            >
-              {isLoading ? (
-                <>
-                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                  AI创作中...
-                </>
-              ) : (
-                "智能创作"
-              )}
-            </Button>
           </div>
         </div>
       </div>
@@ -2283,61 +1334,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                   className="flex-1"
                 />
 
-                {/* 小红书模板对话历史和修改功能 */}
-                {["101", "102", "103", "104", "105", "106", "107", "108"].includes(templateId) && xiaohongshuConversationHistory.length > 0 && (
-                  <div className="border-t border-border px-4 py-3 bg-muted/30">
-                    <div className="text-xs text-muted-foreground mb-2">
-                      对话轮次：{xiaohongshuModifyCount + 1}/5
-                    </div>
-
-                    {/* 修改输入框 */}
-                    {xiaohongshuModifyCount < 5 && (
-                      <div className="space-y-2">
-                        <textarea
-                          value={xiaohongshuModifyInput}
-                          onChange={(e) => setXiaohongshuModifyInput(e.target.value)}
-                          placeholder="如需修改，请输入修改要求（例如：让文案更活泼一些、增加emoji表情等）"
-                          className="w-full px-3 py-2 text-sm border border-input rounded-md bg-background resize-none focus:outline-none focus:ring-2 focus:ring-ring"
-                          rows={2}
-                        />
-                        <div className="flex items-center gap-2">
-                          <Button
-                            size="sm"
-                            onClick={handleSubmit}
-                            disabled={isLoading || !xiaohongshuModifyInput.trim()}
-                            className="h-8"
-                          >
-                            <RefreshCw className="h-4 w-4 mr-1" />
-                            提交修改
-                          </Button>
-                          <Button
-                            variant="outline"
-                            size="sm"
-                            onClick={handleXiaohongshuNewConversation}
-                            className="h-8"
-                          >
-                            <Plus className="h-4 w-4 mr-1" />
-                            重新开始
-                          </Button>
-                        </div>
-                      </div>
-                    )}
-
-                    {xiaohongshuModifyCount >= 5 && (
-                      <div className="text-sm text-muted-foreground">
-                        已达到最大修改次数（5次），请
-                        <Button
-                          variant="link"
-                          size="sm"
-                          onClick={handleXiaohongshuNewConversation}
-                          className="h-auto p-0 ml-1"
-                        >
-                          重新开始新对话
-                        </Button>
-                      </div>
-                    )}
-                  </div>
-                )}
+                {/* 小红书模板对话历史和修改功能 - 已移除，使用统一对话模式 */}
 
                 {/* 底部操作按钮 */}
                 <div className="border-t border-border px-4 py-3 flex items-center justify-between bg-card">
@@ -2358,16 +1355,6 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                     >
                       <Share2 className="h-4 w-4 mr-1" />
                       分享
-                    </Button>
-                    <Button
-                      variant="outline"
-                      size="sm"
-                      className="h-8"
-                      onClick={handleSubmit}
-                      disabled={isLoading}
-                    >
-                      <RefreshCw className="h-4 w-4 mr-1" />
-                      重写
                     </Button>
                     <Button
                       variant="outline"
@@ -2426,9 +1413,9 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                             setCurrentConversationId(convId);
 
                             // 保存对话历史
-                            for (let i = 0; i < xiaohongshuConversationHistory.length; i += 2) {
-                              const userMsg = xiaohongshuConversationHistory[i];
-                              const assistantMsg = xiaohongshuConversationHistory[i + 1];
+                            for (let i = 0; i < conversationHistory.length; i += 2) {
+                              const userMsg = conversationHistory[i];
+                              const assistantMsg = conversationHistory[i + 1];
                               if (userMsg && assistantMsg) {
                                 await addMessage(convId, 'user', userMsg.content);
                                 await addMessage(convId, 'assistant', assistantMsg.content);
@@ -2501,7 +1488,7 @@ ${recommendExtraInfo ? `\n💡 补充信息：${recommendExtraInfo}` : ""}`;
                                 content: msg.content
                               });
                             });
-                            setXiaohongshuConversationHistory(history);
+                            setConversationHistory(history);
 
                             // 恢复消息列表(模板102)
                             if (templateId === "102") {
