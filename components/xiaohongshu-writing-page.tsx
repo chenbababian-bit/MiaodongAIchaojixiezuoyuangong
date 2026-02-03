@@ -34,6 +34,7 @@ import {
 } from "lucide-react";
 import { MessageBubble } from "@/components/message-bubble";
 import { supabase } from "@/lib/supabase";
+import { cleanMarkdownClient } from "@/lib/markdown-cleaner-client";
 import {
   createConversation,
   getConversations,
@@ -717,11 +718,11 @@ export function XiaohongshuWritingPage() {
         throw new Error(data.error || '生成失败');
       }
 
-      // 添加AI回复
+      // 添加AI回复（清理markdown格式）
       const aiMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant' as const,
-        content: data.result,
+        content: cleanMarkdownClient(data.result),
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
@@ -1021,17 +1022,20 @@ export function XiaohongshuWritingPage() {
                               const conv = await getConversationWithMessages(conversation.id);
 
                               if (conv && conv.messages) {
-                                // 恢复对话历史
+                                // 恢复对话历史（清理markdown格式）
                                 const history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
                                 const msgs = conv.messages.map(msg => {
+                                  const cleanedContent = msg.role === 'assistant'
+                                    ? cleanMarkdownClient(msg.content)
+                                    : msg.content;
                                   history.push({
                                     role: msg.role as 'user' | 'assistant',
-                                    content: msg.content
+                                    content: cleanedContent
                                   });
                                   return {
                                     id: msg.id,
                                     role: msg.role as 'user' | 'assistant',
-                                    content: msg.content,
+                                    content: cleanedContent,
                                     isCollapsed: false
                                   };
                                 });
@@ -1040,12 +1044,12 @@ export function XiaohongshuWritingPage() {
                                 setMessages(msgs);
                                 setCurrentConversationId(conversation.id);
 
-                                // 显示最后一条AI回复
+                                // 显示最后一条AI回复（清理markdown格式）
                                 const lastAssistantMsg = conv.messages
                                   .filter(m => m.role === 'assistant')
                                   .pop();
                                 if (lastAssistantMsg) {
-                                  const plainText = markdownToPlainText(lastAssistantMsg.content);
+                                  const plainText = markdownToPlainText(cleanMarkdownClient(lastAssistantMsg.content));
                                   setCurrentResult(plainText);
                                 }
 
@@ -1480,22 +1484,27 @@ export function XiaohongshuWritingPage() {
                           const conv = await getConversationWithMessages(conversation.id);
 
                           if (conv && conv.messages) {
-                            // 恢复对话历史
+                            // 恢复对话历史（清理markdown格式）
                             const history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
                             conv.messages.forEach(msg => {
+                              const cleanedContent = msg.role === 'assistant'
+                                ? cleanMarkdownClient(msg.content)
+                                : msg.content;
                               history.push({
                                 role: msg.role as 'user' | 'assistant',
-                                content: msg.content
+                                content: cleanedContent
                               });
                             });
                             setConversationHistory(history);
 
-                            // 恢复消息列表(模板102)
+                            // 恢复消息列表(模板102)（清理markdown格式）
                             if (templateId === "102") {
                               const msgs = conv.messages.map(msg => ({
                                 id: msg.id,
                                 role: msg.role as 'user' | 'assistant',
-                                content: msg.content,
+                                content: msg.role === 'assistant'
+                                  ? cleanMarkdownClient(msg.content)
+                                  : msg.content,
                                 isCollapsed: false
                               }));
                               setMessages(msgs);
@@ -1504,12 +1513,12 @@ export function XiaohongshuWritingPage() {
                             // 设置当前对话ID
                             setCurrentConversationId(conversation.id);
 
-                            // 显示最后一条AI回复
+                            // 显示最后一条AI回复（清理markdown格式）
                             const lastAssistantMsg = conv.messages
                               .filter(m => m.role === 'assistant')
                               .pop();
                             if (lastAssistantMsg) {
-                              setCurrentResult(lastAssistantMsg.content);
+                              setCurrentResult(cleanMarkdownClient(lastAssistantMsg.content));
                             }
 
                             // 切换到当前创作结果标签
