@@ -1,4 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
+import { cleanMarkdown } from "@/lib/markdown-cleaner";
 
 // DeepSeek API 配置
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
@@ -327,9 +328,12 @@ export async function POST(request: NextRequest) {
         );
       }
 
+      // 清理markdown格式，但保留emoji
+      const cleanedResult = cleanMarkdown(result);
+
       return NextResponse.json({
         success: true,
-        result: result,
+        result: cleanedResult,
         usage: data.usage,
       });
     } catch (fetchError) {
