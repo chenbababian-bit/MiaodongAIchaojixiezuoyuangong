@@ -14,14 +14,17 @@ export function cleanMarkdownClient(text: string): string {
   // 删除行内代码标记 (`)
   cleaned = cleaned.replace(/`([^`]+)`/g, '$1');
 
-  // 删除粗体标记 (**) - 多次运行以处理嵌套，支持星号和内容之间有空格
-  // 处理 ** text ** 格式（星号和内容之间有空格）
-  cleaned = cleaned.replace(/\*\*\s*([^*]+?)\s*\*\*/g, '$1');
-  // 再次运行以处理嵌套的情况
-  cleaned = cleaned.replace(/\*\*\s*([^*]+?)\s*\*\*/g, '$1');
+  // 删除粗体标记 (**) - 使用更强大的正则，处理所有情况
+  // 多次运行以确保嵌套的粗体标记也被清理
+  for (let i = 0; i < 3; i++) {
+    cleaned = cleaned.replace(/\*\*([^*]+?)\*\*/g, '$1');
+    cleaned = cleaned.replace(/\*\*\s+([^*]+?)\s+\*\*/g, '$1');
+    cleaned = cleaned.replace(/\*\*([^*]*?)\*\*/g, '$1');
+  }
 
   // 删除斜体标记 (*) - 处理单个星号
   cleaned = cleaned.replace(/\*([^*\s][^*]*?)\*/g, '$1');
+  cleaned = cleaned.replace(/\*\s+([^*]+?)\s+\*/g, '$1');
 
   // 删除删除线标记 (~~)
   cleaned = cleaned.replace(/~~(.+?)~~/g, '$1');
@@ -51,6 +54,9 @@ export function cleanMarkdownClient(text: string): string {
 
   // 清理多余的空行（超过2个连续空行的情况）
   cleaned = cleaned.replace(/\n{3,}/g, '\n\n');
+
+  // 最后再清理一次可能残留的星号
+  cleaned = cleaned.replace(/\*\*/g, '');
 
   return cleaned;
 }

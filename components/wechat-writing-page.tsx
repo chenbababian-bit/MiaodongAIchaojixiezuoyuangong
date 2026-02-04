@@ -791,33 +791,41 @@ export function WechatWritingPage() {
       });
 
       if (!response.ok) {
-        throw new Error('API请求失败');
+        const errorData = await response.json().catch(() => ({}));
+        const errorMessage = errorData.error || `API请求失败 (状态码: ${response.status})`;
+        console.error('API错误:', errorMessage, errorData);
+        throw new Error(errorMessage);
       }
 
       const data = await response.json();
 
       if (!data.success || !data.result) {
-        throw new Error(data.error || '生成失败');
+        const errorMessage = data.error || '生成失败';
+        console.error('生成失败:', errorMessage, data);
+        throw new Error(errorMessage);
       }
+
+      // 清理markdown格式
+      const cleanedResult = cleanMarkdownClient(data.result);
 
       // 添加AI回复（清理markdown格式）
       const aiMessage = {
         id: (Date.now() + 1).toString(),
         role: 'assistant' as const,
-        content: cleanMarkdownClient(data.result),
+        content: cleanedResult,
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
-      const plainText = markdownToPlainText(data.result);
+      const plainText = markdownToPlainText(cleanedResult);
       setCurrentResult(plainText);
 
-      // 更新对话历史
+      // 更新对话历史（使用清理后的内容）
       setConversationHistory(prev => [
         ...prev,
         { role: 'user', content: userContent },
-        { role: 'assistant', content: data.result }
+        { role: 'assistant', content: cleanedResult }
       ]);
 
       // 如果用户已登录且没有当前对话ID，自动创建对话并保存
@@ -828,9 +836,9 @@ export function WechatWritingPage() {
           const convId = await createConversation(userId, title, conversationType);
           setCurrentConversationId(convId);
 
-          // 保存消息到数据库
+          // 保存消息到数据库（使用清理后的内容）
           await addMessage(convId, 'user', userContent);
-          await addMessage(convId, 'assistant', data.result);
+          await addMessage(convId, 'assistant', cleanedResult);
 
           // 刷新历史记录列表
           const conversations = await getConversations(userId, undefined, conversationType);
@@ -840,10 +848,10 @@ export function WechatWritingPage() {
           // 不影响用户体验，继续显示结果
         }
       } else if (userId && currentConversationId) {
-        // 如果已有对话ID，直接保存消息
+        // 如果已有对话ID，直接保存消息（使用清理后的内容）
         try {
           await addMessage(currentConversationId, 'user', userContent);
-          await addMessage(currentConversationId, 'assistant', data.result);
+          await addMessage(currentConversationId, 'assistant', cleanedResult);
         } catch (dbError) {
           console.error('保存消息失败:', dbError);
         }
