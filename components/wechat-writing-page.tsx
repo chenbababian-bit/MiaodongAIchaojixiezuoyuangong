@@ -638,7 +638,7 @@ export function WechatWritingPage() {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
-        content: getWelcomeMessage(templateId),
+        content: cleanMarkdownClient(getWelcomeMessage(templateId)),
         isCollapsed: false
       }]);
     }
@@ -907,7 +907,7 @@ export function WechatWritingPage() {
       setMessages([{
         id: 'welcome-' + Date.now(),
         role: 'assistant',
-        content: getWelcomeMessage(templateId),
+        content: cleanMarkdownClient(getWelcomeMessage(templateId)),
         isCollapsed: false
       }]);
       setInputHeight(60); // 重置输入框高度
