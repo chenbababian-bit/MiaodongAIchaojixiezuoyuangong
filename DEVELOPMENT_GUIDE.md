@@ -978,6 +978,141 @@ Markdown格式清理功能经历了三个主要版本的迭代：
 
 ---
 
+##### 版本4: 增强清理逻辑（commit ff2384b）
+**时间**: 2026-02-04
+
+**改进内容**:
+- 优化 `cleanMarkdownClient` 函数，使用循环多次清理粗体标记
+- 添加更多正则表达式变体处理不同格式情况
+- 在最后添加兜底清理步骤，直接删除所有残留的 `**`
+- 统一使用 `cleanedResult` 变量存储清理后的内容
+- 确保保存到对话历史和数据库的内容都是清理后的纯文本
+- 改进错误处理，提供更详细的错误信息
+
+**核心改进**:
+```typescript
+// 使用循环多次清理粗体标记
+for (let i = 0; i < 3; i++) {
+  cleaned = cleaned.replace(/\*\*([^*]+?)\*\*/g, '$1');
+  cleaned = cleaned.replace(/\*\*\s+([^*]+?)\s+\*\*/g, '$1');
+  cleaned = cleaned.replace(/\*\*([^*]*?)\*\*/g, '$1');
+}
+
+// 最后再清理一次可能残留的星号
+cleaned = cleaned.replace(/\*\*/g, '');
+```
+
+**数据流改进**:
+```typescript
+// 清理markdown格式
+const cleanedResult = cleanMarkdownClient(data.result);
+
+// 更新对话历史（使用清理后的内容）
+setConversationHistory(prev => [
+  ...prev,
+  { role: 'user', content: userContent },
+  { role: 'assistant', content: cleanedResult }  // 使用清理后的内容
+]);
+
+// 保存到数据库（使用清理后的内容）
+await addMessage(convId, 'assistant', cleanedResult);
+```
+
+**解决的问题**:
+- 某些复杂的markdown格式无法完全清理
+- 保存到数据库的内容仍包含markdown标记
+- 对话历史中的内容未统一清理
+
+---
+
+##### 版本5: 修复欢迎消息清理（commit 10abe51）
+**时间**: 2026-02-04
+
+**问题发现**:
+用户反馈AI对话中仍然显示 `**` 等markdown格式标记。经过排查发现，虽然AI回复的内容已经正确清理，但**欢迎消息**（AI的第一条消息）在初始化时没有应用清理函数。
+
+**问题分析**:
+欢迎消息在两个地方设置，都没有应用 `cleanMarkdownClient` 清理：
+1. **页面初始化时**（`components/wechat-writing-page.tsx:641`）
+2. **点击"新建对话"时**（`components/wechat-writing-page.tsx:910`）
+
+**欢迎消息示例**（包含markdown标记）:
+```typescript
+const WECHAT_CONTINUE_WELCOME = `你好！我是你的公众号文案续写专家。✍️
+
+无论你是需要一篇干货满满的**科技测评**，还是一篇治愈人心的**情感美文**，
+亦或是实用的**生活攻略**，我都能为你量身打造。
+
+我的工作流程如下：
+1. **确认需求**：你告诉我文章的主题和想要的风格。
+2. **设计标题**：我为你提供几个极具吸引力的标题供你选择。
+3. **撰写全文**：从精彩的开头，到充实的正文，再到引导互动的结尾，一气呵成。
+
+**请告诉我，今天你想写一篇关于什么主题的文章？**`;
+```
+
+**修复方案**:
+在两个位置添加 `cleanMarkdownClient` 清理函数：
+
+```typescript
+// 1. 页面初始化时（第641行）
+useEffect(() => {
+  const xiaohongshuTemplateIds = ["101", "102", "103", "104", "105", "106", "107", "108"];
+  const wechatTemplateIds = ["201", "202", "203", "205"];
+  const allTemplateIds = [...xiaohongshuTemplateIds, ...wechatTemplateIds];
+
+  if (allTemplateIds.includes(templateId) && messages.length === 0) {
+    setMessages([{
+      id: 'welcome',
+      role: 'assistant',
+      content: cleanMarkdownClient(getWelcomeMessage(templateId)),  // 添加清理
+      isCollapsed: false
+    }]);
+  }
+}, [templateId]);
+
+// 2. 新建对话时（第910行）
+const handleXiaohongshuNewConversation = () => {
+  // ... 其他逻辑 ...
+
+  if (allTemplateIds.includes(templateId)) {
+    setMessages([{
+      id: 'welcome-' + Date.now(),
+      role: 'assistant',
+      content: cleanMarkdownClient(getWelcomeMessage(templateId)),  // 添加清理
+      isCollapsed: false
+    }]);
+  }
+};
+```
+
+**修复效果**:
+- 欢迎消息中的 `**` 标记被正确清理
+- 列表标记（`1.`、`2.`）被正确清理
+- 所有显示的AI消息都是纯文本格式
+
+**影响范围**:
+- 小红书模块（8个子类型）：101-108
+- 微信公众号模块（4个子类型）：201-203, 205
+
+**测试建议**:
+1. 刷新页面（Ctrl+F5 强制刷新）
+2. 点击"新建对话"按钮
+3. 查看AI的欢迎消息，应该不再包含 `**` 等markdown标记
+4. 注意：历史对话中的欢迎消息可能仍包含markdown格式（旧数据），但新创建的对话都是纯文本
+
+**完整的清理覆盖**:
+经过这次修复，markdown清理功能已经覆盖所有位置：
+- ✅ API路由返回时清理（服务端）
+- ✅ AI回复时清理（客户端）
+- ✅ 保存到对话历史时清理
+- ✅ 保存到数据库时清理
+- ✅ 加载历史对话时清理
+- ✅ 欢迎消息初始化时清理（新增）
+- ✅ 新建对话时清理（新增）
+
+---
+
 #### 5.8 最佳实践
 
 ##### 1. 服务端和客户端都应用清理
