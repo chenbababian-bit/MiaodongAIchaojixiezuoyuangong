@@ -15,8 +15,15 @@ export type XiaohongshuType =
   | 'xiaohongshu-product'
   | 'xiaohongshu-recommendation';
 
+// 公众号细粒度类型
+export type WechatType =
+  | 'wechat-article'
+  | 'wechat-continue'
+  | 'wechat-title'
+  | 'wechat-clickbait';
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType;
 
 export interface Conversation {
   id: string;
@@ -375,6 +382,28 @@ export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuT
   if (!type) {
     console.warn(`未知的小红书模板ID: ${templateId}，使用默认类型 xiaohongshu-copywriting`);
     return 'xiaohongshu-copywriting';
+  }
+
+  return type;
+}
+
+/**
+ * 根据公众号模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的公众号对话类型
+ */
+export function getWechatTypeByTemplateId(templateId: number): WechatType {
+  const templateMap: Record<number, WechatType> = {
+    201: 'wechat-article',    // 公众号文章撰写
+    202: 'wechat-continue',   // 公众号文本续写
+    203: 'wechat-title',      // 公众号标题
+    205: 'wechat-clickbait',  // 公众号标题党
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的公众号模板ID: ${templateId}，使用默认类型 wechat-article`);
+    return 'wechat-article';
   }
 
   return type;
