@@ -22,8 +22,16 @@ export type WechatType =
   | 'wechat-title'
   | 'wechat-clickbait';
 
+// 今日头条细粒度类型
+export type ToutiaoType =
+  | 'toutiao-article'
+  | 'toutiao-title'
+  | 'toutiao-qa'
+  | 'toutiao-micro'
+  | 'toutiao-outline';
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType;
 
 export interface Conversation {
   id: string;
@@ -404,6 +412,29 @@ export function getWechatTypeByTemplateId(templateId: number): WechatType {
   if (!type) {
     console.warn(`未知的公众号模板ID: ${templateId}，使用默认类型 wechat-article`);
     return 'wechat-article';
+  }
+
+  return type;
+}
+
+/**
+ * 根据今日头条模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的今日头条对话类型
+ */
+export function getToutiaoTypeByTemplateId(templateId: number): ToutiaoType {
+  const templateMap: Record<number, ToutiaoType> = {
+    301: 'toutiao-article',   // 头条爆文
+    302: 'toutiao-title',     // 头条爆款标题
+    303: 'toutiao-qa',        // 头条问答
+    304: 'toutiao-micro',     // 微头条文案
+    305: 'toutiao-outline',   // 头条文章大纲
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的今日头条模板ID: ${templateId}，使用默认类型 toutiao-article`);
+    return 'toutiao-article';
   }
 
   return type;
