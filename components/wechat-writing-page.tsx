@@ -925,8 +925,8 @@ export function WechatWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["101", "102", "103", "104", "105", "106", "107", "108"].includes(templateId) ? (
-        /* 所有小红书子类型：统一使用对话模式UI */
+      {["101", "102", "103", "104", "105", "106", "107", "108", "201", "202", "203", "205"].includes(templateId) ? (
+        /* 所有小红书和公众号子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
           <div className="border-b border-border p-4">
