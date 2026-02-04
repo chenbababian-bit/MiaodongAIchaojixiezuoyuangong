@@ -221,7 +221,7 @@ export const weiboTemplates = [
     id: 407,
     icon: "🐦",
     title: "微博推文",
-    desc: "设计吸引用户注意力的微博推文，提高用户参与度和内容传播力。",
+    desc: "创作具有强网感、高传播力和情绪价值的爆款微博推文。",
     color: "bg-orange-500",
   },
 ];

@@ -30,8 +30,18 @@ export type ToutiaoType =
   | 'toutiao-micro'
   | 'toutiao-outline';
 
+// 微博细粒度类型
+export type WeiboType =
+  | 'weibo-short'
+  | 'weibo-long'
+  | 'weibo-title'
+  | 'weibo-name'
+  | 'weibo-hotspot'
+  | 'weibo-profile'
+  | 'weibo-post';
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType;
 
 export interface Conversation {
   id: string;
@@ -435,6 +445,31 @@ export function getToutiaoTypeByTemplateId(templateId: number): ToutiaoType {
   if (!type) {
     console.warn(`未知的今日头条模板ID: ${templateId}，使用默认类型 toutiao-article`);
     return 'toutiao-article';
+  }
+
+  return type;
+}
+
+/**
+ * 根据微博模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的微博对话类型
+ */
+export function getWeiboTypeByTemplateId(templateId: number): WeiboType {
+  const templateMap: Record<number, WeiboType> = {
+    401: 'weibo-short',    // 微博短推文
+    402: 'weibo-long',     // 微博长文
+    403: 'weibo-title',    // 微博爆款标题
+    404: 'weibo-name',     // 微博账号名称
+    405: 'weibo-hotspot',  // 微博热点分析
+    406: 'weibo-profile',  // 微博账号简介
+    407: 'weibo-post',     // 微博推文
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的微博模板ID: ${templateId}，使用默认类型 weibo-short`);
+    return 'weibo-short';
   }
 
   return type;
