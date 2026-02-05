@@ -48,8 +48,26 @@ export type ZhihuType =
   | 'zhihu-tagline'      // 504: 知乎一句话简介
   | 'zhihu-username';    // 505: 知乎账号名称
 
+// 视频文案细粒度类型
+export type VideoType =
+  | 'video-script-outline'      // 1001: 短视频脚本大纲
+  | 'video-viral-copy'          // 1002: 短视频爆款文案
+  | 'video-viral-title'         // 1003: 短视频爆款标题
+  | 'video-storyboard'          // 1004: 短视频分镜头脚本
+  | 'video-golden-3sec'         // 1005: 短视频黄金3秒开头
+  | 'video-sales-script'        // 1006: 短视频带货口播文案
+  | 'video-soft-ad'             // 1007: 短视频软广脚本
+  | 'video-selling-point'       // 1008: 短视频卖点脚本
+  | 'video-hard-ad'             // 1009: 短视频硬广脚本
+  | 'video-hook-script'         // 1010: 短视频钩子脚本
+  | 'video-question-method'     // 1011: 短视频抛问题法
+  | 'video-technique-amplify'   // 1012: 短视频技巧放大法
+  | 'video-data-proof'          // 1013: 短视频数据佐证法
+  | 'video-error-point'         // 1014: 短视频指出错误法
+  | 'video-list-method';        // 1015: 短视频列举法
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType;
 
 export interface Conversation {
   id: string;
@@ -511,6 +529,39 @@ export function getZhihuTypeByTemplateId(templateId: number): ZhihuType {
   if (!type) {
     console.warn(`未知的知乎模板ID: ${templateId}，使用默认类型 zhihu-qa`);
     return 'zhihu-qa';
+  }
+
+  return type;
+}
+
+/**
+ * 根据视频文案模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的视频对话类型
+ */
+export function getVideoTypeByTemplateId(templateId: number): VideoType {
+  const templateMap: Record<number, VideoType> = {
+    1001: 'video-script-outline',      // 短视频脚本大纲
+    1002: 'video-viral-copy',          // 短视频爆款文案
+    1003: 'video-viral-title',         // 短视频爆款标题
+    1004: 'video-storyboard',          // 短视频分镜头脚本
+    1005: 'video-golden-3sec',         // 短视频黄金3秒开头
+    1006: 'video-sales-script',        // 短视频带货口播文案
+    1007: 'video-soft-ad',             // 短视频软广脚本
+    1008: 'video-selling-point',       // 短视频卖点脚本
+    1009: 'video-hard-ad',             // 短视频硬广脚本
+    1010: 'video-hook-script',         // 短视频钩子脚本
+    1011: 'video-question-method',     // 短视频抛问题法
+    1012: 'video-technique-amplify',   // 短视频技巧放大法
+    1013: 'video-data-proof',          // 短视频数据佐证法
+    1014: 'video-error-point',         // 短视频指出错误法
+    1015: 'video-list-method',         // 短视频列举法
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的视频文案模板ID: ${templateId}，使用默认类型 video-viral-copy`);
+    return 'video-viral-copy';
   }
 
   return type;
