@@ -254,14 +254,31 @@ export async function getConversationMessages(
 const [currentConversation, setCurrentConversation] = useState<Conversation | null>(null);
 const [messages, setMessages] = useState<Message[]>([]);
 const [conversationHistory, setConversationHistory] = useState<Array<{role: string, content: string}>>([]);
+const [historyConversations, setHistoryConversations] = useState<DBConversation[]>([]);
+const [isLoadingHistory, setIsLoadingHistory] = useState(false);
+const [resultTab, setResultTab] = useState<"current" | "history">("current");
 
-// 加载对话历史
+// 加载对话历史列表
 useEffect(() => {
-  if (currentConversation) {
-    loadMessages(currentConversation.id);
-  }
-}, [currentConversation]);
+  const loadHistory = async () => {
+    if (!userId) return;
 
+    setIsLoadingHistory(true);
+    try {
+      const conversationType = getModuleTypeByTemplateId(templateId);
+      const conversations = await getConversations(userId, undefined, conversationType);
+      setHistoryConversations(conversations);
+    } catch (error) {
+      console.error('加载历史记录失败:', error);
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  loadHistory();
+}, [userId, templateId]);
+
+// 加载单个对话的消息
 async function loadMessages(conversationId: string) {
   const msgs = await getConversationMessages(conversationId);
   setMessages(msgs);
@@ -273,6 +290,269 @@ async function loadMessages(conversationId: string) {
   }));
   setConversationHistory(history);
 }
+```
+
+### 4. 历史记录UI实现
+
+#### 4.1 历史记录标签页切换
+
+```typescript
+// 右侧区域：当前创作结果 / 历史记录
+<div className="flex-1 flex flex-col">
+  {/* 标签页切换按钮 */}
+  <div className="flex gap-2 p-4 border-b">
+    <Button
+      variant={resultTab === "current" ? "default" : "outline"}
+      onClick={() => setResultTab("current")}
+    >
+      当前创作结果
+    </Button>
+    <Button
+      variant={resultTab === "history" ? "default" : "outline"}
+      onClick={() => setResultTab("history")}
+    >
+      历史记录
+    </Button>
+  </div>
+
+  {/* 内容区域 */}
+  {resultTab === "current" ? (
+    <RichTextEditor value={currentResult} />
+  ) : (
+    <HistoryList />
+  )}
+</div>
+```
+
+#### 4.2 历史记录列表展示
+
+```typescript
+// 历史记录列表组件
+function HistoryList() {
+  return (
+    <ScrollArea className="flex-1">
+      {isLoadingHistory ? (
+        <div className="flex flex-col items-center justify-center h-full p-6">
+          <Loader2 className="h-12 w-12 text-primary animate-spin mb-4" />
+          <p className="text-sm text-muted-foreground">加载历史记录中...</p>
+        </div>
+      ) : historyConversations.length > 0 ? (
+        <div className="p-4 space-y-3">
+          {historyConversations.map((conversation) => (
+            <div
+              key={conversation.id}
+              className="p-4 border border-border rounded-lg hover:bg-muted/50 cursor-pointer transition-colors"
+              onClick={() => handleLoadConversation(conversation.id)}
+            >
+              <div className="flex items-start justify-between mb-2">
+                <h3 className="text-sm font-medium text-foreground line-clamp-1">
+                  {conversation.title}
+                </h3>
+                <span className="text-xs text-muted-foreground whitespace-nowrap ml-2">
+                  {new Date(conversation.created_at).toLocaleDateString('zh-CN', {
+                    month: 'numeric',
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  })}
+                </span>
+              </div>
+              <p className="text-xs text-muted-foreground">
+                点击查看完整对话
+              </p>
+            </div>
+          ))}
+        </div>
+      ) : (
+        <div className="flex flex-col items-center justify-center h-full p-6">
+          <Calendar className="h-12 w-12 text-muted-foreground mb-4" />
+          <p className="text-sm text-muted-foreground">
+            暂无历史创作记录
+          </p>
+          {!userId && (
+            <p className="text-xs text-muted-foreground mt-2">
+              请先登录以保存和查看历史记录
+            </p>
+          )}
+        </div>
+      )}
+    </ScrollArea>
+  );
+}
+```
+
+#### 4.3 点击历史记录恢复对话
+
+```typescript
+// 加载历史对话的完整实现
+async function handleLoadConversation(conversationId: string) {
+  try {
+    const { getConversationWithMessages } = await import('@/lib/conversations');
+    const conv = await getConversationWithMessages(conversationId);
+
+    if (conv && conv.messages) {
+      // 恢复对话历史（清理markdown格式）
+      const history: Array<{ role: 'user' | 'assistant'; content: string }> = [];
+      const msgs = conv.messages.map(msg => {
+        const cleanedContent = msg.role === 'assistant'
+          ? cleanMarkdownClient(msg.content)
+          : msg.content;
+        history.push({
+          role: msg.role as 'user' | 'assistant',
+          content: cleanedContent
+        });
+        return {
+          id: msg.id,
+          role: msg.role as 'user' | 'assistant',
+          content: cleanedContent,
+          isCollapsed: false
+        };
+      });
+
+      // 更新状态
+      setConversationHistory(history);
+      setMessages(msgs);
+      setCurrentConversationId(conversation.id);
+
+      // 显示最后一条AI回复（清理markdown格式）
+      const lastAssistantMsg = conv.messages
+        .filter(m => m.role === 'assistant')
+        .pop();
+      if (lastAssistantMsg) {
+        const plainText = markdownToPlainText(cleanMarkdownClient(lastAssistantMsg.content));
+        setCurrentResult(plainText);
+      }
+
+      // 切换到当前创作结果标签
+      setResultTab('current');
+    }
+  } catch (error) {
+    console.error('加载对话失败:', error);
+    alert('加载对话失败，请重试');
+  }
+}
+```
+
+#### 4.4 新建对话功能
+
+```typescript
+// 新建对话按钮
+<Button
+  variant="outline"
+  size="sm"
+  onClick={handleNewConversation}
+  className="gap-2"
+>
+  <Plus className="h-4 w-4" />
+  新建对话
+</Button>
+
+// 新建对话处理函数
+function handleNewConversation() {
+  // 清空当前对话状态
+  setCurrentConversationId(null);
+  setMessages([]);
+  setConversationHistory([]);
+  setCurrentResult('');
+
+  // 重置为欢迎消息
+  setMessages([{
+    id: 'welcome',
+    role: 'assistant',
+    content: getWelcomeMessage(templateId),
+    isCollapsed: false
+  }]);
+
+  // 切换到当前创作结果标签
+  setResultTab('current');
+}
+```
+
+### 5. 自动保存对话
+
+```typescript
+// 发送消息后自动保存到数据库
+async function handleSendMessage(userContent: string) {
+  // ... 调用AI API获取回复 ...
+
+  // 更新对话历史状态
+  setConversationHistory(prev => [
+    ...prev,
+    { role: 'user', content: userContent },
+    { role: 'assistant', content: aiResponse }
+  ]);
+
+  // 如果用户已登录且没有当前对话ID，自动创建对话并保存
+  if (userId && !currentConversationId) {
+    try {
+      const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
+      const conversationType = getModuleTypeByTemplateId(templateId);
+      const convId = await createConversation(userId, title, conversationType);
+      setCurrentConversationId(convId);
+
+      // 保存消息到数据库
+      await addMessage(convId, 'user', userContent);
+      await addMessage(convId, 'assistant', aiResponse);
+
+      // 刷新历史记录列表
+      const conversations = await getConversations(userId, undefined, conversationType);
+      setHistoryConversations(conversations);
+    } catch (dbError) {
+      console.error('保存到数据库失败:', dbError);
+    }
+  } else if (userId && currentConversationId) {
+    // 如果已有对话ID，直接保存消息
+    try {
+      await addMessage(currentConversationId, 'user', userContent);
+      await addMessage(currentConversationId, 'assistant', aiResponse);
+    } catch (dbError) {
+      console.error('保存消息失败:', dbError);
+    }
+  }
+}
+```
+
+### 6. 类型映射函数
+
+```typescript
+// lib/conversations.ts
+// 根据模板ID获取对应的对话类型
+export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuType {
+  const templateMap: Record<number, XiaohongshuType> = {
+    // 新ID (101-108)
+    101: 'xiaohongshu-travel',
+    102: 'xiaohongshu-copywriting',
+    103: 'xiaohongshu-title',
+    104: 'xiaohongshu-profile',
+    105: 'xiaohongshu-seo',
+    106: 'xiaohongshu-style',
+    107: 'xiaohongshu-product',
+    108: 'xiaohongshu-recommendation',
+    // 旧ID (1-8) - 向后兼容
+    1: 'xiaohongshu-travel',
+    2: 'xiaohongshu-copywriting',
+    3: 'xiaohongshu-title',
+    4: 'xiaohongshu-profile',
+    5: 'xiaohongshu-seo',
+    6: 'xiaohongshu-style',
+    7: 'xiaohongshu-product',
+    8: 'xiaohongshu-recommendation',
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的模板ID: ${templateId}，使用默认类型`);
+    return 'xiaohongshu-copywriting';
+  }
+
+  return type;
+}
+
+// 其他模块的类型映射函数
+export function getWeiboTypeByTemplateId(templateId: number): WeiboType { /* ... */ }
+export function getZhihuTypeByTemplateId(templateId: number): ZhihuType { /* ... */ }
+export function getWechatTypeByTemplateId(templateId: number): WechatType { /* ... */ }
+export function getToutiaoTypeByTemplateId(templateId: number): ToutiaoType { /* ... */ }
 ```
 
 ---
