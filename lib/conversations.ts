@@ -32,13 +32,13 @@ export type ToutiaoType =
 
 // 微博细粒度类型
 export type WeiboType =
-  | 'weibo-short'
-  | 'weibo-long'
-  | 'weibo-title'
-  | 'weibo-name'
-  | 'weibo-hotspot'
-  | 'weibo-profile'
-  | 'weibo-post';
+  | 'weibo-short'     // 401: 微博短推文
+  | 'weibo-long'      // 402: 微博长文
+  | 'weibo-title'     // 403: 微博爆款标题
+  | 'weibo-name'      // 404: 微博账号名称
+  | 'weibo-hotspot'   // 405: 微博热点分析
+  | 'weibo-bio'       // 406: 微博账号简介
+  | 'weibo-tweet';    // 407: 微博推文
 
 // 知乎细粒度类型
 export type ZhihuType =
@@ -470,8 +470,8 @@ export function getWeiboTypeByTemplateId(templateId: number): WeiboType {
     403: 'weibo-title',    // 微博爆款标题
     404: 'weibo-name',     // 微博账号名称
     405: 'weibo-hotspot',  // 微博热点分析
-    406: 'weibo-profile',  // 微博账号简介
-    407: 'weibo-post',     // 微博推文
+    406: 'weibo-bio',      // 微博账号简介
+    407: 'weibo-tweet',    // 微博推文
   };
 
   const type = templateMap[templateId];
