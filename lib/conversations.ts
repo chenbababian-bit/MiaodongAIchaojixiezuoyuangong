@@ -394,6 +394,7 @@ export function generateConversationTitle(firstMessage: string): string {
  */
 export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuType {
   const templateMap: Record<number, XiaohongshuType> = {
+    // 新ID (101-108)
     101: 'xiaohongshu-travel',        // 旅游攻略
     102: 'xiaohongshu-copywriting',   // 爆款文案
     103: 'xiaohongshu-title',         // 爆款标题
@@ -402,6 +403,15 @@ export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuT
     106: 'xiaohongshu-style',         // 风格改写
     107: 'xiaohongshu-product',       // 产品种草
     108: 'xiaohongshu-recommendation', // 好物推荐
+    // 旧ID (1-8) - 向后兼容
+    1: 'xiaohongshu-travel',          // 旧ID: 旅游攻略
+    2: 'xiaohongshu-copywriting',     // 旧ID: 爆款文案
+    3: 'xiaohongshu-title',           // 旧ID: 爆款标题
+    4: 'xiaohongshu-profile',         // 旧ID: 个人简介
+    5: 'xiaohongshu-seo',             // 旧ID: SEO优化
+    6: 'xiaohongshu-style',           // 旧ID: 风格改写
+    7: 'xiaohongshu-product',         // 旧ID: 产品种草
+    8: 'xiaohongshu-recommendation',  // 旧ID: 好物推荐
   };
 
   const type = templateMap[templateId];
