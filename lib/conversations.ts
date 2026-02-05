@@ -40,8 +40,16 @@ export type WeiboType =
   | 'weibo-profile'
   | 'weibo-post';
 
+// 知乎细粒度类型
+export type ZhihuType =
+  | 'zhihu-qa'           // 501: 知乎高赞问答
+  | 'zhihu-answer'       // 502: 知乎高赞回答仿写
+  | 'zhihu-bio'          // 503: 知乎账号个人简介
+  | 'zhihu-tagline'      // 504: 知乎一句话简介
+  | 'zhihu-username';    // 505: 知乎账号名称
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType;
 
 export interface Conversation {
   id: string;
@@ -470,6 +478,29 @@ export function getWeiboTypeByTemplateId(templateId: number): WeiboType {
   if (!type) {
     console.warn(`未知的微博模板ID: ${templateId}，使用默认类型 weibo-short`);
     return 'weibo-short';
+  }
+
+  return type;
+}
+
+/**
+ * 根据知乎模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的知乎对话类型
+ */
+export function getZhihuTypeByTemplateId(templateId: number): ZhihuType {
+  const templateMap: Record<number, ZhihuType> = {
+    501: 'zhihu-qa',       // 知乎高赞问答
+    502: 'zhihu-answer',   // 知乎高赞回答仿写
+    503: 'zhihu-bio',      // 知乎账号个人简介
+    504: 'zhihu-tagline',  // 知乎一句话简介
+    505: 'zhihu-username', // 知乎账号名称
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的知乎模板ID: ${templateId}，使用默认类型 zhihu-qa`);
+    return 'zhihu-qa';
   }
 
   return type;
