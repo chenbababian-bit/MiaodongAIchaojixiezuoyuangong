@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
@@ -40,6 +40,7 @@ import {
   getConversations,
   addMessage,
   type Conversation as DBConversation,
+  type PrivateType,
 } from "@/lib/conversations";
 import {
   Select,
@@ -223,7 +224,7 @@ const getApiEndpoint = (templateId: string): string => {
 };
 
 // 根据模板ID获取对话类型
-const getPrivateTypeByTemplateId = (templateId: number): string => {
+const getPrivateTypeByTemplateId = (templateId: number): PrivateType => {
   switch (templateId) {
     case 601: return "private-daily";
     case 602: return "private-moments";
@@ -236,7 +237,7 @@ const getPrivateTypeByTemplateId = (templateId: number): string => {
   }
 };
 
-export default function PrivateWritingPage() {
+function PrivateWritingPageContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "私域日常文案库";
@@ -790,6 +791,18 @@ export default function PrivateWritingPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function PrivateWritingPage() {
+  return (
+    <Suspense fallback={
+      <div className="flex items-center justify-center h-screen">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    }>
+      <PrivateWritingPageContent />
+    </Suspense>
   );
 }
 
