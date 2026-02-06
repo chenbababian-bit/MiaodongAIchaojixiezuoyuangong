@@ -419,7 +419,7 @@ export function VideoWritingPage() {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
-        content: getWelcomeMessage(templateId),
+        content: cleanMarkdownClient(getWelcomeMessage(templateId)),
         isCollapsed: false
       }]);
     }
@@ -615,7 +615,7 @@ export function VideoWritingPage() {
       setMessages([{
         id: 'welcome-' + Date.now(),
         role: 'assistant',
-        content: getWelcomeMessage(templateId),
+        content: cleanMarkdownClient(getWelcomeMessage(templateId)),
         isCollapsed: false
       }]);
       setInputHeight(60);
