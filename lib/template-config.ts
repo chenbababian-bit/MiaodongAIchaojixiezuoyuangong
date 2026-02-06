@@ -634,6 +634,62 @@ export const TEMPLATE_REGISTRY: Record<number, TemplateConfig> = {
     apiEndpoint: "/api/video-list-method",
     routePath: "/writing/video",
   },
+
+  // ========== 快手运营类 (4001-4005) ==========
+  4001: {
+    id: 4001,
+    category: "video",
+    title: "快手账号名称",
+    desc: "设计能够吸引目标观众群体的短视频标题和内容,提高用户参与度和账号影响力。",
+    icon: "⚡",
+    iconBg: "bg-orange-600",
+    apiEndpoint: "/api/kuaishou-name",
+    routePath: "/writing/kuaishou",
+  },
+
+  4002: {
+    id: 4002,
+    category: "video",
+    title: "快手带货口播文案",
+    desc: "设计能够吸引观众、促进销售的口播文案,同时确保文案内容真实、吸引人,不夸大其词。",
+    icon: "⚡",
+    iconBg: "bg-orange-600",
+    apiEndpoint: "/api/kuaishou-live",
+    routePath: "/writing/kuaishou",
+  },
+
+  4003: {
+    id: 4003,
+    category: "video",
+    title: "快手分镜头脚本",
+    desc: "设计一个能够吸引快手平台观众的短视频分镜头脚本,确保内容有趣、有教育意义或有娱乐价值。",
+    icon: "⚡",
+    iconBg: "bg-orange-600",
+    apiEndpoint: "/api/kuaishou-script",
+    routePath: "/writing/kuaishou",
+  },
+
+  4004: {
+    id: 4004,
+    category: "video",
+    title: "快手爆款标题",
+    desc: "设计出能够吸引观众注意力并提高视频点击率的短视频标题。",
+    icon: "⚡",
+    iconBg: "bg-orange-600",
+    apiEndpoint: "/api/kuaishou-title",
+    routePath: "/writing/kuaishou",
+  },
+
+  4005: {
+    id: 4005,
+    category: "video",
+    title: "快手账号简介",
+    desc: "制作并发布能够吸引观众、引发讨论、增加粉丝互动的短视频内容。",
+    icon: "⚡",
+    iconBg: "bg-orange-600",
+    apiEndpoint: "/api/kuaishou-profile",
+    routePath: "/writing/kuaishou",
+  },
 };
 
 /**
