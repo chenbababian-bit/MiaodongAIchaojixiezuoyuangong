@@ -466,6 +466,174 @@ export const TEMPLATE_REGISTRY: Record<number, TemplateConfig> = {
     apiEndpoint: "/api/private-rules",
     routePath: "/writing/private",
   },
+
+  // ========== 视频文案类 (1001-1015) ==========
+  1001: {
+    id: 1001,
+    category: "video",
+    title: "短视频脚本大纲",
+    desc: "设计一个结构清晰、内容丰富、易于执行的短视频脚本大纲。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-script-outline",
+    routePath: "/writing/video",
+  },
+
+  1002: {
+    id: 1002,
+    legacyIds: [4], // 首页旧ID
+    category: "video",
+    title: "短视频爆款文案",
+    desc: "设计能够迅速吸引观众注意力并激发他们情感共鸣的短视频文案。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-viral-copy",
+    routePath: "/writing/video",
+  },
+
+  1003: {
+    id: 1003,
+    category: "video",
+    title: "短视频爆款标题",
+    desc: "设计出能够迅速吸引观众群体注意的短视频标题。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-viral-title",
+    routePath: "/writing/video",
+  },
+
+  1004: {
+    id: 1004,
+    category: "video",
+    title: "短视频分镜头脚本",
+    desc: "设计一个能够帮助用户快速梳理短视频分镜头脚本的提示词。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-storyboard",
+    routePath: "/writing/video",
+  },
+
+  1005: {
+    id: 1005,
+    legacyIds: [9], // 首页旧ID
+    category: "video",
+    title: "短视频黄金3秒开头",
+    desc: "设计出能够迅速吸引观众并促使他们继续观看的短视频开头。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-golden-3sec",
+    routePath: "/writing/video",
+  },
+
+  1006: {
+    id: 1006,
+    category: "video",
+    title: "短视频带货口播文案",
+    desc: "设计出能够吸引目标受众、提升商品曝光度和转化率的短视频带货口播文案。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-sales-script",
+    routePath: "/writing/video",
+  },
+
+  1007: {
+    id: 1007,
+    category: "video",
+    title: "短视频软广脚本",
+    desc: "创作出既能够吸引观众,又能够巧妙地推广产品或服务的短视频脚本。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-soft-ad",
+    routePath: "/writing/video",
+  },
+
+  1008: {
+    id: 1008,
+    category: "video",
+    title: "短视频卖点脚本",
+    desc: "设计出能够迅速吸引观众注意并促使其分享的短视频脚本。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-selling-point",
+    routePath: "/writing/video",
+  },
+
+  1009: {
+    id: 1009,
+    category: "video",
+    title: "短视频硬广脚本",
+    desc: "设计出能够迅速吸引目标受众注意力并促使其采取行动的短视频广告脚本。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-hard-ad",
+    routePath: "/writing/video",
+  },
+
+  1010: {
+    id: 1010,
+    category: "video",
+    title: "短视频钩子脚本",
+    desc: "设计能够快速吸引观众注意力的短视频钩子脚本。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-hook-script",
+    routePath: "/writing/video",
+  },
+
+  1011: {
+    id: 1011,
+    category: "video",
+    title: "短视频抛问题法",
+    desc: "设计一个能够帮助用户快速创作出吸引观众的短视频内容的提示词。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-question-method",
+    routePath: "/writing/video",
+  },
+
+  1012: {
+    id: 1012,
+    category: "video",
+    title: "短视频技巧放大法",
+    desc: "设计一个能够帮助用户提升短视频吸引力和观众参与度的提示词。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-technique-amplify",
+    routePath: "/writing/video",
+  },
+
+  1013: {
+    id: 1013,
+    category: "video",
+    title: "短视频数据佐证法",
+    desc: "帮助用户通过短视频数据来佐证其内容创作的有效性,提高内容的吸引力和传播力。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-data-proof",
+    routePath: "/writing/video",
+  },
+
+  1014: {
+    id: 1014,
+    category: "video",
+    title: "短视频指出错误法",
+    desc: "设计一个能够指导用户识别和纠正短视频中错误的提示词,提高内容的准确性和可信度。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-error-point",
+    routePath: "/writing/video",
+  },
+
+  1015: {
+    id: 1015,
+    category: "video",
+    title: "短视频列举法",
+    desc: "设计一套能够帮助用户快速生成短视频创意和脚本的提示词。",
+    icon: "🎬",
+    iconBg: "bg-orange-500",
+    apiEndpoint: "/api/video-list-method",
+    routePath: "/writing/video",
+  },
 };
 
 /**
