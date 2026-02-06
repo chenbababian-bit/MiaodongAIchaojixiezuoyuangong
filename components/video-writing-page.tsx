@@ -990,6 +990,9 @@ export function VideoWritingPage() {
               <button
                 key={template.id}
                 onClick={() => {
+                  // 立即更新activeTemplate状态
+                  setActiveTemplate(template.id);
+                  // 然后更新URL
                   router.push(
                     `/writing/video?template=${template.id}&title=${encodeURIComponent(template.title)}&source=${source}`
                   );
