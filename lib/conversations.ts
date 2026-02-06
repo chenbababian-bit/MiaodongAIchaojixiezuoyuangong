@@ -66,8 +66,18 @@ export type VideoType =
   | 'video-error-point'         // 1014: 短视频指出错误法
   | 'video-list-method';        // 1015: 短视频列举法
 
+// 私域运营细粒度类型
+export type PrivateType =
+  | 'private-daily'        // 601: 私域日常文案库
+  | 'private-moments'      // 602: 私域朋友圈发文计划库
+  | 'private-value'        // 603: 私域价值感文案库
+  | 'private-marketing'    // 604: 私域产品营销文案库
+  | 'private-reply'        // 605: 私域客户回复助手
+  | 'private-event'        // 606: 私域社群活动策划
+  | 'private-rules';       // 607: 私域社群规则生成库
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType;
 
 export interface Conversation {
   id: string;
