@@ -76,8 +76,16 @@ export type PrivateType =
   | 'private-event'        // 606: 私域社群活动策划
   | 'private-rules';       // 607: 私域社群规则生成库
 
+// 快手运营细粒度类型
+export type KuaishouType =
+  | 'kuaishou-name'        // 4001: 快手账号名称
+  | 'kuaishou-live'        // 4002: 快手带货口播文案
+  | 'kuaishou-script'      // 4003: 快手分镜头脚本
+  | 'kuaishou-title'       // 4004: 快手爆款标题
+  | 'kuaishou-profile';    // 4005: 快手账号简介
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType;
 
 export interface Conversation {
   id: string;
