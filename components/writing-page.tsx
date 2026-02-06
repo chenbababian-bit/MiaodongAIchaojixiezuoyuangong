@@ -694,21 +694,21 @@ function TemplateCard({ template }: TemplateCardProps) {
 
   const handleClick = () => {
     // 统一路由映射表
-    const routeMap: Record<number, string> = {
-      1: "/writing/xiaohongshu",      // 小红书爆款文案
-      2: "/writing/report",            // 汇报材料
-      3: "/writing/wechat",            // 公众号文章撰写
-      4: "/writing/video",             // 短视频爆款文案
-      5: "/writing/toutiao",           // 头条爆文
-      6: "/writing/title",             // 小红书爆款标题
-      7: "/writing/business-plan",     // 商业计划书
-      8: "/writing/work-summary",      // 周/月/季度工作总结
-      9: "/writing/video-hook",        // 短视频黄金3秒开头
-      10: "/writing/brand-positioning", // 品牌定位报告
+    const routeMap: Record<number, { route: string; templateId: string }> = {
+      1: { route: "/writing/xiaohongshu", templateId: "102" },      // 小红书爆款文案 -> 新ID 102
+      2: { route: "/writing/report", templateId: "2" },             // 汇报材料
+      3: { route: "/writing/wechat", templateId: "201" },           // 公众号文章撰写 -> 新ID 201
+      4: { route: "/writing/video", templateId: "1002" },           // 短视频爆款文案 -> 新ID 1002
+      5: { route: "/writing/toutiao", templateId: "301" },          // 头条爆文 -> 新ID 301
+      6: { route: "/writing/title", templateId: "103" },            // 小红书爆款标题 -> 新ID 103
+      7: { route: "/writing/business-plan", templateId: "7" },      // 商业计划书
+      8: { route: "/writing/work-summary", templateId: "8" },       // 周/月/季度工作总结
+      9: { route: "/writing/video-hook", templateId: "1005" },      // 短视频黄金3秒开头 -> 新ID 1005
+      10: { route: "/writing/brand-positioning", templateId: "10" }, // 品牌定位报告
     };
 
-    const route = routeMap[template.id] || "/writing/xiaohongshu";
-    router.push(`${route}?template=${template.id}&title=${encodeURIComponent(template.title)}&source=hot`);
+    const mapping = routeMap[template.id] || { route: "/writing/xiaohongshu", templateId: "102" };
+    router.push(`${mapping.route}?template=${mapping.templateId}&title=${encodeURIComponent(template.title)}&source=hot`);
   };
 
   return (
