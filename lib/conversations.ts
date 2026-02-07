@@ -103,8 +103,24 @@ export type DataAnalysisType =
   | 'data-analysis-video-interaction' // 5005: 短视频互动分析
   | 'data-analysis-video-sales';      // 5006: 短视频成交分析
 
+// 直播话术细粒度类型
+export type LiveStreamingType =
+  | 'live-product-selling'      // 6001: 直播产品卖点话术
+  | 'live-closing'              // 6002: 直播成交话术
+  | 'live-basic-product'        // 6003: 直播基础品话术
+  | 'live-interaction'          // 6004: 直播互动话术
+  | 'live-retention'            // 6005: 直播停留话术
+  | 'live-combo-product'        // 6006: 直播组合品话术
+  | 'live-welfare-product'      // 6007: 直播福利品话术
+  | 'live-urgency'              // 6008: 直播催单话术
+  | 'live-ending'               // 6009: 直播下播话术
+  | 'live-30min-script'         // 6010: 30分钟直播话术
+  | 'live-sales-script'         // 6011: 直播带货脚本
+  | 'live-host-growth'          // 6012: 主播成长规划
+  | 'live-title-generator';     // 6013: 直播间标题生成器
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType;
 
 export interface Conversation {
   id: string;
@@ -648,6 +664,37 @@ export function getDataAnalysisTypeByTemplateId(templateId: number): DataAnalysi
   if (!type) {
     console.warn(`未知的数据分析模板ID: ${templateId}，使用默认类型 data-analysis-video-play`);
     return 'data-analysis-video-play';
+  }
+
+  return type;
+}
+
+/**
+ * 根据直播话术模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的直播话术对话类型
+ */
+export function getLiveStreamingTypeByTemplateId(templateId: number): LiveStreamingType {
+  const templateMap: Record<number, LiveStreamingType> = {
+    6001: 'live-product-selling',   // 直播产品卖点话术
+    6002: 'live-closing',            // 直播成交话术
+    6003: 'live-basic-product',      // 直播基础品话术
+    6004: 'live-interaction',        // 直播互动话术
+    6005: 'live-retention',          // 直播停留话术
+    6006: 'live-combo-product',      // 直播组合品话术
+    6007: 'live-welfare-product',    // 直播福利品话术
+    6008: 'live-urgency',            // 直播催单话术
+    6009: 'live-ending',             // 直播下播话术
+    6010: 'live-30min-script',       // 30分钟直播话术
+    6011: 'live-sales-script',       // 直播带货脚本
+    6012: 'live-host-growth',        // 主播成长规划
+    6013: 'live-title-generator',    // 直播间标题生成器
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的直播话术模板ID: ${templateId}，使用默认类型 live-product-selling`);
+    return 'live-product-selling';
   }
 
   return type;
