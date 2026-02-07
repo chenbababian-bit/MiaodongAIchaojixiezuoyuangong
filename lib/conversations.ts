@@ -84,8 +84,18 @@ export type KuaishouType =
   | 'kuaishou-title'       // 4004: 快手爆款标题
   | 'kuaishou-profile';    // 4005: 快手账号简介
 
+// 抖音运营细粒度类型
+export type DouyinType =
+  | 'douyin-strategy'      // 2001: 企业抖音矩阵运营战略图
+  | 'douyin-title'         // 2002: 抖音爆款标题
+  | 'douyin-script'        // 2003: 抖音分镜头脚本
+  | 'douyin-profile'       // 2004: 抖音账号简介
+  | 'douyin-hotspot'       // 2005: 抖音蹭热点选题
+  | 'douyin-topic'         // 2006: 抖音选题方向
+  | 'douyin-name';         // 2007: 抖音账号名称
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType;
 
 export interface Conversation {
   id: string;

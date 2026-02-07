@@ -690,6 +690,84 @@ export const TEMPLATE_REGISTRY: Record<number, TemplateConfig> = {
     apiEndpoint: "/api/kuaishou-profile",
     routePath: "/writing/kuaishou",
   },
+
+  // ========== 抖音运营类 (2001-2007) ==========
+  2001: {
+    id: 2001,
+    category: "video",
+    title: "企业抖音矩阵运营战略图",
+    desc: "制定《企业抖音矩阵运营战略图》,帮助企业在抖音平台上实现品牌的全面覆盖和用户的深度粘性。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-strategy",
+    routePath: "/writing/douyin",
+  },
+
+  2002: {
+    id: 2002,
+    category: "video",
+    title: "抖音爆款标题",
+    desc: "设计出能够迅速吸引观众注意并增加视频观看量的短视频标题。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-title",
+    routePath: "/writing/douyin",
+  },
+
+  2003: {
+    id: 2003,
+    category: "video",
+    title: "抖音分镜头脚本",
+    desc: "设计一个能够指导用户创作出具有吸引力的抖音短视频分镜头脚本的提示词。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-script",
+    routePath: "/writing/douyin",
+  },
+
+  2004: {
+    id: 2004,
+    category: "video",
+    title: "抖音账号简介",
+    desc: "设计一个能够吸引目标观众的抖音账号简介,同时展示个人品牌和内容特色。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-profile",
+    routePath: "/writing/douyin",
+  },
+
+  2005: {
+    id: 2005,
+    category: "video",
+    title: "抖音蹭蹭热点选题",
+    desc: "设计一系列能够迅速吸引观众注意力的短视频选题。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-hotspot",
+    routePath: "/writing/douyin",
+  },
+
+  2006: {
+    id: 2006,
+    category: "video",
+    title: "抖音选题方向",
+    desc: "设计一系列能够吸引观众的短视频选题,提高视频的观看量和互动率。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-topic",
+    routePath: "/writing/douyin",
+  },
+
+  2007: {
+    id: 2007,
+    category: "video",
+    title: "抖音账号名称",
+    desc: "设计一个能够帮助用户快速生成短视频创意的提示词,提高内容的吸引力和观众参与度。",
+    icon: "🎵",
+    iconBg: "bg-black",
+    apiEndpoint: "/api/douyin-name",
+    routePath: "/writing/douyin",
+  },
 };
 
 /**
