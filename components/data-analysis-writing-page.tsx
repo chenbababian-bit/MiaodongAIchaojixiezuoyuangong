@@ -19,6 +19,7 @@ import {
   createConversation,
   getConversations,
   addMessage,
+  getDataAnalysisTypeByTemplateId,
   type Conversation as DBConversation,
 } from "@/lib/conversations";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -180,19 +181,6 @@ const getApiEndpoint = (templateId: string): string => {
   }
 };
 
-// 获取对话类型
-const getConversationType = (templateId: number): string => {
-  switch (templateId) {
-    case 5001: return "data_analysis_video_play";
-    case 5002: return "data_analysis_video_audience";
-    case 5003: return "data_analysis_live_sales";
-    case 5004: return "data_analysis_live_view";
-    case 5005: return "data_analysis_video_interaction";
-    case 5006: return "data_analysis_video_sales";
-    default: return "data_analysis";
-  }
-};
-
 export function DataAnalysisWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
@@ -246,7 +234,7 @@ export function DataAnalysisWritingPage() {
 
       setIsLoadingHistory(true);
       try {
-        const conversationType = getConversationType(parseInt(templateId));
+        const conversationType = getDataAnalysisTypeByTemplateId(parseInt(templateId));
         const conversations = await getConversations(userId, undefined, conversationType);
         setHistoryConversations(conversations);
       } catch (error) {
@@ -408,7 +396,7 @@ export function DataAnalysisWritingPage() {
       if (userId && !currentConversationId) {
         try {
           const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
-          const conversationType = getConversationType(parseInt(templateId));
+          const conversationType = getDataAnalysisTypeByTemplateId(parseInt(templateId));
           const convId = await createConversation(userId, title, conversationType);
           setCurrentConversationId(convId);
 
