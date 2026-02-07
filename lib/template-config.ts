@@ -12,6 +12,7 @@ export type TemplateCategory =
   | "private"        // 私域运营
   | "video"          // 短视频
   | "live"           // 直播
+  | "data-analysis"  // 数据分析
   | "report"         // 汇报材料
   | "business"       // 商业
   | "general";       // 通用写作
@@ -767,6 +768,73 @@ export const TEMPLATE_REGISTRY: Record<number, TemplateConfig> = {
     iconBg: "bg-black",
     apiEndpoint: "/api/douyin-name",
     routePath: "/writing/douyin",
+  },
+
+  // ========== 数据分析类 (5001-5006) ==========
+  5001: {
+    id: 5001,
+    category: "data-analysis",
+    title: "短视频播放分析",
+    desc: "设计一个能够指导用户进行短视频播放分析的流程,帮助用户理解观众喜好,优化视频内容。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/video-play-analysis",
+    routePath: "/writing/data-analysis",
+  },
+
+  5002: {
+    id: 5002,
+    category: "data-analysis",
+    title: "短视频观众分析",
+    desc: "设计一个能够提供深入观众分析的提示词,帮助用户理解短视频观众的行为模式,从而创作出更受欢迎的内容。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/video-audience-analysis",
+    routePath: "/writing/data-analysis",
+  },
+
+  5003: {
+    id: 5003,
+    category: "data-analysis",
+    title: "直播成交数据分析",
+    desc: "设计一个短视频脚本,清晰展示直播成交数据的关键指标和趋势,以吸引观众并促进销售。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/live-sales-analysis",
+    routePath: "/writing/data-analysis",
+  },
+
+  5004: {
+    id: 5004,
+    category: "data-analysis",
+    title: "直播观看数据分析",
+    desc: "设计一个能够指导内容创作者通过分析直播数据来提高观众参与度和内容吸引力的提示词。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/live-view-analysis",
+    routePath: "/writing/data-analysis",
+  },
+
+  5005: {
+    id: 5005,
+    category: "data-analysis",
+    title: "短视频互动分析",
+    desc: "设计一个能够引导用户进行短视频内容创作和分析的提示词,帮助用户创作出吸引观众的内容。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/video-interaction-analysis",
+    routePath: "/writing/data-analysis",
+  },
+
+  5006: {
+    id: 5006,
+    category: "data-analysis",
+    title: "短视频成交分析",
+    desc: "设计一个能够指导用户如何分析短视频成交数据的流程,帮助用户洞察市场趋势和消费者偏好。",
+    icon: "📊",
+    iconBg: "bg-purple-600",
+    apiEndpoint: "/api/video-sales-analysis",
+    routePath: "/writing/data-analysis",
   },
 };
 

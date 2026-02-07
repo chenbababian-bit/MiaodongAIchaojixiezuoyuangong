@@ -45,3 +45,4 @@ BEGIN
   RAISE NOTICE '  - xiaohongshu-product (小红书-产品种草)';
   RAISE NOTICE '  - xiaohongshu-recommendation (小红书-好物推荐)';
 END $$;
+

@@ -94,8 +94,17 @@ export type DouyinType =
   | 'douyin-topic'         // 2006: 抖音选题方向
   | 'douyin-name';         // 2007: 抖音账号名称
 
+// 数据分析细粒度类型
+export type DataAnalysisType =
+  | 'data-analysis-video-play'        // 5001: 短视频播放分析
+  | 'data-analysis-video-audience'    // 5002: 短视频观众分析
+  | 'data-analysis-live-sales'        // 5003: 直播成交数据分析
+  | 'data-analysis-live-view'         // 5004: 直播观看数据分析
+  | 'data-analysis-video-interaction' // 5005: 短视频互动分析
+  | 'data-analysis-video-sales';      // 5006: 短视频成交分析
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType;
 
 export interface Conversation {
   id: string;
@@ -615,6 +624,30 @@ export function getVideoTypeByTemplateId(templateId: number): VideoType {
   if (!type) {
     console.warn(`未知的视频文案模板ID: ${templateId}，使用默认类型 video-viral-copy`);
     return 'video-viral-copy';
+  }
+
+  return type;
+}
+
+/**
+ * 根据数据分析模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的数据分析对话类型
+ */
+export function getDataAnalysisTypeByTemplateId(templateId: number): DataAnalysisType {
+  const templateMap: Record<number, DataAnalysisType> = {
+    5001: 'data-analysis-video-play',        // 短视频播放分析
+    5002: 'data-analysis-video-audience',    // 短视频观众分析
+    5003: 'data-analysis-live-sales',        // 直播成交数据分析
+    5004: 'data-analysis-live-view',         // 直播观看数据分析
+    5005: 'data-analysis-video-interaction', // 短视频互动分析
+    5006: 'data-analysis-video-sales',       // 短视频成交分析
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的数据分析模板ID: ${templateId}，使用默认类型 data-analysis-video-play`);
+    return 'data-analysis-video-play';
   }
 
   return type;
