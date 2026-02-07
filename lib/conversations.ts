@@ -470,6 +470,31 @@ export function getXiaohongshuTypeByTemplateId(templateId: number): XiaohongshuT
 }
 
 /**
+ * 根据抖音模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的抖音对话类型
+ */
+export function getDouyinTypeByTemplateId(templateId: number): DouyinType {
+  const templateMap: Record<number, DouyinType> = {
+    2001: 'douyin-strategy',   // 企业抖音矩阵运营战略图
+    2002: 'douyin-title',       // 抖音爆款标题
+    2003: 'douyin-script',      // 抖音分镜头脚本
+    2004: 'douyin-profile',     // 抖音账号简介
+    2005: 'douyin-hotspot',     // 抖音蹭热点选题
+    2006: 'douyin-topic',       // 抖音选题方向
+    2007: 'douyin-name',        // 抖音账号名称
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的抖音模板ID: ${templateId}，使用默认类型 douyin-strategy`);
+    return 'douyin-strategy';
+  }
+
+  return type;
+}
+
+/**
  * 根据公众号模板ID获取对应的对话类型
  * @param templateId 模板ID
  * @returns 对应的公众号对话类型

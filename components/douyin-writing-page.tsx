@@ -39,6 +39,7 @@ import {
   createConversation,
   getConversations,
   addMessage,
+  getDouyinTypeByTemplateId,
   type Conversation as DBConversation,
 } from "@/lib/conversations";
 import {
@@ -117,20 +118,6 @@ const DOUYIN_NAME_WELCOME = `你好！我是拥有50年落地项目经验的商�
 4. 目标受众（例如：宝妈、大学生、企业老板...）
 
 让我为您打造价值百万的账号名称！`;
-
-// 获取抖音类型对应的对话类型
-const getDouyinTypeByTemplateId = (templateId: number): string => {
-  switch (templateId) {
-    case 2001: return "douyin-strategy";
-    case 2002: return "douyin-title";
-    case 2003: return "douyin-script";
-    case 2004: return "douyin-profile";
-    case 2005: return "douyin-hotspot";
-    case 2006: return "douyin-topic";
-    case 2007: return "douyin-name";
-    default: return "douyin-strategy";
-  }
-};
 
 export function DouyinWritingPage() {
   const router = useRouter();
