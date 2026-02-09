@@ -8,6 +8,7 @@ import {
   marketingSecondLevelCategories,
   brandSubCategories,
   creativeSubCategories,
+  mediaSubCategories,
   brandStrategyTemplates,
   marketAnalysisTemplates,
   creativeContentTemplates,
@@ -30,7 +31,7 @@ import {
   financialBudgetTemplates,
   legalComplianceCreativeTemplates,
   technicalToolsTemplates,
-  mediaTemplates,
+  mediaStrategyTemplates,
   activityTemplates,
   researchTemplates,
   prTemplates,
@@ -54,6 +55,8 @@ export function MarketingPage() {
       source = `marketing-brand-${activeThirdLevel}`;
     } else if (activeSecondLevel === "creative") {
       source = `marketing-creative-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "media") {
+      source = `marketing-media-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -101,9 +104,13 @@ export function MarketingPage() {
     { id: "technical-tools", label: "技术工具", templates: technicalToolsTemplates },
   ];
 
+  // 媒介下的所有子分类配置
+  const mediaCategories = [
+    { id: "media-strategy", label: "媒体策略", templates: mediaStrategyTemplates },
+  ];
+
   // 其他第二层分类的模板配置
   const otherCategories: { [key: string]: any[] } = {
-    media: mediaTemplates,
     activity: activityTemplates,
     research: researchTemplates,
     pr: prTemplates,
@@ -138,6 +145,10 @@ export function MarketingPage() {
                 // 如果切换到创意,默认选中创意策略
                 if (category.id === "creative") {
                   setActiveThirdLevel("creative-strategy");
+                }
+                // 如果切换到媒介,默认选中媒体策略
+                if (category.id === "media") {
+                  setActiveThirdLevel("media-strategy");
                 }
               }}
               className={cn(
@@ -184,6 +195,26 @@ export function MarketingPage() {
             {activeSecondLevel === "creative" && (
               <div className="space-y-1">
                 {creativeSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 第三层：媒介下的子分类 */}
+            {activeSecondLevel === "media" && (
+              <div className="space-y-1">
+                {mediaSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -283,8 +314,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* 媒介：按子分类分组显示所有功能 */}
+        {activeSecondLevel === "media" && (
+          <div className="space-y-8">
+            {mediaCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}

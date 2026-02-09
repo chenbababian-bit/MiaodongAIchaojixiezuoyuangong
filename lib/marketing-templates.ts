@@ -46,6 +46,23 @@ export const creativeSubCategories = [
   { id: "technical-tools", label: "技术工具" },
 ];
 
+// 第三层分类（媒介下的子分类）
+export const mediaSubCategories = [
+  { id: "media-strategy", label: "媒体策略" },
+  { id: "ad-placement", label: "广告投放" },
+  { id: "digital-media", label: "数字媒体" },
+  { id: "media-relations", label: "媒体关系" },
+  { id: "project-management-media", label: "项目管理" },
+  { id: "client-communication", label: "客户沟通" },
+  { id: "media-monitoring", label: "媒体监测" },
+  { id: "report-summary-media", label: "报告总结" },
+  { id: "process-management", label: "流程管理" },
+  { id: "team-building", label: "团队建设" },
+  { id: "internal-process", label: "内部流程" },
+  { id: "legal-compliance-media", label: "法律合规" },
+  { id: "tech-innovation", label: "技术创新" },
+];
+
 // ========== 品牌战略模板 ==========
 export const brandStrategyTemplates = [
   {
@@ -1437,22 +1454,124 @@ export const technicalToolsTemplates = [
 ];
 
 // ========== 媒介模板 ==========
-export const mediaTemplates = [
+// 媒体策略模板
+export const mediaStrategyTemplates = [
   {
     id: 13001,
-    icon: "📺",
-    title: "媒介策略规划",
-    desc: "制定全面的媒介策略,优化媒介资源配置。",
+    icon: "📋",
+    title: "媒体策略提案",
+    desc: "制定一份全面、有效的媒体策略提案，满足客户的传播需求，提高品牌知名度和市场占有率。",
     color: "bg-blue-500",
   },
   {
     id: 13002,
     icon: "📊",
-    title: "媒介效果评估",
-    desc: "建立媒介效果评估体系,提升媒介投放ROI。",
+    title: "媒体组合分析",
+    desc: "完成一份详细的《媒体组合分析》报告，为客户提供最佳的媒体组合建议，以实现广告传播效果的最大化。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 13003,
+    icon: "📅",
+    title: "媒体投放计划",
+    desc: "制定一份详细、科学、有效的媒体投放计划，实现客户的营销目标，提高品牌知名度和产品销售量。",
     color: "bg-green-500",
   },
+  {
+    id: 13004,
+    icon: "💰",
+    title: "媒体预算分配表",
+    desc: "制作一份详细、科学的《媒体预算分配表》，实现广告投放的最佳效果和投资回报率。",
+    color: "bg-orange-500",
+  },
+  {
+    id: 13005,
+    icon: "📆",
+    title: "媒体排期表",
+    desc: "制定一份科学、合理、有效的媒体排期表，以实现广告传播的最佳效果。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 13006,
+    icon: "🛒",
+    title: "媒体资源采购建议",
+    desc: "为客户提供一份全面、合理的媒体资源采购建议，以实现广告传播效果的最大化。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 13007,
+    icon: "📍",
+    title: "广告位选择报告",
+    desc: "撰写一份详细的《广告位选择报告》，为客户提供科学合理的广告位选择建议，提高广告投放的效果和回报率。",
+    color: "bg-cyan-500",
+  },
+  {
+    id: 13008,
+    icon: "📡",
+    title: "媒体监测报告",
+    desc: "撰写一份详细、准确的媒体监测报告，为广告投放策略的调整提供依据。",
+    color: "bg-teal-500",
+  },
+  {
+    id: 13009,
+    icon: "📈",
+    title: "媒体评估报告",
+    desc: "撰写一份详细、准确的媒体评估报告，为客户提供有价值的媒体选择建议。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 13010,
+    icon: "⚔️",
+    title: "媒体竞争分析",
+    desc: "完成一份全面、深入的《媒体竞争分析》，为媒介策划提供有力支持。",
+    color: "bg-red-500",
+  },
+  {
+    id: 13011,
+    icon: "🎯",
+    title: "目标受众定义",
+    desc: "撰写详细且精准的《目标受众定义》，为媒介策划提供有力支持。",
+    color: "bg-blue-600",
+  },
+  {
+    id: 13012,
+    icon: "💵",
+    title: "媒体成本效益分析",
+    desc: "撰写一份详细的《媒体成本效益分析》报告，为广告投放提供科学依据，实现广告效果最大化和成本最小化。",
+    color: "bg-purple-600",
+  },
+  {
+    id: 13013,
+    icon: "⭐",
+    title: "媒体影响力评估",
+    desc: "撰写一份全面、准确的《媒体影响力评估》，为媒介策划提供有力依据。",
+    color: "bg-green-600",
+  },
+  {
+    id: 13014,
+    icon: "🔀",
+    title: "媒体渠道选择报告",
+    desc: "撰写一份详细的《媒体渠道选择报告》，为客户提供最佳的媒体渠道组合，以实现广告传播的最大化效果。",
+    color: "bg-orange-600",
+  },
+  {
+    id: 13015,
+    icon: "💡",
+    title: "媒体创新提案",
+    desc: "撰写一份全面的《媒体创新提案》，帮助客户在媒体传播方面实现突破，提升品牌知名度和影响力。",
+    color: "bg-pink-600",
+  },
+  {
+    id: 13016,
+    icon: "🔄",
+    title: "跨媒体整合策略",
+    desc: "制定一套全面的跨媒体整合策略，以实现品牌的有效传播和营销目标。",
+    color: "bg-indigo-600",
+  },
 ];
+
+// 保留旧的媒介模板以保持兼容性
+export const mediaTemplates = mediaStrategyTemplates;
 
 // ========== 活动策划模板 ==========
 export const activityTemplates = [
