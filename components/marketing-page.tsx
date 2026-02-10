@@ -33,6 +33,8 @@ import {
   technicalToolsTemplates,
   mediaStrategyTemplates,
   adPlacementTemplates,
+  digitalMediaTemplates,
+  mediaRelationsTemplates,
   activityTemplates,
   researchTemplates,
   prTemplates,
@@ -109,6 +111,8 @@ export function MarketingPage() {
   const mediaCategories = [
     { id: "media-strategy", label: "媒体策略", templates: mediaStrategyTemplates },
     { id: "ad-placement", label: "广告投放", templates: adPlacementTemplates },
+    { id: "digital-media", label: "数字媒体", templates: digitalMediaTemplates },
+    { id: "media-relations", label: "媒体关系", templates: mediaRelationsTemplates },
   ];
 
   // 其他第二层分类的模板配置
