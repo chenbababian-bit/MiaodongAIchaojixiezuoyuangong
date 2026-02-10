@@ -32,6 +32,7 @@ import {
   legalComplianceCreativeTemplates,
   technicalToolsTemplates,
   mediaStrategyTemplates,
+  adPlacementTemplates,
   activityTemplates,
   researchTemplates,
   prTemplates,
@@ -107,6 +108,7 @@ export function MarketingPage() {
   // 媒介下的所有子分类配置
   const mediaCategories = [
     { id: "media-strategy", label: "媒体策略", templates: mediaStrategyTemplates },
+    { id: "ad-placement", label: "广告投放", templates: adPlacementTemplates },
   ];
 
   // 其他第二层分类的模板配置
