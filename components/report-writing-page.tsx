@@ -39,7 +39,6 @@ import {
   createConversation,
   getConversations,
   addMessage,
-  getXiaohongshuTypeByTemplateId,
   type Conversation as DBConversation,
 } from "@/lib/conversations";
 import {
@@ -373,9 +372,28 @@ function getIconComponent(iconType: string) {
 export function ReportWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
-  const templateTitle = searchParams.get("title") || "小红书爆款文案";
-  const templateId = searchParams.get("template") || "1";
+  const templateTitle = searchParams.get("title") || "汇报总结";
+  const templateId = searchParams.get("template") || "1101";
   const source = searchParams.get("source") || "hot"; // 获取source参数
+
+  // 临时的类型映射函数（待后续添加到conversations.ts）
+  const getReportTypeByTemplateId = (templateId: string): string => {
+    const mapping: Record<string, string> = {
+      '1101': 'report-work-summary',
+      '1102': 'report-work-plan',
+      '1103': 'report-project-progress',
+      '1104': 'report-sales-performance',
+      '1105': 'report-financial',
+      '1106': 'report-market-analysis',
+      '1107': 'report-annual-review',
+      '1108': 'report-probation-review',
+      '1109': 'report-performance-evaluation',
+      '1110': 'report-performance-improvement',
+      '1111': 'report-department-brief',
+      '1112': 'report-business-development',
+    };
+    return mapping[templateId] || 'report-work-summary';
+  };
 
   // 自动重定向旧ID到新ID
   useEffect(() => {
@@ -524,7 +542,7 @@ export function ReportWritingPage() {
       setIsLoadingHistory(true);
       try {
         // 根据当前模板ID获取对应的子类型
-        const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+        const conversationType = getReportTypeByTemplateId(activeTemplate);
         const conversations = await getConversations(userId, undefined, conversationType);
         setHistoryConversations(conversations);
       } catch (error) {
@@ -765,7 +783,7 @@ export function ReportWritingPage() {
       if (userId && !currentConversationId) {
         try {
           const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
-          const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+          const conversationType = getReportTypeByTemplateId(activeTemplate);
           const convId = await createConversation(userId, title, conversationType);
           setCurrentConversationId(convId);
 
@@ -1410,7 +1428,7 @@ export function ReportWritingPage() {
                           // 如果没有当前对话ID，创建新对话
                           if (!convId) {
                             const title = currentResult.slice(0, 30) + (currentResult.length > 30 ? '...' : '');
-                            const conversationType = getXiaohongshuTypeByTemplateId(activeTemplate);
+                            const conversationType = getReportTypeByTemplateId(activeTemplate);
                             convId = await createConversation(userId, title, conversationType);
                             setCurrentConversationId(convId);
 
