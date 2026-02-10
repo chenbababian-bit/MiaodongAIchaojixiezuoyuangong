@@ -5,12 +5,12 @@ import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
 import {
   Search,
   FileText,
   MessageCircle,
-  ChevronLeft,
   ChevronRight,
   Video,
   Loader2,
@@ -676,19 +676,6 @@ export function VideoWritingPage() {
     }
   };
 
-  // 根据source参数判断返回路径
-  const getBackPath = () => {
-    if (source === "hot") {
-      // 从热门写作来的，返回首页
-      return "/";
-    } else if (source.startsWith("media-") || source.startsWith("video-")) {
-      // 从分类来的，返回自媒体分类页
-      return "/?category=media";
-    } else {
-      // 默认返回首页
-      return "/";
-    }
-  };
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
@@ -700,13 +687,7 @@ export function VideoWritingPage() {
             <div className="flex items-center justify-between">
               {/* 左侧：返回 + 标题 */}
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push(getBackPath())}
-                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="text-sm font-medium">返回</span>
-                </button>
+                <BackButton />
                 <h1 className="text-lg font-semibold text-foreground">
                   {templateTitle}
                 </h1>
@@ -960,13 +941,7 @@ export function VideoWritingPage() {
       <div className="w-[280px] border-r border-border bg-card flex flex-col">
         {/* Header with back button */}
         <div className="p-4 border-b border-border">
-          <button
-            onClick={() => router.push(getBackPath())}
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-3"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="text-sm font-medium">返回分类页</span>
-          </button>
+          <BackButton label="返回分类页" className="mb-3" />
 
           {/* Search */}
           <div className="relative">

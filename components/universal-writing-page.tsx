@@ -4,9 +4,9 @@ import { useState, useEffect } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
 import {
-  ChevronLeft,
   ChevronRight,
   Loader2,
   Copy,
@@ -233,18 +233,6 @@ export function UniversalWritingPage() {
     }
   };
 
-  // 根据source参数判断返回路径
-  const getBackPath = () => {
-    if (source === "hot") {
-      return "/";
-    } else if (source.startsWith("media-")) {
-      return "/?category=media";
-    } else if (source === "general") {
-      return "/?category=general";
-    } else {
-      return "/";
-    }
-  };
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
@@ -253,13 +241,7 @@ export function UniversalWritingPage() {
         {/* Main Form Content */}
         <div className="flex-1 overflow-y-auto p-6">
           {/* Back Button */}
-          <button
-            onClick={() => router.push(getBackPath())}
-            className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors mb-6"
-          >
-            <ChevronLeft className="h-4 w-4" />
-            <span className="text-sm font-medium">返回</span>
-          </button>
+          <BackButton className="mb-6" />
 
           {/* Title */}
           <div className="flex items-center justify-between mb-4">

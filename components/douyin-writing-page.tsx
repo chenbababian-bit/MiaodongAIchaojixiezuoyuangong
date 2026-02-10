@@ -6,12 +6,12 @@ import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
+import { BackButton } from "@/components/ui/back-button";
 import { cn } from "@/lib/utils";
 import {
   Search,
   FileText,
   MessageCircle,
-  ChevronLeft,
   ChevronRight,
   BookOpen,
   Video,
@@ -449,16 +449,6 @@ export function DouyinWritingPage() {
     }
   };
 
-  // 根据source参数判断返回路径
-  const getBackPath = () => {
-    if (source === "hot") {
-      return "/";
-    } else if (source.startsWith("media-")) {
-      return "/?category=media";
-    } else {
-      return "/";
-    }
-  };
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
@@ -470,13 +460,7 @@ export function DouyinWritingPage() {
             <div className="flex items-center justify-between">
               {/* 左侧：返回 + 标题 */}
               <div className="flex items-center gap-4">
-                <button
-                  onClick={() => router.push(getBackPath())}
-                  className="flex items-center gap-2 text-primary hover:text-primary/80 transition-colors"
-                >
-                  <ChevronLeft className="h-4 w-4" />
-                  <span className="text-sm font-medium">返回</span>
-                </button>
+                <BackButton />
                 <h1 className="text-lg font-semibold text-foreground">
                   {templateTitle}
                 </h1>
