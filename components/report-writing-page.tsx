@@ -591,9 +591,9 @@ export function ReportWritingPage() {
     return welcomeMessages[templateId] || welcomeMessages["1001"];
   };
 
-  // 初始化欢迎消息（所有沟通协作子类型）
+  // 初始化欢迎消息（所有汇报总结子类型）
   useEffect(() => {
-    const reportTemplateIds = ["1001", "1002", "1003", "1004", "1005", "1006", "1007", "1008", "1009", "1010", "1011", "1012", "1013"];
+    const reportTemplateIds = ["1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112"];
     if (reportTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
@@ -849,8 +849,8 @@ export function ReportWritingPage() {
     setCurrentConversationId(null); // 重置对话ID
     setInputValue(""); // 清空输入框
 
-    // 所有沟通协作子类型：重置消息列表为对应的欢迎消息
-    const reportTemplateIds = ["1001", "1002", "1003", "1004", "1005", "1006", "1007", "1008", "1009", "1010", "1011", "1012", "1013"];
+    // 所有汇报总结子类型：重置消息列表为对应的欢迎消息
+    const reportTemplateIds = ["1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112"];
     if (reportTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
@@ -868,8 +868,8 @@ export function ReportWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["101", "102", "103", "104", "105", "106", "107", "108", "1001", "1002", "1003", "1004", "1005", "1006", "1007", "1008", "1009", "1010", "1011", "1012", "1013"].includes(templateId) ? (
-        /* 所有沟通协作子类型：统一使用对话模式UI */
+      {["1101", "1102", "1103", "1104", "1105", "1106", "1107", "1108", "1109", "1110", "1111", "1112"].includes(templateId) ? (
+        /* 所有汇报总结子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
           <div className="border-b border-border p-4">
