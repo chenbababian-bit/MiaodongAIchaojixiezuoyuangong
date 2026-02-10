@@ -456,6 +456,9 @@ export function WritingPage() {
   useEffect(() => {
     if (categoryParam && categories.some(cat => cat.id === categoryParam)) {
       setActiveCategory(categoryParam);
+    } else if (!categoryParam) {
+      // 没有 category 参数时，重置为首页
+      setActiveCategory("home");
     }
   }, [categoryParam]);
 
@@ -562,7 +565,14 @@ export function WritingPage() {
               <button
                 key={cat.id}
                 onClick={() => {
+                  // 更新状态
                   setActiveCategory(cat.id);
+                  // 更新 URL，以便浏览器历史记录正确
+                  if (cat.id === "home") {
+                    router.push("/");
+                  } else {
+                    router.push(`/?category=${cat.id}`);
+                  }
                 }}
                 className={cn(
                   "px-3 py-1.5 rounded-md text-sm transition-colors whitespace-nowrap",
