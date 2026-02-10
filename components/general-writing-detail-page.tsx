@@ -243,6 +243,16 @@ export function GeneralWritingDetailPage() {
   const templateTitle = searchParams.get("title") || "通用写作";
   const templateId = searchParams.get("template") || "1001";
 
+  // 检测是否为沟通协作模板（1001-1013），如果是则重定向到对话式界面
+  useEffect(() => {
+    const numId = parseInt(templateId);
+    if (numId >= 1001 && numId <= 1013) {
+      // 重定向到沟通协作页面
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/communication?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+  }, [templateId, templateTitle, router, searchParams]);
+
   const [contentInput, setContentInput] = useState("");
   const [selectedModel, setSelectedModel] = useState("fast");
   const [resultTab, setResultTab] = useState<"current" | "history">("current");
