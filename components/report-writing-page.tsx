@@ -40,6 +40,7 @@ import {
   getConversations,
   addMessage,
   type Conversation as DBConversation,
+  type ConversationType,
 } from "@/lib/conversations";
 import {
   Select,
@@ -377,8 +378,8 @@ export function ReportWritingPage() {
   const source = searchParams.get("source") || "hot"; // 获取source参数
 
   // 临时的类型映射函数（待后续添加到conversations.ts）
-  const getReportTypeByTemplateId = (templateId: string): string => {
-    const mapping: Record<string, string> = {
+  const getReportTypeByTemplateId = (templateId: string): ConversationType => {
+    const mapping: Record<string, ConversationType> = {
       '1101': 'report-work-summary',
       '1102': 'report-work-plan',
       '1103': 'report-project-progress',
@@ -542,7 +543,7 @@ export function ReportWritingPage() {
       setIsLoadingHistory(true);
       try {
         // 根据当前模板ID获取对应的子类型
-        const conversationType = getReportTypeByTemplateId(activeTemplate);
+        const conversationType = getReportTypeByTemplateId(activeTemplate.toString());
         const conversations = await getConversations(userId, undefined, conversationType);
         setHistoryConversations(conversations);
       } catch (error) {
@@ -783,7 +784,7 @@ export function ReportWritingPage() {
       if (userId && !currentConversationId) {
         try {
           const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
-          const conversationType = getReportTypeByTemplateId(activeTemplate);
+          const conversationType = getReportTypeByTemplateId(activeTemplate.toString());
           const convId = await createConversation(userId, title, conversationType);
           setCurrentConversationId(convId);
 
@@ -1428,7 +1429,7 @@ export function ReportWritingPage() {
                           // 如果没有当前对话ID，创建新对话
                           if (!convId) {
                             const title = currentResult.slice(0, 30) + (currentResult.length > 30 ? '...' : '');
-                            const conversationType = getReportTypeByTemplateId(activeTemplate);
+                            const conversationType = getReportTypeByTemplateId(activeTemplate.toString());
                             convId = await createConversation(userId, title, conversationType);
                             setCurrentConversationId(convId);
 
