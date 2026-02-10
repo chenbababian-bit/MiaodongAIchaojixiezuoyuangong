@@ -84,6 +84,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/communication?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为汇报总结模板（1101-1112），跳转到汇报总结对话式界面
+    else if (templateId >= 1101 && templateId <= 1112) {
+      router.push(
+        `/writing/report?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`
