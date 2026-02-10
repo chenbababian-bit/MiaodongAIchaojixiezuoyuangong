@@ -96,6 +96,64 @@ sed -i 's/XiaohongshuWritingPage/[新模块]WritingPage/g' components/[新模块
 sed -i 's/xiaohongshu/[新模块]/g' components/[新模块]-writing-page.tsx
 ```
 
+⚠️ **批量替换风险警告：**
+
+使用 `sed` 批量替换虽然快速，但**只会替换文本字符串**，不会理解代码逻辑！
+
+**关键问题：** 模板ID数组的具体值不会被替换！
+
+例如：
+```typescript
+// ❌ 批量替换后仍然是错误的
+const reportTemplateIds = ["1001", "1002", ..., "1013"];  // 这是沟通协作的ID！
+
+// ✅ 需要手动改为
+const reportTemplateIds = ["1101", "1102", ..., "1112"];  // 汇报总结的ID
+```
+
+**必须手动检查的3个关键位置：**
+
+1. **初始化欢迎消息的 useEffect**（约第595行）
+   ```typescript
+   useEffect(() => {
+     const reportTemplateIds = ["1101", "1102", ..., "1112"];  // ⚠️ 检查这里！
+     if (reportTemplateIds.includes(templateId)) {
+       // ...
+     }
+   }, [templateId]);
+   ```
+
+2. **新建对话函数**（约第850行）
+   ```typescript
+   const handleNewConversation = () => {
+     const reportTemplateIds = ["1101", "1102", ..., "1112"];  // ⚠️ 检查这里！
+     if (reportTemplateIds.includes(templateId)) {
+       // ...
+     }
+   };
+   ```
+
+3. **主渲染逻辑的条件判断**（约第870行）
+   ```typescript
+   return (
+     <div>
+       {["1101", "1102", ..., "1112"].includes(templateId) ? (  // ⚠️ 检查这里！
+         // 对话式UI
+       ) : (
+         // 传统表单UI
+       )}
+     </div>
+   );
+   ```
+
+**验证方法：**
+```bash
+# 搜索所有模板ID数组
+grep -n "1001.*1013\|101.*108" components/[新模块]-writing-page.tsx
+
+# 如果有输出，说明还有旧的模板ID需要修改！
+```
+
 **关键修改点：**
 
 #### 2.1 更新模板ID范围
@@ -599,10 +657,139 @@ git push
 
 ---
 
-**文档版本：** v1.1
+### Q5: ⚠️ 批量替换后仍显示传统表单界面？
+
+**问题现象：**
+- 已经复制组件并使用 `sed` 批量替换
+- 路由和重定向都配置正确
+- Vercel部署成功，无错误
+- 但访问页面时仍然显示传统表单界面，而不是对话式UI
+
+**问题根本原因：**
+
+`sed` 批量替换**只替换文本字符串**，不理解代码逻辑！
+
+**具体问题：** 模板ID数组中的具体数值没有被替换
+
+```typescript
+// 复制自 communication-writing-page.tsx 后
+const reportTemplateIds = ["1001", "1002", ..., "1013"];  // ❌ 仍然是沟通协作的ID
+
+// 条件判断永远为 false
+if (reportTemplateIds.includes("1101")) {  // false！
+  // 对话式UI（永远不会执行）
+} else {
+  // 传统表单UI（总是执行这里）
+}
+```
+
+**解决方案：**
+
+#### 步骤1：搜索旧的模板ID
+```bash
+# 搜索所有可能的旧模板ID
+grep -n "1001.*1013\|101.*108" components/[新模块]-writing-page.tsx
+
+# 示例输出：
+# 596:    const reportTemplateIds = ["1001", "1002", ..., "1013"];
+# 853:    const reportTemplateIds = ["1001", "1002", ..., "1013"];
+# 871:      {["101", "102", ..., "1013"].includes(templateId) ? (
+```
+
+#### 步骤2：手动修改3个关键位置
+
+**位置1：初始化欢迎消息（约第595行）**
+```typescript
+// ❌ 错误
+const reportTemplateIds = ["1001", "1002", "1003", "1004", "1005", "1006",
+                           "1007", "1008", "1009", "1010", "1011", "1012", "1013"];
+
+// ✅ 正确（汇报总结模块示例）
+const reportTemplateIds = ["1101", "1102", "1103", "1104", "1105", "1106",
+                           "1107", "1108", "1109", "1110", "1111", "1112"];
+```
+
+**位置2：新建对话函数（约第850行）**
+```typescript
+// ❌ 错误
+const reportTemplateIds = ["1001", "1002", ..., "1013"];
+
+// ✅ 正确
+const reportTemplateIds = ["1101", "1102", ..., "1112"];
+```
+
+**位置3：主渲染逻辑（约第870行）**
+```typescript
+// ❌ 错误
+{["101", "102", ..., "1001", "1002", ..., "1013"].includes(templateId) ? (
+
+// ✅ 正确
+{["1101", "1102", "1103", "1104", "1105", "1106",
+  "1107", "1108", "1109", "1110", "1111", "1112"].includes(templateId) ? (
+```
+
+#### 步骤3：验证修复
+
+```bash
+# 再次搜索，确保没有旧ID
+grep -n "1001.*1013\|101.*108" components/[新模块]-writing-page.tsx
+
+# 应该没有输出，或者只在注释中出现
+```
+
+#### 步骤4：测试验证
+
+**测试清单：**
+- [ ] 访问 `/writing/[模块]?template=[新模块的第一个ID]`
+- [ ] 检查是否显示对话式UI（左侧对话区，右侧编辑器）
+- [ ] 检查是否显示欢迎消息
+- [ ] 检查输入框是否可用
+- [ ] 检查"新建对话"和"历史记录"按钮是否显示
+
+**预防措施：**
+
+1. **创建检查脚本**
+   ```bash
+   # 保存为 check-template-ids.sh
+   #!/bin/bash
+   MODULE_FILE=$1
+   echo "检查模板ID配置..."
+
+   # 搜索可能的旧ID
+   OLD_IDS=$(grep -n "1001.*1013\|101.*108" "$MODULE_FILE" | grep -v "^[[:space:]]*//")
+
+   if [ -n "$OLD_IDS" ]; then
+     echo "⚠️ 发现旧的模板ID，需要手动修改："
+     echo "$OLD_IDS"
+     exit 1
+   else
+     echo "✅ 模板ID配置正确"
+     exit 0
+   fi
+   ```
+
+2. **在提交前运行检查**
+   ```bash
+   bash check-template-ids.sh components/report-writing-page.tsx
+   ```
+
+3. **添加到开发流程**
+   - 在"第二步：创建新组件"完成后，立即运行检查脚本
+   - 在提交代码前，再次运行检查脚本
+
+**重要提示：**
+- ⚠️ 这是最常见的错误，必须特别注意！
+- ⚠️ 批量替换后必须手动检查模板ID数组
+- ⚠️ 建议使用检查脚本自动化验证
+- ⚠️ 如果不确定，可以直接搜索文件中的所有数字数组
+
+---
+
+**文档版本：** v1.2
 **最后更新：** 2026-02-11
 **维护者：** Claude Sonnet 4.5
 
 **更新日志：**
+- v1.2 (2026-02-11): 添加Q5和批量替换风险警告 - 解决模板ID未正确替换问题
 - v1.1 (2026-02-11): 添加Q4故障排查 - 解决传统表单显示问题
 - v1.0 (2026-02-11): 初始版本，整合对话式UI开发流程
