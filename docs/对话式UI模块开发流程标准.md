@@ -474,7 +474,7 @@ export async function POST(request: NextRequest) {
 
 ---
 
-## 🐛 常见问题
+## 🐛 常见问题与故障排查
 
 ### Q1: 为什么要禁止emoji和markdown？
 **A:** 对话框中的内容需要保持纯文本格式，以确保：
@@ -492,8 +492,117 @@ export async function POST(request: NextRequest) {
 - API端点映射完整
 - 数据库类型已添加
 
+### Q4: ⚠️ 访问模块时显示传统表单而非对话式UI？
+
+**问题现象：**
+- 访问 `/writing/general?template=1101` 时显示传统表单界面
+- 应该显示对话式UI但没有自动跳转
+- Vercel部署成功但功能不正常
+
+**问题原因：**
+缺少关键配置导致重定向逻辑未生效：
+1. ❌ 缺少模块专用路由文件（如 `app/writing/report/page.tsx`）
+2. ❌ 缺少自动重定向逻辑（在 `general-writing-detail-page.tsx` 中）
+
+**解决方案：**
+
+#### 步骤1：创建路由文件
+```bash
+# 创建路由目录
+mkdir -p app/writing/[模块名]
+
+# 创建路由文件
+touch app/writing/[模块名]/page.tsx
+```
+
+**路由文件内容：**
+```typescript
+import { Suspense } from "react";
+import { AppLayout } from "@/components/app-layout";
+import { [模块名]WritingPage } from "@/components/[模块名]-writing-page";
+
+export default function [模块名]Page() {
+  return (
+    <AppLayout>
+      <Suspense fallback={<div className="flex items-center justify-center h-screen">加载中...</div>}>
+        <[模块名]WritingPage />
+      </Suspense>
+    </AppLayout>
+  );
+}
+```
+
+#### 步骤2：添加重定向逻辑
+
+**文件：** `components/general-writing-detail-page.tsx`
+
+在 `useEffect` 中添加模板ID范围检测：
+
+```typescript
+export function GeneralWritingDetailPage() {
+  const router = useRouter();
+  const searchParams = useSearchParams();
+  const templateId = searchParams.get("template") || "1001";
+  const templateTitle = searchParams.get("title") || "通用写作";
+
+  // 检测模板ID范围，自动重定向到对话式界面
+  useEffect(() => {
+    const numId = parseInt(templateId);
+
+    // 沟通协作模块 (1001-1013)
+    if (numId >= 1001 && numId <= 1013) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/communication?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 汇报总结模块 (1101-1112) - 新增
+    if (numId >= 1101 && numId <= 1112) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/report?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 其他模块按需添加...
+  }, [templateId, templateTitle, router, searchParams]);
+
+  // ... 其余代码
+}
+```
+
+#### 步骤3：验证修复
+
+**测试清单：**
+- [ ] 访问 `/writing/general?template=[ID]` 能否自动重定向
+- [ ] 重定向后的URL是否正确（`/writing/[模块]?template=[ID]&title=...`）
+- [ ] 对话式UI界面是否正常显示
+- [ ] 欢迎消息是否正确显示
+
+#### 步骤4：提交部署
+
+```bash
+# 添加文件
+git add app/writing/[模块]/ components/general-writing-detail-page.tsx
+
+# 提交
+git commit -m "fix([模块]): 添加路由和自动重定向逻辑"
+
+# 推送
+git push
+```
+
+**等待Vercel自动部署（约1-2分钟），然后刷新页面验证。**
+
+**重要提示：**
+- ⚠️ 必须同时完成路由创建和重定向配置，缺一不可
+- ⚠️ 模板ID范围必须准确匹配（如1101-1112）
+- ⚠️ 重定向路径必须与路由文件位置一致
+- ⚠️ 记得保持URL参数的完整传递（template、title、source）
+
 ---
 
-**文档版本：** v1.0
+**文档版本：** v1.1
 **最后更新：** 2026-02-11
 **维护者：** Claude Sonnet 4.5
+
+**更新日志：**
+- v1.1 (2026-02-11): 添加Q4故障排查 - 解决传统表单显示问题
+- v1.0 (2026-02-11): 初始版本，整合对话式UI开发流程
