@@ -79,9 +79,16 @@ export function GeneralWritingPage() {
 
   // 处理模板点击
   const handleTemplateClick = (templateId: number, title: string) => {
-    router.push(
-      `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`
-    );
+    // 检测是否为沟通协作模板（1001-1013），直接跳转到对话式界面
+    if (templateId >= 1001 && templateId <= 1013) {
+      router.push(
+        `/writing/communication?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
+    } else {
+      router.push(
+        `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`
+      );
+    }
   };
 
   return (
