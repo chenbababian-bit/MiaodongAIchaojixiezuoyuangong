@@ -243,13 +243,20 @@ export function GeneralWritingDetailPage() {
   const templateTitle = searchParams.get("title") || "通用写作";
   const templateId = searchParams.get("template") || "1001";
 
-  // 检测是否为沟通协作模板（1001-1013），如果是则重定向到对话式界面
+  // 检测是否为沟通协作模板（1001-1013）或汇报总结模板（1101-1112），如果是则重定向到对话式界面
   useEffect(() => {
     const numId = parseInt(templateId);
+
+    // 沟通协作模块 (1001-1013)
     if (numId >= 1001 && numId <= 1013) {
-      // 重定向到沟通协作页面
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/communication?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 汇报总结模块 (1101-1112)
+    if (numId >= 1101 && numId <= 1112) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/report?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
   }, [templateId, templateTitle, router, searchParams]);
 
