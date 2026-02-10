@@ -55,7 +55,8 @@ export async function POST(request: NextRequest) {
         'Content-Type': 'application/json',
       },
       body: JSON.stringify({
-        prompt: content,
+        prompt: content,  // 用于新创建的API (problem-solving, proposal等)
+        content: content, // 用于旧的API (meeting-invitation等)
         conversationHistory: conversationHistory || [],
       }),
     });
