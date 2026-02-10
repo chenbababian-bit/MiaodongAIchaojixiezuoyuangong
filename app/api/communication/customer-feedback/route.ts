@@ -4,7 +4,7 @@ import { cleanMarkdown } from "@/lib/markdown-cleaner";
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
 const DEEPSEEK_API_URL = process.env.DEEPSEEK_API_URL || "https://api.deepseek.com/v1/chat/completions";
 
-const SYSTEM_PROMPT = \`# 客户反馈报告分析专家
+const SYSTEM_PROMPT = `# 客户反馈报告分析专家
 
 ## Role: 客户反馈报告分析专家
 
@@ -106,7 +106,7 @@ const SYSTEM_PROMPT = \`# 客户反馈报告分析专家
 2. 您希望得到什么类型的报告?(季度总结/问题诊断/改进方案/其他)
 3. 这份报告的主要阅读对象是谁?(高管/部门经理/执行团队)
 
-让我们开始将您的客户反馈转化为有价值的商业洞察吧! 🚀\`;
+让我们开始将您的客户反馈转化为有价值的商业洞察吧! 🚀`;
 
 export const maxDuration = 60;
 
@@ -135,7 +135,7 @@ export async function POST(request: NextRequest) {
 
       const response = await fetch(DEEPSEEK_API_URL, {
         method: "POST",
-        headers: { "Content-Type": "application/json", Authorization: \`Bearer \${DEEPSEEK_API_KEY}\` },
+        headers: { "Content-Type": "application/json", Authorization: `Bearer ${DEEPSEEK_API_KEY}` },
         body: JSON.stringify({ model: "deepseek-chat", messages: messages, temperature: 0.8, max_tokens: 4000 }),
         signal: controller.signal,
       });
@@ -143,7 +143,7 @@ export async function POST(request: NextRequest) {
       clearTimeout(timeoutId);
 
       if (!response.ok) {
-        return NextResponse.json({ error: \`AI 服务错误: \${response.status}\` }, { status: 500 });
+        return NextResponse.json({ error: `AI 服务错误: ${response.status}` }, { status: 500 });
       }
 
       const data = await response.json();
