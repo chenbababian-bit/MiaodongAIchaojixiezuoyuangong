@@ -60,7 +60,7 @@ import {
   privateTemplates,
 } from "@/components/media-page"; // 从media-page导入模板数据
 import { getTemplateById, getCanonicalId, isLegacyId } from "@/lib/template-config";
-import { reportTemplates } from "@/lib/general-templates";
+import { reportsTemplates } from "@/lib/general-templates";
 
 // 顶部筛选标签
 const topFilters = [
@@ -433,7 +433,7 @@ export function ReportWritingPage() {
       // 根据平台返回对应的模板
       switch (platform) {
         case "report":
-          return reportTemplates.map((t: any) => ({
+          return reportsTemplates.map((t: any) => ({
             id: t.id,
             icon: "report",
             iconBg: t.color,
