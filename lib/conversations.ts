@@ -119,8 +119,23 @@ export type LiveStreamingType =
   | 'live-host-growth'          // 6012: 主播成长规划
   | 'live-title-generator';     // 6013: 直播间标题生成器
 
+// 汇报总结细粒度类型
+export type ReportType =
+  | 'report-work-summary'           // 1101: 工作总结
+  | 'report-work-plan'              // 1102: 工作计划
+  | 'report-project-progress'       // 1103: 项目进度汇报
+  | 'report-sales-performance'      // 1104: 销售业绩汇报
+  | 'report-financial'              // 1105: 财务报告
+  | 'report-market-analysis'        // 1106: 市场分析报告
+  | 'report-annual-review'          // 1107: 年度总结
+  | 'report-probation-review'       // 1108: 试用期转正报告
+  | 'report-performance-evaluation' // 1109: 绩效评估报告
+  | 'report-performance-improvement'// 1110: 绩效改进计划
+  | 'report-department-brief'       // 1111: 部门简报
+  | 'report-business-development';  // 1112: 业务发展报告
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType;
 
 export interface Conversation {
   id: string;

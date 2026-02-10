@@ -63,6 +63,11 @@ export const mediaSubCategories = [
   { id: "tech-innovation", label: "技术创新" },
 ];
 
+// 第三层分类（活动策划下的子分类）
+export const activitySubCategories = [
+  { id: "project-management-activity", label: "项目管理" },
+];
+
 // ========== 品牌战略模板 ==========
 export const brandStrategyTemplates = [
   {
@@ -2156,5 +2161,79 @@ export const b2bActivityTemplates = [
     title: "线下展会方案",
     desc: "制定线下展会参展方案,提升品牌曝光和客户获取。",
     color: "bg-amber-600",
+  },
+];
+
+// ========== 活动策划 - 项目管理模板 ==========
+export const projectManagementActivityTemplates = [
+  {
+    id: 23001,
+    icon: "📅",
+    title: "项目时间线与里程碑",
+    desc: "制定详细、合理的项目时间线与里程碑，确保活动按计划顺利推进。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 23002,
+    icon: "👥",
+    title: "团队任务分配表",
+    desc: "制定详细的团队任务分配表，提高活动执行效率。",
+    color: "bg-green-500",
+  },
+  {
+    id: 23003,
+    icon: "💰",
+    title: "项目预算表",
+    desc: "制定详细准确的项目预算表，确保活动在预算范围内顺利进行。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 23004,
+    icon: "📊",
+    title: "工作进度周报",
+    desc: "撰写一份详细且准确的《工作进度周报》，清晰反映活动策划的进展情况。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 23005,
+    icon: "⚖️",
+    title: "法律合规审查",
+    desc: "撰写一份详细的《法律合规审查》，为活动策划提供法律保障。",
+    color: "bg-red-500",
+  },
+  {
+    id: 23006,
+    icon: "✅",
+    title: "质量控制检查表",
+    desc: "设计一份详细的《质量控制检查表》，确保活动的高质量执行。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 23007,
+    icon: "⚠️",
+    title: "项目风险管理计划",
+    desc: "制定一份全面的《项目风险管理计划》，以降低活动过程中的不确定性和潜在风险。",
+    color: "bg-orange-500",
+  },
+  {
+    id: 23008,
+    icon: "🔄",
+    title: "项目变更请求",
+    desc: "撰写详细、准确的《项目变更请求》，确保活动顺利进行。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 23009,
+    icon: "📦",
+    title: "最终交付物清单",
+    desc: "制定详细的活动策划方案，包括活动流程、预算分配、人员安排等，确保活动的顺利实施。",
+    color: "bg-teal-500",
+  },
+  {
+    id: 23010,
+    icon: "📝",
+    title: "项目结案报告",
+    desc: "撰写一份详细、准确的项目结案报告，包括活动概述、执行情况、效果评估、经验教训和建议等内容。",
+    color: "bg-cyan-500",
   },
 ];
