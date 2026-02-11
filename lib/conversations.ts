@@ -134,8 +134,23 @@ export type ReportType =
   | 'report-department-brief'       // 1111: 部门简报
   | 'report-business-development';  // 1112: 业务发展报告
 
+// 演讲发言细粒度类型
+export type SpeechesType =
+  | 'speeches-onboarding-welcome'      // 1201: 入职欢迎辞
+  | 'speeches-department-intro'        // 1202: 部门介绍演讲
+  | 'speeches-project-kickoff'         // 1203: 项目启动演讲
+  | 'speeches-team-building-opening'   // 1204: 团队建设活动开场白
+  | 'speeches-year-end-summary'        // 1205: 年终总结大会发言稿
+  | 'speeches-annual-meeting'          // 1206: 年会发言稿
+  | 'speeches-award-ceremony'          // 1207: 表彰大会发言稿
+  | 'speeches-retirement-farewell'     // 1208: 退休告别信/演讲
+  | 'speeches-sales-motivation'        // 1209: 销售激励演讲
+  | 'speeches-culture-promotion'       // 1210: 公司文化宣讲
+  | 'speeches-onboarding-speech'       // 1211: 入职发言稿
+  | 'speeches-probation-review';       // 1212: 转正述职报告演讲稿
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType;
 
 export interface Conversation {
   id: string;
@@ -714,3 +729,35 @@ export function getLiveStreamingTypeByTemplateId(templateId: number): LiveStream
 
   return type;
 }
+
+
+/**
+ * 根据演讲发言模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的演讲发言对话类型
+ */
+export function getSpeechesTypeByTemplateId(templateId: number): SpeechesType {
+  const templateMap: Record<number, SpeechesType> = {
+    1201: "speeches-onboarding-welcome",      // 入职欢迎辞
+    1202: "speeches-department-intro",        // 部门介绍演讲
+    1203: "speeches-project-kickoff",         // 项目启动演讲
+    1204: "speeches-team-building-opening",   // 团队建设活动开场白
+    1205: "speeches-year-end-summary",        // 年终总结大会发言稿
+    1206: "speeches-annual-meeting",          // 年会发言稿
+    1207: "speeches-award-ceremony",          // 表彰大会发言稿
+    1208: "speeches-retirement-farewell",     // 退休告别信/演讲
+    1209: "speeches-sales-motivation",        // 销售激励演讲
+    1210: "speeches-culture-promotion",       // 公司文化宣讲
+    1211: "speeches-onboarding-speech",       // 入职发言稿
+    1212: "speeches-probation-review",        // 转正述职报告演讲稿
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的演讲发言模板ID: ${templateId}，使用默认类型 speeches-onboarding-welcome`);
+    return "speeches-onboarding-welcome";
+  }
+
+  return type;
+}
+

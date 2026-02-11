@@ -243,7 +243,7 @@ export function GeneralWritingDetailPage() {
   const templateTitle = searchParams.get("title") || "通用写作";
   const templateId = searchParams.get("template") || "1001";
 
-  // 检测是否为沟通协作模板（1001-1013）或汇报总结模板（1101-1112），如果是则重定向到对话式界面
+  // 检测是否为沟通协作模板（1001-1013）、汇报总结模板（1101-1112）或演讲发言模块（1201-1212），如果是则重定向到对话式界面
   useEffect(() => {
     const numId = parseInt(templateId);
 
@@ -257,6 +257,12 @@ export function GeneralWritingDetailPage() {
     if (numId >= 1101 && numId <= 1112) {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/report?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 演讲发言模块 (1201-1212)
+    if (numId >= 1201 && numId <= 1212) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/speeches?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
   }, [templateId, templateTitle, router, searchParams]);
 
