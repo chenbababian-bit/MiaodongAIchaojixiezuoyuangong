@@ -90,6 +90,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/report?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为演讲发言模块（1201-1212），跳转到演讲发言对话式界面
+    else if (templateId >= 1201 && templateId <= 1212) {
+      router.push(
+        `/writing/speeches?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

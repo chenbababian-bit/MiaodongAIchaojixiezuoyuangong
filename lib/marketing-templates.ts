@@ -85,6 +85,20 @@ export const activitySubCategories = [
   { id: "creative-design-activity", label: "创意设计" },
 ];
 
+// 第三层分类（调研下的子分类）
+export const researchSubCategories = [
+  { id: "research-strategy", label: "调研策略" },
+  { id: "design-execution", label: "设计执行" },
+  { id: "data-analysis", label: "数据分析" },
+  { id: "market-analysis-research", label: "市场分析" },
+  { id: "research-results", label: "调研结果" },
+  { id: "effect-evaluation", label: "效果评估" },
+  { id: "project-management-research", label: "项目管理" },
+  { id: "training-education", label: "培训教育" },
+  { id: "legal-compliance-research", label: "法律合规" },
+  { id: "technical-tools", label: "技术工具" },
+];
+
 // ========== 品牌战略模板 ==========
 export const brandStrategyTemplates = [
   {
