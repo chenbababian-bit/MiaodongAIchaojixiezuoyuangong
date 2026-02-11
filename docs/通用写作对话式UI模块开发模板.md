@@ -592,6 +592,49 @@ case "speeches":  // 改为新模块名
   return speechesTemplates.map((t: any) => ({  // 使用正确的模板
 ```
 
+### 问题4：点击功能后闪烁旧页面再跳转到对话式UI
+
+**现象：** 用户点击功能卡片后，会先短暂显示通用页面（general-writing-detail-page），然后才跳转到对话式UI页面，造成页面闪烁。
+
+**原因：** 在 `general-writing-page.tsx` 的 `handleTemplateClick` 函数中，新模块的卡片点击后会先跳转到 `/writing/general` 页面，然后在 `general-writing-detail-page.tsx` 的 `useEffect` 中检测到模块ID后再重定向到对话式UI页面，导致两次页面跳转。
+
+**解决方案：**
+
+在 `components/general-writing-page.tsx` 的 `handleTemplateClick` 函数中，为新模块添加直接跳转逻辑：
+
+```typescript
+// 处理模板点击
+const handleTemplateClick = (templateId: number, title: string) => {
+  // 检测是否为沟通协作模板（1001-1013），直接跳转到对话式界面
+  if (templateId >= 1001 && templateId <= 1013) {
+    router.push(
+      `/writing/communication?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+    );
+  }
+  // 检测是否为汇报总结模板（1101-1112），跳转到汇报总结对话式界面
+  else if (templateId >= 1101 && templateId <= 1112) {
+    router.push(
+      `/writing/report?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+    );
+  }
+  // 检测是否为演讲发言模块（1201-1212），跳转到演讲发言对话式界面
+  else if (templateId >= 1201 && templateId <= 1212) {
+    router.push(
+      `/writing/speeches?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+    );
+  } else {
+    router.push(
+      `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`
+    );
+  }
+};
+```
+
+**关键点：**
+- 在卡片点击时直接判断模块ID范围，跳转到对应的对话式UI页面
+- 避免先跳转到通用页面再重定向，减少页面跳转次数
+- 保持 `general-writing-detail-page.tsx` 中的重定向逻辑作为兜底方案
+
 ---
 
 ## ✅ 开发检查清单

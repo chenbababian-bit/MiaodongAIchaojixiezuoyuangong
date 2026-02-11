@@ -10,6 +10,7 @@ import {
   creativeSubCategories,
   mediaSubCategories,
   activitySubCategories,
+  researchSubCategories,
   brandStrategyTemplates,
   marketAnalysisTemplates,
   creativeContentTemplates,
@@ -63,6 +64,16 @@ import {
   eventProgramActivityTemplates,
   marketingPromotionActivityTemplates,
   creativeDesignActivityTemplates,
+  researchStrategyTemplates,
+  designExecutionTemplates,
+  dataAnalysisTemplates,
+  marketAnalysisResearchTemplates,
+  researchResultsTemplates,
+  effectEvaluationTemplates,
+  projectManagementResearchTemplates,
+  trainingEducationTemplates,
+  legalComplianceResearchTemplates,
+  technicalToolsTemplates as technicalToolsResearchTemplates,
   activityTemplates,
   researchTemplates,
   prTemplates,
@@ -90,6 +101,8 @@ export function MarketingPage() {
       source = `marketing-media-${activeThirdLevel}`;
     } else if (activeSecondLevel === "activity") {
       source = `marketing-activity-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "research") {
+      source = `marketing-research-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -174,6 +187,20 @@ export function MarketingPage() {
     { id: "event-program", label: "活动程序", templates: eventProgramActivityTemplates },
     { id: "market-promotion", label: "市场宣传", templates: marketingPromotionActivityTemplates },
     { id: "creative-design-activity", label: "创意设计", templates: creativeDesignActivityTemplates },
+  ];
+
+  // 调研下的所有子分类配置
+  const researchCategories = [
+    { id: "research-strategy", label: "调研策略", templates: researchStrategyTemplates },
+    { id: "design-execution", label: "设计执行", templates: designExecutionTemplates },
+    { id: "data-analysis", label: "数据分析", templates: dataAnalysisTemplates },
+    { id: "market-analysis-research", label: "市场分析", templates: marketAnalysisResearchTemplates },
+    { id: "research-results", label: "调研结果", templates: researchResultsTemplates },
+    { id: "effect-evaluation", label: "效果评估", templates: effectEvaluationTemplates },
+    { id: "project-management-research", label: "项目管理", templates: projectManagementResearchTemplates },
+    { id: "training-education", label: "培训教育", templates: trainingEducationTemplates },
+    { id: "legal-compliance-research", label: "法律合规", templates: legalComplianceResearchTemplates },
+    { id: "technical-tools", label: "技术工具", templates: technicalToolsResearchTemplates },
   ];
 
   // 其他第二层分类的模板配置
@@ -305,6 +332,26 @@ export function MarketingPage() {
             {activeSecondLevel === "activity" && (
               <div className="space-y-1">
                 {activitySubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* 第三层：调研下的子分类 */}
+            {activeSecondLevel === "research" && (
+              <div className="space-y-1">
+                {researchSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -480,8 +527,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* 调研：按子分类分组显示所有功能 */}
+        {activeSecondLevel === "research" && (
+          <div className="space-y-8">
+            {researchCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
