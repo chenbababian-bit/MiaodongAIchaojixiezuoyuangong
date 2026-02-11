@@ -451,10 +451,10 @@ export function SpeechesWritingPage() {
       const platform = source.replace("media-", "");
       // 根据平台返回对应的模板
       switch (platform) {
-        case "report":
-          return reportsTemplates.map((t: any) => ({
+        case "speeches":
+          return speechesTemplates.map((t: any) => ({
             id: t.id,
-            icon: "report",
+            icon: "speeches",
             iconBg: t.color,
             title: t.title,
             desc: t.desc,
