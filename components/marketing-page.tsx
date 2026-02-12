@@ -117,6 +117,19 @@ import {
   dataAnalysisGameTemplates,
   internalCollaborationTemplates,
   legalComplianceGameTemplates,
+  b2bManagementSubCategories,
+  strategicPlanningTemplates,
+  marketResearchB2BTemplates,
+  brandCommunicationTemplates,
+  marketingActivitiesTemplates,
+  productMarketingTemplates,
+  salesSupportTemplates,
+  dataAnalysisB2BTemplates,
+  partnershipB2BTemplates,
+  teamManagementB2BTemplates,
+  legalComplianceB2BTemplates,
+  technicalToolsB2BTemplates,
+  improvementInnovationTemplates,
 } from "@/lib/marketing-templates";
 
 export function MarketingPage() {
@@ -143,6 +156,8 @@ export function MarketingPage() {
       source = `marketing-traffic-${activeThirdLevel}`;
     } else if (activeSecondLevel === "game") {
       source = `marketing-game-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "b2b-management") {
+      source = `marketing-b2b-management-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -284,6 +299,22 @@ export function MarketingPage() {
     { id: "legal-compliance-game", label: "法律合规", templates: legalComplianceGameTemplates },
   ];
 
+  // B2B营销管理分类配置
+  const b2bManagementCategories = [
+    { id: "strategic-planning", label: "战略规划", templates: strategicPlanningTemplates },
+    { id: "market-research-b2b", label: "市场调研", templates: marketResearchB2BTemplates },
+    { id: "brand-communication", label: "品牌传播", templates: brandCommunicationTemplates },
+    { id: "marketing-activities", label: "营销活动", templates: marketingActivitiesTemplates },
+    { id: "product-marketing", label: "产品营销", templates: productMarketingTemplates },
+    { id: "sales-support", label: "销售支持", templates: salesSupportTemplates },
+    { id: "data-analysis-b2b", label: "数据分析", templates: dataAnalysisB2BTemplates },
+    { id: "partnership", label: "合作关系", templates: partnershipB2BTemplates },
+    { id: "team-management-b2b", label: "团队管理", templates: teamManagementB2BTemplates },
+    { id: "legal-compliance-b2b", label: "法律合规", templates: legalComplianceB2BTemplates },
+    { id: "technical-tools-b2b", label: "技术工具", templates: technicalToolsB2BTemplates },
+    { id: "improvement-innovation", label: "改进创新", templates: improvementInnovationTemplates },
+  ];
+
   // 其他第二层分类的模板配置
   const otherCategories: { [key: string]: any[] } = {
     research: researchTemplates,
@@ -327,6 +358,10 @@ export function MarketingPage() {
                 // 如果切换到活动策划,默认选中项目管理
                 if (category.id === "activity") {
                   setActiveThirdLevel("project-management-activity");
+                }
+                // 如果切换到B2B营销管理,默认选中战略规划
+                if (category.id === "b2b-management") {
+                  setActiveThirdLevel("strategic-planning");
                 }
               }}
               className={cn(
@@ -492,6 +527,26 @@ export function MarketingPage() {
             {activeSecondLevel === "game" && (
               <div className="space-y-1">
                 {gameSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* B2B营销管理三级导航 */}
+            {activeSecondLevel === "b2b-management" && (
+              <div className="space-y-1">
+                {b2bManagementSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -818,8 +873,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* B2B营销管理分类内容 */}
+        {activeSecondLevel === "b2b-management" && (
+          <div className="space-y-8">
+            {b2bManagementCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && activeSecondLevel !== "b2b-management" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
