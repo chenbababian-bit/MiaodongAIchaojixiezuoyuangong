@@ -389,6 +389,13 @@ export function TeamManagementWritingPage() {
       '1307': 'team-management-resignation-procedure',
       '1308': 'team-management-career-planning',
       '1309': 'team-management-training-record',
+      '1310': 'team-management-promotion-application',
+      '1311': 'team-management-transfer-application',
+      '1312': 'team-management-leave-application',
+      '1313': 'team-management-overtime-application',
+      '1314': 'team-management-business-trip-application',
+      '1315': 'team-management-welfare-application',
+      '1316': 'team-management-handover-document',
     };
     return mapping[templateId] || 'team-management-recruitment-ad';
   };
@@ -698,14 +705,120 @@ export function TeamManagementWritingPage() {
 2. 主要受众是谁(如:新员工、销售经理、技术人员)?
 3. 你希望重点侧重于'流程规范'还是'思维提升'?
 
-我将帮您精准萃取核心知识点、转化为行动指南、生成标准化培训纪要,并捕捉学员痛点评估培训效果。`
+我将帮您精准萃取核心知识点、转化为行动指南、生成标准化培训纪要,并捕捉学员痛点评估培训效果。`,
+      "1310": `您好!我是您的资深职场晋升导师,拥有50年的项目落地经验,专注于帮助职场人士成功实现内部晋升目标。
+
+我能为您提供的核心服务包括:
+- 工作成果的系统化梳理与价值提炼
+- 高质量晋升申请材料的撰写指导
+- 晋升岗位能力模型分析与匹配
+- 答辩面谈的策略辅导与模拟演练
+- 个人发展计划的制定与跟踪
+
+我的工作流程:
+我会先深入了解您的职业背景和晋升目标→帮您系统梳理工作亮点→指导您准备专业的申请材料→分析能力短板并制定提升计划→最后进行答辩准备,确保您以最佳状态迎接晋升机会。
+
+现在,让我们开始吧!请告诉我:
+1. 您目前的职位是什么?希望晋升到什么职位?
+2. 您在当前岗位工作了多久?
+3. 您认为自己最大的工作亮点是什么?
+4. 您在晋升准备过程中遇到的最大困惑是什么?`,
+      "1311": `您好!我是您的转岗申请书写作专家,拥有50年企业人力资源管理与职业发展咨询经验。
+
+我能为您提供的服务:
+- 深度分析您的转岗需求与职业背景
+- 精准匹配您的能力与目标岗位要求
+- 撰写高质量、高成功率的转岗申请书
+- 提供差异化写作策略与专业指导
+- 优化申请书结构、逻辑与语言表达
+- 根据您的反馈持续迭代完善
+
+我们的工作流程:
+1. 信息收集 - 通过结构化提问全面了解您的情况
+2. 策略分析 - 评估可行性,制定写作策略
+3. 初稿撰写 - 创作个性化申请书初稿
+4. 优化迭代 - 根据您的反馈调整完善
+5. 交付指导 - 提供最终版本及提交建议
+
+现在,让我们开始吧!请告诉我:您目前在什么岗位工作?希望转到什么岗位?为什么想要转岗?`,
+      "1312": `您好!我是拥有50年经验的请假申请表大师。请假不仅是休息,更是一场职场心理博弈。
+
+为了帮你写出老板无法拒绝的请假条,请告诉我:
+1. 你想请假的原因(真实原因 vs 想说的原因)?
+2. 请假多长时间?
+3. 你的老板是什么风格(比如:看重细节、只要结果、比较情绪化)?
+4. 手头有没有必须这几天交付的急活?
+
+我将为您提供:
+- 高获批率的请假文案
+- 零副作用的职业形象维护
+- 完善的工作交接计划
+- 消除上级后顾之忧的策略`,
+      "1313": `您好!我是您的转岗申请书写作专家,拥有50年企业人力资源管理与职业发展咨询经验。
+
+我能为您提供的服务:
+- 深度分析您的转岗需求与职业背景
+- 精准匹配您的能力与目标岗位要求
+- 撰写高质量、高成功率的转岗申请书
+- 提供差异化写作策略与专业指导
+
+我们的工作流程:
+1. 信息收集 - 通过结构化提问全面了解您的情况
+2. 策略分析 - 评估可行性,制定写作策略
+3. 初稿撰写 - 创作个性化申请书初稿
+4. 优化迭代 - 根据您的反馈调整完善
+5. 交付指导 - 提供最终版本及提交建议
+
+现在,让我们开始吧!请告诉我您的具体情况。`,
+      "1314": `您好!我是您的专业出差申请表顾问,拥有50年企业差旅管理的落地项目经验。
+
+我能为您提供以下服务:
+- 出差申请表生成 - 快速创建规范的出差申请表
+- 填写指导与优化 - 出差理由的专业撰写建议
+- 流程咨询与建议 - 解答出差申请相关疑问
+- 申请表审查服务 - 检查申请表的完整性
+
+我的工作流程:
+1. 了解您的需求 → 2. 设计专属方案 → 3. 生成申请内容 → 4. 优化与建议 → 5. 答疑解惑
+
+现在,请告诉我:
+- 您计划出差的目的地和时间?
+- 您需要我帮您生成申请表,还是优化现有申请?
+- 您所在企业是否有特殊的申请要求?`,
+      "1315": `您好!我是呱呱老师,一位拥有50年实战经验的员工福利落地大师。我看过太多福利变成了公司的'成本黑洞',也操盘过无数让员工感动落泪的'神仙福利'。
+
+为了帮你把钱花在刀刃上,请告诉我:
+1. 贵公司目前的规模和行业属性是什么?
+2. 本次计划的福利项目是什么(如:中秋、体检、年终奖、日常下午茶等)?
+3. 您的人均预算大概是多少?
+4. 目前最大的痛点是什么(如:预算少、众口难调、老板不满意)?
+
+把难题交给我,我来为您定制一套既省钱又走心的完美方案。`,
+      "1316": `您好!我是您的工作交接文档专家顾问。
+
+我拥有50年项目落地经验,专注于帮助企业和个人完成高质量的工作交接。我的使命是确保您的业务知识、项目经验和关键资源能够完整、清晰地传递给接手方,避免信息断层和业务风险。
+
+我可以帮您:
+- 构建完整的工作交接文档体系
+- 梳理复杂的业务流程和项目状态
+- 识别交接过程中的风险点并提供应对方案
+- 提供标准化模板和检查清单
+- 将隐性经验转化为可传承的知识资产
+
+我的工作方式:
+1. 首先深入了解您的交接场景和具体需求
+2. 然后为您设计清晰的文档框架结构
+3. 接着逐步生成详细、可落地的内容
+4. 最后提供完整性检查和持续优化支持
+
+现在,请告诉我:您需要交接的是什么类型的工作?预计的交接时间节点是什么时候?`
     };
     return welcomeMessages[templateId] || welcomeMessages["1301"];
   };
 
   // 初始化欢迎消息（所有团队管理子类型）
   useEffect(() => {
-    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"];
+    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309", "1310", "1311", "1312", "1313", "1314", "1315", "1316"];
     if (teamManagementTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
@@ -798,6 +911,13 @@ export function TeamManagementWritingPage() {
       case "1307": return "/api/team-management/resignation-procedure";
       case "1308": return "/api/team-management/career-planning";
       case "1309": return "/api/team-management/training-record";
+      case "1310": return "/api/team-management/promotion-application";
+      case "1311": return "/api/team-management/transfer-application";
+      case "1312": return "/api/team-management/leave-application";
+      case "1313": return "/api/team-management/overtime-application";
+      case "1314": return "/api/team-management/business-trip-application";
+      case "1315": return "/api/team-management/welfare-application";
+      case "1316": return "/api/team-management/handover-document";
       default: return "/api/team-management/recruitment-ad";
     }
   };
@@ -958,7 +1078,7 @@ export function TeamManagementWritingPage() {
     setInputValue(""); // 清空输入框
 
     // 所有团队管理子类型：重置消息列表为对应的欢迎消息
-    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"];
+    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309", "1310", "1311", "1312", "1313", "1314", "1315", "1316"];
     if (teamManagementTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
@@ -976,7 +1096,7 @@ export function TeamManagementWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"].includes(templateId) ? (
+      {["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309", "1310", "1311", "1312", "1313", "1314", "1315", "1316"].includes(templateId) ? (
         /* 所有团队管理子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}

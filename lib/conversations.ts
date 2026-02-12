@@ -159,7 +159,14 @@ export type TeamManagementType =
   | 'team-management-onboarding-handbook'  // 1306: 入职手册
   | 'team-management-resignation-procedure' // 1307: 离职手续说明
   | 'team-management-career-planning'      // 1308: 职业发展规划
-  | 'team-management-training-record';     // 1309: 员工培训记录
+  | 'team-management-training-record'      // 1309: 员工培训记录
+  | 'team-management-promotion-application' // 1310: 内部晋升申请
+  | 'team-management-transfer-application' // 1311: 转岗申请书
+  | 'team-management-leave-application'    // 1312: 请假申请表
+  | 'team-management-overtime-application' // 1313: 加班申请表
+  | 'team-management-business-trip-application' // 1314: 出差申请表
+  | 'team-management-welfare-application'  // 1315: 员工福利申请
+  | 'team-management-handover-document';   // 1316: 工作交接文档
 
 // 对话类型
 export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType;

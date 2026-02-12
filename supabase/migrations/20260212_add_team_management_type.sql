@@ -131,5 +131,12 @@ CHECK (type IN (
   'team-management-onboarding-handbook',
   'team-management-resignation-procedure',
   'team-management-career-planning',
-  'team-management-training-record'
+  'team-management-training-record',
+  'team-management-promotion-application',
+  'team-management-transfer-application',
+  'team-management-leave-application',
+  'team-management-overtime-application',
+  'team-management-business-trip-application',
+  'team-management-welfare-application',
+  'team-management-handover-document'
 ));
