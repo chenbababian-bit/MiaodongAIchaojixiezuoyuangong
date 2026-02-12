@@ -149,8 +149,15 @@ export type SpeechesType =
   | 'speeches-onboarding-speech'       // 1211: 入职发言稿
   | 'speeches-probation-review';       // 1212: 转正述职报告演讲稿
 
+// 团队管理细粒度类型
+export type TeamManagementType =
+  | 'team-management-recruitment-ad'       // 1301: 招聘广告
+  | 'team-management-job-description'      // 1302: 职位描述
+  | 'team-management-interview-invitation' // 1303: 面试邀请
+  | 'team-management-interview-feedback';  // 1304: 面试反馈表
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType;
 
 export interface Conversation {
   id: string;

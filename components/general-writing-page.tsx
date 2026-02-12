@@ -96,6 +96,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/speeches?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为团队管理模块（1301-1316），跳转到团队管理对话式界面
+    else if (templateId >= 1301 && templateId <= 1316) {
+      router.push(
+        `/writing/team-management?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

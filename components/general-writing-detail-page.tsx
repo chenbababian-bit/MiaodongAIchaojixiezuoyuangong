@@ -264,6 +264,12 @@ export function GeneralWritingDetailPage() {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/speeches?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
+
+    // 团队管理模块 (1301-1316)
+    if (numId >= 1301 && numId <= 1316) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/team-management?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
   }, [templateId, templateTitle, router, searchParams]);
 
   const [contentInput, setContentInput] = useState("");
