@@ -83,6 +83,22 @@ import {
   b2bDigitalTemplates,
   b2bContentTemplates,
   b2bActivityTemplates,
+  prSubCategories,
+  prStrategyTemplates,
+  prPlanningTemplates,
+  mediaRelationsPrTemplates,
+  socialMediaManagementTemplates,
+  eventActivitiesTemplates,
+  crisisManagementTemplates,
+  eventPlanningPrTemplates,
+  internalCommunicationTemplates,
+  partnershipTemplates,
+  monitoringEvaluationTemplates,
+  reportPresentationTemplates,
+  trainingDevelopmentPrTemplates,
+  financeBudgetPrTemplates,
+  legalCompliancePrTemplates,
+  innovationTechnologyTemplates,
 } from "@/lib/marketing-templates";
 
 export function MarketingPage() {
@@ -103,6 +119,8 @@ export function MarketingPage() {
       source = `marketing-activity-${activeThirdLevel}`;
     } else if (activeSecondLevel === "research") {
       source = `marketing-research-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "pr") {
+      source = `marketing-pr-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -201,6 +219,25 @@ export function MarketingPage() {
     { id: "training-education", label: "培训教育", templates: trainingEducationTemplates },
     { id: "legal-compliance-research", label: "法律合规", templates: legalComplianceResearchTemplates },
     { id: "technical-tools", label: "技术工具", templates: technicalToolsResearchTemplates },
+  ];
+
+  // 公关传播下的所有子分类配置
+  const prCategories = [
+    { id: "pr-strategy", label: "公关战略", templates: prStrategyTemplates },
+    { id: "pr-planning", label: "公关策划", templates: prPlanningTemplates },
+    { id: "media-relations-pr", label: "媒体关系", templates: mediaRelationsPrTemplates },
+    { id: "social-media-management", label: "社媒管理", templates: socialMediaManagementTemplates },
+    { id: "event-activities", label: "活动事件", templates: eventActivitiesTemplates },
+    { id: "crisis-management", label: "危机管理", templates: crisisManagementTemplates },
+    { id: "event-planning-pr", label: "事件策划", templates: eventPlanningPrTemplates },
+    { id: "internal-communication", label: "内部沟通", templates: internalCommunicationTemplates },
+    { id: "partnership", label: "合作伙伴", templates: partnershipTemplates },
+    { id: "monitoring-evaluation", label: "监测评估", templates: monitoringEvaluationTemplates },
+    { id: "report-presentation", label: "报告呈现", templates: reportPresentationTemplates },
+    { id: "training-development-pr", label: "培训与发展", templates: trainingDevelopmentPrTemplates },
+    { id: "finance-budget-pr", label: "财务与预算", templates: financeBudgetPrTemplates },
+    { id: "legal-compliance-pr", label: "法律合规", templates: legalCompliancePrTemplates },
+    { id: "innovation-technology", label: "创新与技术", templates: innovationTechnologyTemplates },
   ];
 
   // 其他第二层分类的模板配置
@@ -352,6 +389,25 @@ export function MarketingPage() {
             {activeSecondLevel === "research" && (
               <div className="space-y-1">
                 {researchSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {activeSecondLevel === "pr" && (
+              <div className="space-y-1">
+                {prSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -565,8 +621,45 @@ export function MarketingPage() {
           </div>
         )}
 
+        {activeSecondLevel === "pr" && (
+          <div className="space-y-8">
+            {prCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
