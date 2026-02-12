@@ -126,5 +126,10 @@ CHECK (type IN (
   'team-management-recruitment-ad',
   'team-management-job-description',
   'team-management-interview-invitation',
-  'team-management-interview-feedback'
+  'team-management-interview-feedback',
+  'team-management-offer-letter',
+  'team-management-onboarding-handbook',
+  'team-management-resignation-procedure',
+  'team-management-career-planning',
+  'team-management-training-record'
 ));

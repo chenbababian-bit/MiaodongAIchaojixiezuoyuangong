@@ -384,6 +384,11 @@ export function TeamManagementWritingPage() {
       '1302': 'team-management-job-description',
       '1303': 'team-management-interview-invitation',
       '1304': 'team-management-interview-feedback',
+      '1305': 'team-management-offer-letter',
+      '1306': 'team-management-onboarding-handbook',
+      '1307': 'team-management-resignation-procedure',
+      '1308': 'team-management-career-planning',
+      '1309': 'team-management-training-record',
     };
     return mapping[templateId] || 'team-management-recruitment-ad';
   };
@@ -621,14 +626,86 @@ export function TeamManagementWritingPage() {
 3. 输出可直接使用的反馈表模板
 4. 根据你的反馈持续优化
 
-现在,请告诉我:你希望为什么岗位设计面试反馈表?目前面试评估遇到了什么挑战?`
+现在,请告诉我:你希望为什么岗位设计面试反馈表?目前面试评估遇到了什么挑战?`,
+      "1305": `您好!我是您的专业录用通知书撰写大师,拥有50年的落地项目经验,精通各行业录用通知书的撰写规范和法律要求。
+
+我可以为您提供以下服务:
+- 撰写专业录用通知书 - 为不同岗位定制合规、专业的录用通知
+- 审核现有通知书 - 检查法律风险,优化表述内容
+- 提供专业建议 - 解答录用通知相关的法律和实务问题
+- 设计配套文档 - 劳动合同、保密协议等HR文书
+
+我的工作流程:
+1. 了解您的需求 - 询问企业信息、岗位详情、薪酬待遇等
+2. 确认关键信息 - 二次确认重要条款,避免遗漏
+3. 设计方案 - 提供多种表述方案供您选择
+4. 撰写初稿 - 完整、规范的录用通知书
+5. 优化完善 - 根据您的反馈调整优化
+6. 交付成果 - 可直接使用的最终版本
+
+现在,请告诉我您的具体需求:您是需要撰写新的录用通知书,还是审核现有通知书,或是咨询相关问题?`,
+      "1306": `您好!我是企业新员工入职手册定制专家,拥有50年企业管理咨询与人力资源实战经验。
+
+我能为您提供的服务:
+- 文化传递 - 精准提炼企业文化,用有温度的语言传递价值观
+- 效率提升 - 构建清晰的业务SOP和工具指引,缩短新人适应期
+- 风险规避 - 明确红线与合规要求,保障企业与员工双方权益
+- 体验优化 - 打造"保姆级"生活与工作指南,提升新员工满意度
+- 结构化输出 - 生成一份目录清晰、内容详实、格式规范的Markdown格式入职手册
+
+我们的工作流程:
+1. 需求调研 - 询问您的企业行业、规模、核心痛点及希望传递的文化基调
+2. 大纲确认 - 根据调研结果,提供一份入职手册的目录大纲供您确认
+3. 分章节撰写 - 欢迎与文化、生存指南、业务作战图、成长与红线
+4. 核查与交付 - 检查是否有遗漏信息,提醒您后续落地的注意事项
+
+请告诉我:贵公司目前处于什么发展阶段?您希望这份手册的整体基调是严肃专业的,还是活泼扁平的?`,
+      "1307": `您好!我是您的离职手续专业顾问,拥有50年人力资源管理和离职流程处理经验。
+
+我的服务流程如下:
+1. 了解您的情况 - 倾听您的需求和困惑
+2. 制定专属方案 - 为您设计个性化离职计划
+3. 准备必要文档 - 提供模板并指导填写
+4. 执行流程指导 - 手把手教您完成每个环节
+5. 保障合法权益 - 帮您核算和争取应得权益
+6. 后续事务处理 - 协助解决离职后的各项事务
+
+请告诉我您目前的情况:
+- 您在什么类型的公司工作?(国企/私企/外企等)
+- 您的岗位和工作年限是?
+- 您离职的主要原因是什么?
+- 您目前处于离职的哪个阶段?(考虑中/已提出/办理中)
+
+让我们一起确保您的离职过程顺利、合规,并最大程度地维护您的权益!`,
+      "1308": `您好!我是您的职业发展规划大师,拥有50年的实战经验,曾帮助数千位职场人士成功实现职业突破。
+
+我的服务涵盖:职业现状诊断、个性化发展规划、技能提升方案、求职转型指导、长期发展咨询等全方位内容。
+
+接下来,我会通过系统化流程与您深度交流:
+- 首先了解您的基本情况和核心诉求
+- 然后进行专业的职业诊断分析
+- 接着与您共同设定清晰的职业目标
+- 再为您设计可行的发展路径
+- 最后制定具体的行动方案
+
+请放心,我们的交流完全保密,您可以畅所欲言。请先告诉我:您目前的职业状态如何?遇到了什么具体的困惑或挑战?让我们一起开启您的职业发展新篇章!`,
+      "1309": `您好!我是拥有50年经验的企业级员工培训记录与复盘专家。
+
+请把你的培训录音转文字稿、会议笔记或杂乱的记录发给我,我将为你生成一份可以直接汇报或归档的专业培训纪要。
+
+为了效果更佳,请先告诉我:
+1. 本次培训的主题是什么?
+2. 主要受众是谁(如:新员工、销售经理、技术人员)?
+3. 你希望重点侧重于'流程规范'还是'思维提升'?
+
+我将帮您精准萃取核心知识点、转化为行动指南、生成标准化培训纪要,并捕捉学员痛点评估培训效果。`
     };
     return welcomeMessages[templateId] || welcomeMessages["1301"];
   };
 
   // 初始化欢迎消息（所有团队管理子类型）
   useEffect(() => {
-    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304"];
+    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"];
     if (teamManagementTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
@@ -716,6 +793,11 @@ export function TeamManagementWritingPage() {
       case "1302": return "/api/team-management/job-description";
       case "1303": return "/api/team-management/interview-invitation";
       case "1304": return "/api/team-management/interview-feedback";
+      case "1305": return "/api/team-management/offer-letter";
+      case "1306": return "/api/team-management/onboarding-handbook";
+      case "1307": return "/api/team-management/resignation-procedure";
+      case "1308": return "/api/team-management/career-planning";
+      case "1309": return "/api/team-management/training-record";
       default: return "/api/team-management/recruitment-ad";
     }
   };
@@ -876,7 +958,7 @@ export function TeamManagementWritingPage() {
     setInputValue(""); // 清空输入框
 
     // 所有团队管理子类型：重置消息列表为对应的欢迎消息
-    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304"];
+    const teamManagementTemplateIds = ["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"];
     if (teamManagementTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
@@ -894,7 +976,7 @@ export function TeamManagementWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["1301", "1302", "1303", "1304"].includes(templateId) ? (
+      {["1301", "1302", "1303", "1304", "1305", "1306", "1307", "1308", "1309"].includes(templateId) ? (
         /* 所有团队管理子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}

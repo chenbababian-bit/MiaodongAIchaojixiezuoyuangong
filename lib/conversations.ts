@@ -154,7 +154,12 @@ export type TeamManagementType =
   | 'team-management-recruitment-ad'       // 1301: 招聘广告
   | 'team-management-job-description'      // 1302: 职位描述
   | 'team-management-interview-invitation' // 1303: 面试邀请
-  | 'team-management-interview-feedback';  // 1304: 面试反馈表
+  | 'team-management-interview-feedback'   // 1304: 面试反馈表
+  | 'team-management-offer-letter'         // 1305: 录用通知书
+  | 'team-management-onboarding-handbook'  // 1306: 入职手册
+  | 'team-management-resignation-procedure' // 1307: 离职手续说明
+  | 'team-management-career-planning'      // 1308: 职业发展规划
+  | 'team-management-training-record';     // 1309: 员工培训记录
 
 // 对话类型
 export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType;
