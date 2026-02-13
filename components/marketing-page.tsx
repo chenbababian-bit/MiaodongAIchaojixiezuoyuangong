@@ -156,6 +156,17 @@ import {
   legalComplianceContentTemplates,
   financialBudgetContentTemplates,
   innovationExperimentsTemplates,
+  b2bActivitySubCategories,
+  eventPlanningB2bTemplates,
+  marketingMaterialsTemplates,
+  participantManagementTemplates,
+  techPlatformTemplates,
+  marketingCommunicationTemplates,
+  dataAnalysisActivityTemplates,
+  followUpActionsTemplates,
+  legalComplianceB2bActivityTemplates,
+  departmentCollaborationTemplates,
+  learningDevelopmentTemplates,
 } from "@/lib/marketing-templates";
 
 export function MarketingPage() {
@@ -188,6 +199,8 @@ export function MarketingPage() {
       source = `marketing-b2b-digital-${activeThirdLevel}`;
     } else if (activeSecondLevel === "b2b-content") {
       source = `marketing-b2b-content-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "b2b-activity") {
+      source = `marketing-b2b-activity-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -377,6 +390,20 @@ export function MarketingPage() {
     { id: "innovation-experiments", label: "创新实验", templates: innovationExperimentsTemplates },
   ];
 
+  // B2B活动营销下的所有子分类配置
+  const b2bActivityCategories = [
+    { id: "event-planning-b2b", label: "活动策划", templates: eventPlanningB2bTemplates },
+    { id: "marketing-materials", label: "营销物料", templates: marketingMaterialsTemplates },
+    { id: "participant-management", label: "参与者管理", templates: participantManagementTemplates },
+    { id: "tech-platform", label: "技术平台", templates: techPlatformTemplates },
+    { id: "marketing-communication", label: "营销传播", templates: marketingCommunicationTemplates },
+    { id: "data-analysis-activity", label: "数据分析", templates: dataAnalysisActivityTemplates },
+    { id: "follow-up-actions", label: "后续行动", templates: followUpActionsTemplates },
+    { id: "legal-compliance-activity", label: "法律合规", templates: legalComplianceB2bActivityTemplates },
+    { id: "department-collaboration", label: "部门协作", templates: departmentCollaborationTemplates },
+    { id: "learning-development", label: "学习发展", templates: learningDevelopmentTemplates },
+  ];
+
   // 其他第二层分类的模板配置
   const otherCategories: { [key: string]: any[] } = {
     research: researchTemplates,
@@ -424,6 +451,10 @@ export function MarketingPage() {
                 // 如果切换到B2B营销管理,默认选中战略规划
                 if (category.id === "b2b-management") {
                   setActiveThirdLevel("strategic-planning");
+                }
+                // 如果切换到B2B活动营销,默认选中活动策划
+                if (category.id === "b2b-activity") {
+                  setActiveThirdLevel("event-planning-b2b");
                 }
               }}
               className={cn(
@@ -648,6 +679,25 @@ export function MarketingPage() {
             {activeSecondLevel === "b2b-content" && (
               <div className="space-y-1">
                 {b2bContentSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {activeSecondLevel === "b2b-activity" && (
+              <div className="space-y-1">
+                {b2bActivitySubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -1088,8 +1138,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* B2B活动营销：按子分类分组显示所有功能 */}
+        {activeSecondLevel === "b2b-activity" && (
+          <div className="space-y-8">
+            {b2bActivityCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && activeSecondLevel !== "b2b-management" && activeSecondLevel !== "b2b-digital" && activeSecondLevel !== "b2b-content" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && activeSecondLevel !== "b2b-management" && activeSecondLevel !== "b2b-digital" && activeSecondLevel !== "b2b-content" && activeSecondLevel !== "b2b-activity" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
