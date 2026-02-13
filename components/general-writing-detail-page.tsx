@@ -306,6 +306,12 @@ export function GeneralWritingDetailPage() {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/publicity?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
+
+    // 通信公文模块 (2301-2304)
+    if (numId >= 2301 && numId <= 2304) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/communication-docs?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
   }, [templateId, templateTitle, router, searchParams]);
 
   const [contentInput, setContentInput] = useState("");
