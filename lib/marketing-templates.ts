@@ -10042,3 +10042,427 @@ export const customerServiceTemplates = [
     color: "bg-indigo-500",
   },
 ];
+
+// 增长黑客 - 用户留存模板 (ID: 35201-35299)
+export const userRetentionTemplates = [
+  {
+    id: 35201,
+    icon: "🔄",
+    title: "用户流失预警系统",
+    desc: "建立用户流失预警机制，及时识别高风险用户，采取挽留措施。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35202,
+    icon: "📧",
+    title: "用户召回策略",
+    desc: "设计有效的用户召回策略，重新激活流失用户，提升用户回归率。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35203,
+    icon: "🎁",
+    title: "用户忠诚度计划",
+    desc: "建立用户忠诚度计划，通过积分、等级等机制提升用户粘性。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35204,
+    icon: "💬",
+    title: "用户反馈闭环管理",
+    desc: "建立用户反馈闭环管理机制，及时响应用户需求，提升满意度。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35205,
+    icon: "📊",
+    title: "留存率分析报告",
+    desc: "分析用户留存数据，识别留存关键因素，优化产品和运营策略。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35206,
+    icon: "🎯",
+    title: "用户生命周期管理",
+    desc: "建立用户生命周期管理体系，针对不同阶段用户制定差异化策略。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35207,
+    icon: "⚡",
+    title: "用户活跃度提升方案",
+    desc: "设计用户活跃度提升方案，通过功能优化和运营活动提升用户活跃度。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 用户研究模板 (ID: 35301-35399)
+export const growthUserResearchTemplates = [
+  {
+    id: 35301,
+    icon: "🔍",
+    title: "用户访谈计划",
+    desc: "制定系统的用户访谈计划，深入了解用户需求和痛点。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35302,
+    icon: "📋",
+    title: "用户调研问卷设计",
+    desc: "设计科学的用户调研问卷，收集有价值的用户反馈数据。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35303,
+    icon: "👥",
+    title: "用户画像更新",
+    desc: "定期更新用户画像，确保对目标用户的理解准确且及时。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35304,
+    icon: "🎯",
+    title: "用户需求优先级排序",
+    desc: "对用户需求进行优先级排序，确保资源投入到最有价值的需求上。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35305,
+    icon: "📊",
+    title: "用户行为路径分析",
+    desc: "分析用户行为路径，识别转化瓶颈和优化机会。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35306,
+    icon: "💡",
+    title: "用户洞察报告",
+    desc: "撰写用户洞察报告，为产品和运营决策提供数据支持。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35307,
+    icon: "🗺️",
+    title: "用户体验地图",
+    desc: "绘制用户体验地图，全面了解用户在各个触点的体验。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 优化迭代模板 (ID: 35401-35499)
+export const optimizationIterationTemplates = [
+  {
+    id: 35401,
+    icon: "🧪",
+    title: "A/B测试方案",
+    desc: "设计科学的A/B测试方案，通过数据驱动的方式优化产品和运营。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35402,
+    icon: "📈",
+    title: "转化漏斗优化",
+    desc: "分析转化漏斗数据，识别流失环节，制定优化方案提升转化率。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35403,
+    icon: "⚡",
+    title: "产品迭代计划",
+    desc: "制定产品迭代计划，持续优化产品功能和用户体验。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35404,
+    icon: "🎯",
+    title: "增长实验设计",
+    desc: "设计增长实验，快速验证增长假设，找到有效的增长策略。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35405,
+    icon: "📊",
+    title: "数据驱动决策框架",
+    desc: "建立数据驱动决策框架，确保决策基于数据而非直觉。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35406,
+    icon: "🔄",
+    title: "快速迭代流程",
+    desc: "建立快速迭代流程，提升团队的响应速度和执行效率。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35407,
+    icon: "📝",
+    title: "优化效果评估报告",
+    desc: "撰写优化效果评估报告，总结经验教训，指导后续优化工作。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 营销推广模板 (ID: 35501-35599)
+export const marketingPromotionTemplates = [
+  {
+    id: 35501,
+    icon: "📢",
+    title: "病毒式营销方案",
+    desc: "设计病毒式营销方案，通过用户自发传播实现低成本增长。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35502,
+    icon: "🎁",
+    title: "裂变活动策划",
+    desc: "策划裂变活动，通过老用户带新用户实现用户快速增长。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35503,
+    icon: "🤝",
+    title: "合作伙伴营销计划",
+    desc: "制定合作伙伴营销计划，通过资源互换实现双赢增长。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35504,
+    icon: "📱",
+    title: "社交媒体营销策略",
+    desc: "制定社交媒体营销策略，提升品牌曝光和用户获取。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35505,
+    icon: "🎯",
+    title: "内容营销计划",
+    desc: "制定内容营销计划，通过优质内容吸引和转化目标用户。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35506,
+    icon: "💰",
+    title: "付费推广策略",
+    desc: "制定付费推广策略，优化广告投放ROI，降低获客成本。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35507,
+    icon: "🌟",
+    title: "品牌营销方案",
+    desc: "制定品牌营销方案，提升品牌知名度和美誉度。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 数据分析模板 (ID: 35601-35699)
+export const growthDataAnalysisTemplates = [
+  {
+    id: 35601,
+    icon: "📊",
+    title: "增长数据看板",
+    desc: "建立增长数据看板，实时监控关键增长指标。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35602,
+    icon: "📈",
+    title: "用户行为分析报告",
+    desc: "分析用户行为数据，发现增长机会和优化方向。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35603,
+    icon: "🎯",
+    title: "渠道效果分析",
+    desc: "分析各渠道的获客效果，优化渠道投放策略。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35604,
+    icon: "💡",
+    title: "数据洞察报告",
+    desc: "撰写数据洞察报告，为增长决策提供数据支持。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35605,
+    icon: "🔍",
+    title: "用户细分分析",
+    desc: "进行用户细分分析，识别高价值用户群体。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35606,
+    icon: "📉",
+    title: "流失原因分析",
+    desc: "分析用户流失原因，制定针对性的挽留策略。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35607,
+    icon: "⚡",
+    title: "实时数据监控",
+    desc: "建立实时数据监控系统，及时发现异常并快速响应。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 技术自动化模板 (ID: 35701-35799)
+export const technicalAutomationTemplates = [
+  {
+    id: 35701,
+    icon: "🤖",
+    title: "营销自动化系统",
+    desc: "搭建营销自动化系统，提升营销效率和用户体验。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35702,
+    icon: "📧",
+    title: "邮件自动化流程",
+    desc: "设计邮件自动化流程，实现用户生命周期的自动化触达。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35703,
+    icon: "🔔",
+    title: "推送通知策略",
+    desc: "制定推送通知策略，通过精准推送提升用户活跃度。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35704,
+    icon: "🎯",
+    title: "用户分群自动化",
+    desc: "实现用户分群自动化，动态调整用户标签和分组。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35705,
+    icon: "📊",
+    title: "数据采集与处理",
+    desc: "建立数据采集与处理系统，确保数据的准确性和及时性。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35706,
+    icon: "⚙️",
+    title: "增长工具集成",
+    desc: "集成各类增长工具，打造高效的增长技术栈。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35707,
+    icon: "🔧",
+    title: "技术优化方案",
+    desc: "制定技术优化方案，提升系统性能和用户体验。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 跨部门协作模板 (ID: 35801-35899)
+export const crossDepartmentCollaborationTemplates = [
+  {
+    id: 35801,
+    icon: "🤝",
+    title: "增长团队协作机制",
+    desc: "建立增长团队协作机制，促进跨部门沟通和协作。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35802,
+    icon: "📋",
+    title: "增长项目管理",
+    desc: "规范增长项目管理流程，确保项目高效执行。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35803,
+    icon: "💬",
+    title: "跨部门沟通计划",
+    desc: "制定跨部门沟通计划，确保信息及时传递和共享。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35804,
+    icon: "🎯",
+    title: "增长目标对齐",
+    desc: "对齐各部门增长目标，确保团队朝着共同目标努力。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35805,
+    icon: "📊",
+    title: "增长会议纪要",
+    desc: "记录增长会议纪要，跟踪行动项和决策执行。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35806,
+    icon: "🔄",
+    title: "协作流程优化",
+    desc: "优化跨部门协作流程，提升团队协作效率。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35807,
+    icon: "👥",
+    title: "团队能力建设",
+    desc: "开展团队能力建设，提升团队的增长专业能力。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 合规法律模板 (ID: 35901-35999)
+export const complianceLegalTemplates = [
+  {
+    id: 35901,
+    icon: "⚖️",
+    title: "用户隐私政策",
+    desc: "制定用户隐私政策，确保用户数据收集和使用合规。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35902,
+    icon: "📜",
+    title: "用户协议条款",
+    desc: "撰写用户协议条款，明确用户权利和义务。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35903,
+    icon: "🔒",
+    title: "数据安全管理",
+    desc: "建立数据安全管理体系，保护用户数据安全。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35904,
+    icon: "✅",
+    title: "合规审查清单",
+    desc: "制定合规审查清单，确保增长活动符合法律法规。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35905,
+    icon: "📋",
+    title: "营销合规指南",
+    desc: "编写营销合规指南，规范营销活动的合规性。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35906,
+    icon: "🛡️",
+    title: "风险防控方案",
+    desc: "制定风险防控方案，预防和应对法律风险。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35907,
+    icon: "📝",
+    title: "合规培训材料",
+    desc: "编写合规培训材料，提升团队的合规意识。",
+    color: "bg-red-500",
+  },
+];

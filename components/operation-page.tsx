@@ -8,6 +8,14 @@ import {
   operationSubCategories,
   growthStrategyTemplates,
   userActivationTemplates,
+  userRetentionTemplates,
+  growthUserResearchTemplates,
+  optimizationIterationTemplates,
+  marketingPromotionTemplates,
+  growthDataAnalysisTemplates,
+  technicalAutomationTemplates,
+  crossDepartmentCollaborationTemplates,
+  complianceLegalTemplates,
   ecommerceMarketAnalysisTemplates,
   ecommerceProductManagementTemplates,
   userResearchTemplates,
@@ -48,6 +56,14 @@ export function OperationPage() {
   const growthHackerCategories = [
     { id: "growth-strategy", label: "增长策略", templates: growthStrategyTemplates },
     { id: "user-activation", label: "用户激活", templates: userActivationTemplates },
+    { id: "user-retention", label: "用户留存", templates: userRetentionTemplates },
+    { id: "user-research", label: "用户研究", templates: growthUserResearchTemplates },
+    { id: "optimization-iteration", label: "优化迭代", templates: optimizationIterationTemplates },
+    { id: "marketing-promotion", label: "营销推广", templates: marketingPromotionTemplates },
+    { id: "data-analysis", label: "数据分析", templates: growthDataAnalysisTemplates },
+    { id: "technical-automation", label: "技术自动化", templates: technicalAutomationTemplates },
+    { id: "cross-department", label: "跨部门协作", templates: crossDepartmentCollaborationTemplates },
+    { id: "compliance-legal", label: "合规法律", templates: complianceLegalTemplates },
   ];
 
   // 电商运营下的所有子分类配置
