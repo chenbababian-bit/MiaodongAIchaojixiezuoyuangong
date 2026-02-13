@@ -1045,7 +1045,7 @@ export function AdministrativeWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["2101", "2102", "2103", "2104", "2105"].includes(templateId) ? (
+      {["2101", "2102", "2103", "2104", "2105", "2106", "2107", "2108", "2109", "2110", "2111", "2112"].includes(templateId) ? (
         /* 所有事务公文子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
