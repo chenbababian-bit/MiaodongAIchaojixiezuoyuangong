@@ -207,37 +207,35 @@ export function OperationPage() {
         </div>
 
         {/* Main Content Area */}
-        <div className="flex-1 overflow-y-auto bg-background">
-          <div className="p-6">
-            {currentCategories.length > 0 && (
-              <>
-                {currentCategories.map((category) => (
-                  <div key={category.id} id={`category-${category.id}`} className="mb-8">
-                    <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
-                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
-                      {category.templates.map((template) => (
-                        <Card
-                          key={template.id}
-                          className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
-                          onClick={() => handleTemplateClick(template.id, template.title)}
-                        >
-                          <div className="flex items-start gap-3 mb-3">
-                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0", template.color)}>
-                              {template.icon}
-                            </div>
-                            <div className="flex-1 min-w-0">
-                              <h3 className="font-medium text-sm mb-1 line-clamp-1">{template.title}</h3>
-                              <p className="text-xs text-muted-foreground line-clamp-2">{template.desc}</p>
-                            </div>
+        <div className="flex-1 p-6 overflow-y-auto">
+          {currentCategories.length > 0 && (
+            <>
+              {currentCategories.map((category) => (
+                <div key={category.id} id={`category-${category.id}`} className="mb-8">
+                  <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+                  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                    {category.templates.map((template) => (
+                      <Card
+                        key={template.id}
+                        className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                        onClick={() => handleTemplateClick(template.id, template.title)}
+                      >
+                        <div className="flex items-start gap-3 mb-3">
+                          <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0", template.color)}>
+                            {template.icon}
                           </div>
-                        </Card>
-                      ))}
-                    </div>
+                          <div className="flex-1 min-w-0">
+                            <h3 className="font-medium text-sm mb-1 line-clamp-1">{template.title}</h3>
+                            <p className="text-xs text-muted-foreground line-clamp-2">{template.desc}</p>
+                          </div>
+                        </div>
+                      </Card>
+                    ))}
                   </div>
-                ))}
-              </>
-            )}
-          </div>
+                </div>
+              ))}
+            </>
+          )}
         </div>
       </div>
     </div>
