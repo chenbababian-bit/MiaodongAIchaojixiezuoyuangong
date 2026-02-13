@@ -149,6 +149,13 @@ export type SpeechesType =
   | 'speeches-onboarding-speech'       // 1211: 入职发言稿
   | 'speeches-probation-review';       // 1212: 转正述职报告演讲稿
 
+// 通信公文细粒度类型
+export type CommunicationDocsType =
+  | 'communication-docs-formal-letter'        // 2301: 正式信函
+  | 'communication-docs-email'                // 2302: 电子邮件
+  | 'communication-docs-memo'                 // 2303: 备忘录
+  | 'communication-docs-meeting-invitation';  // 2304: 会议邀请函
+
 // 事务公文细粒度类型
 export type AdministrativeType =
   | 'administrative-report-material'      // 2101: 汇报材料
@@ -233,7 +240,7 @@ export type GovernmentAffairsType =
   | 'government-affairs-minutes';                // 2015: 纪要
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | AdministrativeType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | AdministrativeType;
 
 export interface Conversation {
   id: string;
@@ -876,6 +883,28 @@ export function getSpeechesTypeByTemplateId(templateId: number): SpeechesType {
   if (!type) {
     console.warn(`未知的演讲发言模板ID: ${templateId}，使用默认类型 speeches-onboarding-welcome`);
     return "speeches-onboarding-welcome";
+  }
+
+  return type;
+}
+
+/**
+ * 根据通信公文模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的通信公文对话类型
+ */
+export function getCommunicationDocsTypeByTemplateId(templateId: number): CommunicationDocsType {
+  const templateMap: Record<number, CommunicationDocsType> = {
+    2301: "communication-docs-formal-letter",        // 正式信函
+    2302: "communication-docs-email",                // 电子邮件
+    2303: "communication-docs-memo",                 // 备忘录
+    2304: "communication-docs-meeting-invitation",  // 会议邀请函
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的通信公文模板ID: ${templateId}，使用默认类型 communication-docs-formal-letter`);
+    return "communication-docs-formal-letter";
   }
 
   return type;
