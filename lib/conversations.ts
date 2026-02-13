@@ -199,8 +199,26 @@ export type PersonalDevelopmentType =
   | 'personal-development-goal-tracking'            // 1518: 目标达成追踪表
   | 'personal-development-leadership-development';  // 1519: 领导力培养计划
 
+// 政务公文细粒度类型
+export type GovernmentAffairsType =
+  | 'government-affairs-resolution'              // 2001: 决议
+  | 'government-affairs-decision'                // 2002: 决定
+  | 'government-affairs-order'                   // 2003: 命令（令）
+  | 'government-affairs-communique'              // 2004: 公报
+  | 'government-affairs-announcement'            // 2005: 公告
+  | 'government-affairs-notice'                  // 2006: 通告
+  | 'government-affairs-opinion'                 // 2007: 意见
+  | 'government-affairs-notification'            // 2008: 通知
+  | 'government-affairs-circular'                // 2009: 通报
+  | 'government-affairs-report'                  // 2010: 报告
+  | 'government-affairs-request-for-instructions' // 2011: 请示
+  | 'government-affairs-reply'                   // 2012: 批复
+  | 'government-affairs-proposal'                // 2013: 议案
+  | 'government-affairs-letter'                  // 2014: 函
+  | 'government-affairs-minutes';                // 2015: 纪要
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType;
 
 export interface Conversation {
   id: string;
@@ -843,6 +861,39 @@ export function getSpeechesTypeByTemplateId(templateId: number): SpeechesType {
   if (!type) {
     console.warn(`未知的演讲发言模板ID: ${templateId}，使用默认类型 speeches-onboarding-welcome`);
     return "speeches-onboarding-welcome";
+  }
+
+  return type;
+}
+
+/**
+ * 根据政务公文模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的政务公文对话类型
+ */
+export function getGovernmentAffairsTypeByTemplateId(templateId: number): GovernmentAffairsType {
+  const templateMap: Record<number, GovernmentAffairsType> = {
+    2001: "government-affairs-resolution",              // 决议
+    2002: "government-affairs-decision",                // 决定
+    2003: "government-affairs-order",                   // 命令（令）
+    2004: "government-affairs-communique",              // 公报
+    2005: "government-affairs-announcement",            // 公告
+    2006: "government-affairs-notice",                  // 通告
+    2007: "government-affairs-opinion",                 // 意见
+    2008: "government-affairs-notification",            // 通知
+    2009: "government-affairs-circular",                // 通报
+    2010: "government-affairs-report",                  // 报告
+    2011: "government-affairs-request-for-instructions", // 请示
+    2012: "government-affairs-reply",                   // 批复
+    2013: "government-affairs-proposal",                // 议案
+    2014: "government-affairs-letter",                  // 函
+    2015: "government-affairs-minutes",                 // 纪要
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的政务公文模板ID: ${templateId}，使用默认类型 government-affairs-resolution`);
+    return "government-affairs-resolution";
   }
 
   return type;
