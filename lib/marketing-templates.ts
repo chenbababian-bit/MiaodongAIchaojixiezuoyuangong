@@ -8886,3 +8886,124 @@ export const innovationExperimentsTemplates = [
     color: "bg-red-500",
   },
 ];
+
+// ========== 运营分类 ==========
+
+// 第三层分类（运营下的子分类）
+export const operationSubCategories = [
+  { id: "growth-hacker", label: "增长黑客" },
+  { id: "ecommerce-operation", label: "电商运营" },
+  { id: "user-operation", label: "用户运营" },
+  { id: "short-video-operation", label: "短视频运营" },
+  { id: "private-domain-operation", label: "私域运营" },
+  { id: "weibo-operation", label: "微博运营" },
+  { id: "official-account-operation", label: "公众号运营" },
+  { id: "community-operation", label: "社群运营" },
+  { id: "customer-service", label: "客户服务" },
+];
+
+// 增长黑客 - 增长策略模板 (ID: 35001-35099)
+export const growthStrategyTemplates = [
+  {
+    id: 35001,
+    icon: "🎯",
+    title: "增长战略蓝图",
+    desc: "制定全面的增长战略蓝图，明确企业增长目标、路径和关键里程碑，为团队提供清晰的增长方向。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35002,
+    icon: "📊",
+    title: "增长目标设定与分解",
+    desc: "设定科学合理的增长目标，并将其分解为可执行的子目标，确保团队聚焦关键指标。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35003,
+    icon: "💡",
+    title: "增长假设列表",
+    desc: "建立系统化的增长假设列表，通过结构化的方式记录和管理待验证的增长机会。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35004,
+    icon: "🧪",
+    title: "增长实验框架",
+    desc: "设计科学的增长实验框架，规范实验流程，提高实验效率和成功率。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35005,
+    icon: "📈",
+    title: "增长指标定义与跟踪",
+    desc: "定义核心增长指标体系，建立数据跟踪机制，实时监控增长健康度。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35006,
+    icon: "🎲",
+    title: "增长机会优先级矩阵",
+    desc: "构建增长机会优先级评估矩阵，科学评估和排序增长机会，优化资源配置。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35007,
+    icon: "👥",
+    title: "增长团队角色与职责",
+    desc: "明确增长团队的组织架构、角色分工和职责边界，提升团队协作效率。",
+    color: "bg-red-500",
+  },
+];
+
+// 增长黑客 - 用户激活模板 (ID: 35101-35199)
+export const userActivationTemplates = [
+  {
+    id: 35101,
+    icon: "💰",
+    title: "用户获取成本(CAC)分析",
+    desc: "深入分析各渠道用户获取成本，优化获客策略，提升投资回报率。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 35102,
+    icon: "📊",
+    title: "引流渠道效率对比",
+    desc: "对比分析不同引流渠道的效率和质量，识别高价值渠道，优化渠道组合。",
+    color: "bg-green-500",
+  },
+  {
+    id: 35103,
+    icon: "🎨",
+    title: "登录页优化指南",
+    desc: "提供系统化的登录页优化方法，提升转化率，降低用户流失。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 35104,
+    icon: "🎁",
+    title: "邀请与推荐计划",
+    desc: "设计有效的用户邀请和推荐机制，通过口碑传播实现低成本增长。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 35105,
+    icon: "✍️",
+    title: "用户注册流程优化",
+    desc: "优化用户注册流程，降低注册门槛，提升注册转化率。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 35106,
+    icon: "📚",
+    title: "新用户引导与教育材料",
+    desc: "创建完善的新用户引导体系和教育内容，帮助用户快速理解产品价值。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 35107,
+    icon: "⭐",
+    title: "初次用户体验(FEU)改进",
+    desc: "优化用户首次使用体验，提升用户满意度和留存率。",
+    color: "bg-red-500",
+  },
+];
