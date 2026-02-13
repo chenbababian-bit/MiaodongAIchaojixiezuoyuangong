@@ -108,6 +108,18 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/project-management?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为个人发展模块（1501-1519），跳转到个人发展对话式界面
+    else if (templateId >= 1501 && templateId <= 1519) {
+      router.push(
+        `/writing/personal-development?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
+    }
+    // 检测是否为政务公文模块（2001-2015），跳转到政务公文对话式界面
+    else if (templateId >= 2001 && templateId <= 2015) {
+      router.push(
+        `/writing/government-affairs?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

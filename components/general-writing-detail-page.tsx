@@ -276,6 +276,18 @@ export function GeneralWritingDetailPage() {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/project-management?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
+
+    // 个人发展模块 (1501-1519)
+    if (numId >= 1501 && numId <= 1519) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/personal-development?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 政务公文模块 (2001-2015)
+    if (numId >= 2001 && numId <= 2015) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/government-affairs?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
   }, [templateId, templateTitle, router, searchParams]);
 
   const [contentInput, setContentInput] = useState("");

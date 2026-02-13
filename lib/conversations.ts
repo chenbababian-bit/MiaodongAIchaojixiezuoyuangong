@@ -177,8 +177,30 @@ export type ProjectManagementType =
   | 'project-management-acceptance-report'   // 1405: 项目验收报告
   | 'project-management-post-evaluation';    // 1406: 项目后评价报告
 
+// 个人发展细粒度类型
+export type PersonalDevelopmentType =
+  | 'personal-development-resume-optimization-job'  // 1501: 求职简历优化
+  | 'personal-development-resume-optimization'      // 1502: 简历优化
+  | 'personal-development-cover-letter'             // 1503: 求职信
+  | 'personal-development-growth-plan'              // 1504: 个人成长计划
+  | 'personal-development-skill-improvement'        // 1505: 技能提升计划
+  | 'personal-development-self-introduction'        // 1506: 自我介绍
+  | 'personal-development-career-planning'          // 1507: 职业发展规划
+  | 'personal-development-goal-setting'             // 1508: 个人目标设定
+  | 'personal-development-ability-assessment'       // 1509: 能力评估报告
+  | 'personal-development-learning-resources'       // 1510: 学习资源清单
+  | 'personal-development-certification-application' // 1511: 职业资格证书申请
+  | 'personal-development-continuing-education'     // 1512: 继续教育计划
+  | 'personal-development-mentor-guidance'          // 1513: 导师指导计划
+  | 'personal-development-self-reflection'          // 1514: 自我反思日记
+  | 'personal-development-career-transition'        // 1515: 职业转型规划
+  | 'personal-development-personal-branding'        // 1516: 个人品牌建立指南
+  | 'personal-development-time-management'          // 1517: 时间管理计划
+  | 'personal-development-goal-tracking'            // 1518: 目标达成追踪表
+  | 'personal-development-leadership-development';  // 1519: 领导力培养计划
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType;
 
 export interface Conversation {
   id: string;
@@ -758,6 +780,43 @@ export function getLiveStreamingTypeByTemplateId(templateId: number): LiveStream
   return type;
 }
 
+
+/**
+ * 根据个人发展模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的个人发展对话类型
+ */
+export function getPersonalDevelopmentTypeByTemplateId(templateId: number): PersonalDevelopmentType {
+  const templateMap: Record<number, PersonalDevelopmentType> = {
+    1501: "personal-development-resume-optimization-job",  // 求职简历优化
+    1502: "personal-development-resume-optimization",      // 简历优化
+    1503: "personal-development-cover-letter",             // 求职信
+    1504: "personal-development-growth-plan",              // 个人成长计划
+    1505: "personal-development-skill-improvement",        // 技能提升计划
+    1506: "personal-development-self-introduction",        // 自我介绍
+    1507: "personal-development-career-planning",          // 职业发展规划
+    1508: "personal-development-goal-setting",             // 个人目标设定
+    1509: "personal-development-ability-assessment",       // 能力评估报告
+    1510: "personal-development-learning-resources",       // 学习资源清单
+    1511: "personal-development-certification-application", // 职业资格证书申请
+    1512: "personal-development-continuing-education",     // 继续教育计划
+    1513: "personal-development-mentor-guidance",          // 导师指导计划
+    1514: "personal-development-self-reflection",          // 自我反思日记
+    1515: "personal-development-career-transition",        // 职业转型规划
+    1516: "personal-development-personal-branding",        // 个人品牌建立指南
+    1517: "personal-development-time-management",          // 时间管理计划
+    1518: "personal-development-goal-tracking",            // 目标达成追踪表
+    1519: "personal-development-leadership-development",   // 领导力培养计划
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的个人发展模板ID: ${templateId}，使用默认类型 personal-development-resume-optimization-job`);
+    return "personal-development-resume-optimization-job";
+  }
+
+  return type;
+}
 
 /**
  * 根据演讲发言模板ID获取对应的对话类型
