@@ -127,6 +127,18 @@ export function GeneralWritingPage() {
         `/writing/administrative?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
     }
+    // 检测是否为宣传公文模块（2201-2205），跳转到宣传公文对话式界面
+    else if (templateId >= 2201 && templateId <= 2205) {
+      router.push(
+        `/writing/publicity?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
+    }
+    // 检测是否为通信公文模块（2301-2304），跳转到通信公文对话式界面
+    else if (templateId >= 2301 && templateId <= 2304) {
+      router.push(
+        `/writing/communication-docs?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
+    }
     // 检测是否为礼仪公文模块（2401-2404），跳转到礼仪公文对话式界面
     else if (templateId >= 2401 && templateId <= 2404) {
       router.push(
