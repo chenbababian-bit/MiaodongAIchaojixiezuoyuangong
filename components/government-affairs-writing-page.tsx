@@ -877,7 +877,7 @@ export function GovernmentAffairsWritingPage() {
     setInputValue(""); // 清空输入框
 
     // 所有政务公文子类型：重置消息列表为对应的欢迎消息
-    const governmentAffairsTemplateIds = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012"];
+    const governmentAffairsTemplateIds = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"];
     if (governmentAffairsTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
@@ -895,7 +895,7 @@ export function GovernmentAffairsWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012"].includes(templateId) ? (
+      {["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"].includes(templateId) ? (
         /* 所有政务公文子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
