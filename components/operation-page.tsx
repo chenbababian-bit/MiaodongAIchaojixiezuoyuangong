@@ -224,11 +224,9 @@ export function OperationPage() {
                           <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0", template.color)}>
                             {template.icon}
                           </div>
-                          <div className="flex-1 min-w-0">
-                            <h3 className="font-medium text-sm mb-1 line-clamp-1">{template.title}</h3>
-                            <p className="text-xs text-muted-foreground line-clamp-2">{template.desc}</p>
-                          </div>
+                          <h3 className="font-medium text-sm flex-1">{template.title}</h3>
                         </div>
+                        <p className="text-xs text-muted-foreground line-clamp-2">{template.desc}</p>
                       </Card>
                     ))}
                   </div>
