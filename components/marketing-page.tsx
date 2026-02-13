@@ -130,6 +130,16 @@ import {
   legalComplianceB2BTemplates,
   technicalToolsB2BTemplates,
   improvementInnovationTemplates,
+  b2bDigitalSubCategories,
+  strategicPlanningDigitalTemplates,
+  websiteSeoTemplates,
+  advertisingPpcTemplates,
+  socialMediaMarketingTemplates,
+  emailMarketingTemplates,
+  dataAnalysisDigitalTemplates,
+  customerRelationshipTemplates,
+  technicalToolsDigitalTemplates,
+  teamCollaborationDigitalTemplates,
 } from "@/lib/marketing-templates";
 
 export function MarketingPage() {
@@ -158,6 +168,8 @@ export function MarketingPage() {
       source = `marketing-game-${activeThirdLevel}`;
     } else if (activeSecondLevel === "b2b-management") {
       source = `marketing-b2b-management-${activeThirdLevel}`;
+    } else if (activeSecondLevel === "b2b-digital") {
+      source = `marketing-b2b-digital-${activeThirdLevel}`;
     } else {
       source = `marketing-${activeSecondLevel}`;
     }
@@ -313,6 +325,19 @@ export function MarketingPage() {
     { id: "legal-compliance-b2b", label: "法律合规", templates: legalComplianceB2BTemplates },
     { id: "technical-tools-b2b", label: "技术工具", templates: technicalToolsB2BTemplates },
     { id: "improvement-innovation", label: "改进创新", templates: improvementInnovationTemplates },
+  ];
+
+  // B2B数字营销下的所有子分类配置
+  const b2bDigitalCategories = [
+    { id: "strategic-planning-digital", label: "战略规划", templates: strategicPlanningDigitalTemplates },
+    { id: "website-seo", label: "网站SEO", templates: websiteSeoTemplates },
+    { id: "advertising-ppc", label: "广告PPC", templates: advertisingPpcTemplates },
+    { id: "social-media-marketing", label: "社媒营销", templates: socialMediaMarketingTemplates },
+    { id: "email-marketing", label: "邮件营销", templates: emailMarketingTemplates },
+    { id: "data-analysis-digital", label: "数据分析", templates: dataAnalysisDigitalTemplates },
+    { id: "customer-relationship", label: "客户关系", templates: customerRelationshipTemplates },
+    { id: "technical-tools-digital", label: "技术工具", templates: technicalToolsDigitalTemplates },
+    { id: "team-collaboration", label: "团队协作", templates: teamCollaborationDigitalTemplates },
   ];
 
   // 其他第二层分类的模板配置
@@ -547,6 +572,26 @@ export function MarketingPage() {
             {activeSecondLevel === "b2b-management" && (
               <div className="space-y-1">
                 {b2bManagementSubCategories.map((category) => (
+                  <button
+                    key={category.id}
+                    onClick={() => scrollToCategory(category.id)}
+                    className={cn(
+                      "w-full text-left px-4 py-3 rounded-lg text-sm font-medium transition-colors mb-1",
+                      activeThirdLevel === category.id
+                        ? "bg-primary text-primary-foreground"
+                        : "hover:bg-muted text-foreground"
+                    )}
+                  >
+                    {category.label}
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {/* B2B数字营销三级导航 */}
+            {activeSecondLevel === "b2b-digital" && (
+              <div className="space-y-1">
+                {b2bDigitalSubCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -911,8 +956,46 @@ export function MarketingPage() {
           </div>
         )}
 
+        {/* B2B数字营销：按子分类分组显示所有功能 */}
+        {activeSecondLevel === "b2b-digital" && (
+          <div className="space-y-8">
+            {b2bDigitalCategories.map((category) => (
+              <div key={category.id} id={`category-${category.id}`}>
+                {/* 分类标题 */}
+                <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
+
+                {/* 功能卡片 */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
+                  {category.templates.map((template) => (
+                    <Card
+                      key={template.id}
+                      className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
+                      onClick={() => handleTemplateClick(template.id, template.title)}
+                    >
+                      <div className="flex items-start gap-3 mb-3">
+                        <div
+                          className={cn(
+                            "w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0",
+                            template.color
+                          )}
+                        >
+                          {template.icon}
+                        </div>
+                        <h3 className="font-medium text-sm flex-1">{template.title}</h3>
+                      </div>
+                      <p className="text-xs text-muted-foreground line-clamp-2">
+                        {template.desc}
+                      </p>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        )}
+
         {/* 其他分类内容 */}
-        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && activeSecondLevel !== "b2b-management" && otherCategories[activeSecondLevel] && (
+        {activeSecondLevel !== "brand" && activeSecondLevel !== "creative" && activeSecondLevel !== "media" && activeSecondLevel !== "activity" && activeSecondLevel !== "research" && activeSecondLevel !== "pr" && activeSecondLevel !== "traffic" && activeSecondLevel !== "game" && activeSecondLevel !== "b2b-management" && activeSecondLevel !== "b2b-digital" && otherCategories[activeSecondLevel] && (
           <div className="space-y-8">
             <div>
               {/* 功能卡片 */}
