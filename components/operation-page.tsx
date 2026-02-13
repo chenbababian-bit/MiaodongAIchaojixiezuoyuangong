@@ -8,6 +8,18 @@ import {
   operationSubCategories,
   growthStrategyTemplates,
   userActivationTemplates,
+  ecommerceMarketAnalysisTemplates,
+  ecommerceProductManagementTemplates,
+  userResearchTemplates,
+  userGrowthTemplates,
+  shortVideoContentCreationTemplates,
+  privateDomainUserGrowthTemplates,
+  privateDomainCommunityTemplates,
+  weiboOperationPlanningTemplates,
+  weiboContentCreationTemplates,
+  officialAccountContentPlanningTemplates,
+  communityPlanningTemplates,
+  customerServiceTemplates,
 } from "@/lib/marketing-templates";
 
 export function OperationPage() {
@@ -38,11 +50,83 @@ export function OperationPage() {
     { id: "user-activation", label: "用户激活", templates: userActivationTemplates },
   ];
 
+  // 电商运营下的所有子分类配置
+  const ecommerceOperationCategories = [
+    { id: "market-analysis", label: "市场分析", templates: ecommerceMarketAnalysisTemplates },
+    { id: "product-management", label: "商品管理", templates: ecommerceProductManagementTemplates },
+  ];
+
+  // 用户运营下的所有子分类配置
+  const userOperationCategories = [
+    { id: "user-research", label: "用户研究", templates: userResearchTemplates },
+    { id: "user-growth", label: "用户增长", templates: userGrowthTemplates },
+  ];
+
+  // 短视频运营下的所有子分类配置
+  const shortVideoOperationCategories = [
+    { id: "content-creation", label: "内容创作", templates: shortVideoContentCreationTemplates },
+  ];
+
+  // 私域运营下的所有子分类配置
+  const privateDomainOperationCategories = [
+    { id: "user-growth-private", label: "用户增长", templates: privateDomainUserGrowthTemplates },
+    { id: "community-operation", label: "社群运营", templates: privateDomainCommunityTemplates },
+  ];
+
+  // 微博运营下的所有子分类配置
+  const weiboOperationCategories = [
+    { id: "operation-planning", label: "运营规划", templates: weiboOperationPlanningTemplates },
+    { id: "content-creation-weibo", label: "内容创作", templates: weiboContentCreationTemplates },
+  ];
+
+  // 公众号运营下的所有子分类配置
+  const officialAccountOperationCategories = [
+    { id: "content-planning", label: "内容策划", templates: officialAccountContentPlanningTemplates },
+  ];
+
+  // 社群运营下的所有子分类配置
+  const communityOperationCategories = [
+    { id: "community-planning", label: "社群策划", templates: communityPlanningTemplates },
+  ];
+
+  // 客户服务下的所有子分类配置
+  const customerServiceCategories = [
+    { id: "customer-service", label: "客户服务", templates: customerServiceTemplates },
+  ];
+
   // 获取当前第二层分类的标题
   const getCurrentSecondLevelTitle = () => {
     const category = operationSubCategories.find((cat) => cat.id === activeSecondLevel);
     return category?.label || "增长黑客";
   };
+
+  // 获取当前激活的分类配置
+  const getCurrentCategories = () => {
+    switch (activeSecondLevel) {
+      case "growth-hacker":
+        return growthHackerCategories;
+      case "ecommerce-operation":
+        return ecommerceOperationCategories;
+      case "user-operation":
+        return userOperationCategories;
+      case "short-video-operation":
+        return shortVideoOperationCategories;
+      case "private-domain-operation":
+        return privateDomainOperationCategories;
+      case "weibo-operation":
+        return weiboOperationCategories;
+      case "official-account-operation":
+        return officialAccountOperationCategories;
+      case "community-operation":
+        return communityOperationCategories;
+      case "customer-service":
+        return customerServiceCategories;
+      default:
+        return [];
+    }
+  };
+
+  const currentCategories = getCurrentCategories();
 
   return (
     <div className="flex flex-col h-[calc(100vh-56px)]">
@@ -54,9 +138,10 @@ export function OperationPage() {
               key={category.id}
               onClick={() => {
                 setActiveSecondLevel(category.id);
-                // 如果切换到增长黑客,默认选中增长策略
-                if (category.id === "growth-hacker") {
-                  setActiveThirdLevel("growth-strategy");
+                // 切换分类时，默认选中第一个子分类
+                const categories = getCurrentCategories();
+                if (categories.length > 0) {
+                  setActiveThirdLevel(categories[0].id);
                 }
               }}
               className={cn(
@@ -79,10 +164,9 @@ export function OperationPage() {
         {/* Left Sidebar - 第三层导航 */}
         <div className="w-48 border-r border-border bg-card overflow-y-auto">
           <div className="p-2">
-            {/* 第三层：增长黑客下的子分类 */}
-            {activeSecondLevel === "growth-hacker" && (
+            {currentCategories.length > 0 && (
               <div className="space-y-1">
-                {growthHackerCategories.map((category) => (
+                {currentCategories.map((category) => (
                   <button
                     key={category.id}
                     onClick={() => scrollToCategory(category.id)}
@@ -98,23 +182,15 @@ export function OperationPage() {
                 ))}
               </div>
             )}
-
-            {/* 其他分类暂时显示"敬请期待" */}
-            {activeSecondLevel !== "growth-hacker" && (
-              <div className="p-4 text-center text-muted-foreground">
-                <p className="text-sm">敬请期待</p>
-              </div>
-            )}
           </div>
         </div>
 
         {/* Main Content Area */}
         <div className="flex-1 overflow-y-auto bg-background">
           <div className="p-6">
-            {/* 增长黑客分类的内容 */}
-            {activeSecondLevel === "growth-hacker" && (
+            {currentCategories.length > 0 && (
               <>
-                {growthHackerCategories.map((category) => (
+                {currentCategories.map((category) => (
                   <div key={category.id} id={`category-${category.id}`} className="mb-8">
                     <h2 className="text-xl font-semibold mb-4">{category.label}</h2>
                     <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4">
@@ -139,16 +215,6 @@ export function OperationPage() {
                   </div>
                 ))}
               </>
-            )}
-
-            {/* 其他分类暂时显示"敬请期待" */}
-            {activeSecondLevel !== "growth-hacker" && (
-              <div className="flex items-center justify-center h-full">
-                <div className="text-center">
-                  <p className="text-2xl font-semibold text-muted-foreground mb-2">敬请期待</p>
-                  <p className="text-sm text-muted-foreground">该分类内容正在开发中...</p>
-                </div>
-              </div>
             )}
           </div>
         </div>
