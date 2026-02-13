@@ -100,9 +100,9 @@ export function OperationPage() {
     return category?.label || "增长黑客";
   };
 
-  // 获取当前激活的分类配置
-  const getCurrentCategories = () => {
-    switch (activeSecondLevel) {
+  // 根据分类ID获取对应的分类配置
+  const getCategoriesById = (categoryId: string) => {
+    switch (categoryId) {
       case "growth-hacker":
         return growthHackerCategories;
       case "ecommerce-operation":
@@ -126,6 +126,11 @@ export function OperationPage() {
     }
   };
 
+  // 获取当前激活的分类配置
+  const getCurrentCategories = () => {
+    return getCategoriesById(activeSecondLevel);
+  };
+
   const currentCategories = getCurrentCategories();
 
   return (
@@ -139,7 +144,7 @@ export function OperationPage() {
               onClick={() => {
                 setActiveSecondLevel(category.id);
                 // 切换分类时，默认选中第一个子分类
-                const categories = getCurrentCategories();
+                const categories = getCategoriesById(category.id);
                 if (categories.length > 0) {
                   setActiveThirdLevel(categories[0].id);
                 }
