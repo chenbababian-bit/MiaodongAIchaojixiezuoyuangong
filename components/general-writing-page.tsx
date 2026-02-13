@@ -120,6 +120,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/government-affairs?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为事务公文模块（2101-2112），跳转到事务公文对话式界面
+    else if (templateId >= 2101 && templateId <= 2112) {
+      router.push(
+        `/writing/administrative?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

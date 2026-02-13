@@ -149,6 +149,14 @@ export type SpeechesType =
   | 'speeches-onboarding-speech'       // 1211: 入职发言稿
   | 'speeches-probation-review';       // 1212: 转正述职报告演讲稿
 
+// 事务公文细粒度类型
+export type AdministrativeType =
+  | 'administrative-report-material'      // 2101: 汇报材料
+  | 'administrative-inspection-report'    // 2102: 检查报告
+  | 'administrative-supervision-notice'   // 2103: 督查通报
+  | 'administrative-evaluation-report'    // 2104: 评估报告
+  | 'administrative-emergency-plan';      // 2105: 应急预案
+
 // 团队管理细粒度类型
 export type TeamManagementType =
   | 'team-management-recruitment-ad'       // 1301: 招聘广告
@@ -218,7 +226,7 @@ export type GovernmentAffairsType =
   | 'government-affairs-minutes';                // 2015: 纪要
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | AdministrativeType;
 
 export interface Conversation {
   id: string;
@@ -861,6 +869,29 @@ export function getSpeechesTypeByTemplateId(templateId: number): SpeechesType {
   if (!type) {
     console.warn(`未知的演讲发言模板ID: ${templateId}，使用默认类型 speeches-onboarding-welcome`);
     return "speeches-onboarding-welcome";
+  }
+
+  return type;
+}
+
+/**
+ * 根据事务公文模板ID获取对应的对话类型
+ * @param templateId 模板ID
+ * @returns 对应的事务公文对话类型
+ */
+export function getAdministrativeTypeByTemplateId(templateId: number): AdministrativeType {
+  const templateMap: Record<number, AdministrativeType> = {
+    2101: "administrative-report-material",      // 汇报材料
+    2102: "administrative-inspection-report",    // 检查报告
+    2103: "administrative-supervision-notice",   // 督查通报
+    2104: "administrative-evaluation-report",    // 评估报告
+    2105: "administrative-emergency-plan",       // 应急预案
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的事务公文模板ID: ${templateId}，使用默认类型 administrative-report-material`);
+    return "administrative-report-material";
   }
 
   return type;
