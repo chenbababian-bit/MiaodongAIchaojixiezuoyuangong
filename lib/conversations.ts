@@ -168,8 +168,17 @@ export type TeamManagementType =
   | 'team-management-welfare-application'  // 1315: 员工福利申请
   | 'team-management-handover-document';   // 1316: 工作交接文档
 
+// 项目管理细粒度类型
+export type ProjectManagementType =
+  | 'project-management-startup-report'      // 1401: 项目启动报告
+  | 'project-management-plan'                // 1402: 项目计划书
+  | 'project-management-progress-tracking'   // 1403: 项目进度跟踪表
+  | 'project-management-communication-plan'  // 1404: 项目沟通计划
+  | 'project-management-acceptance-report'   // 1405: 项目验收报告
+  | 'project-management-post-evaluation';    // 1406: 项目后评价报告
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | TeamManagementType | ProjectManagementType;
 
 export interface Conversation {
   id: string;

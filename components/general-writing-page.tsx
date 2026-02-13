@@ -102,6 +102,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/team-management?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为项目管理模块（1401-1406），跳转到项目管理对话式界面
+    else if (templateId >= 1401 && templateId <= 1406) {
+      router.push(
+        `/writing/project-management?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

@@ -270,6 +270,12 @@ export function GeneralWritingDetailPage() {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/team-management?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
+
+    // 项目管理模块 (1401-1406)
+    if (numId >= 1401 && numId <= 1406) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/project-management?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
   }, [templateId, templateTitle, router, searchParams]);
 
   const [contentInput, setContentInput] = useState("");
