@@ -221,8 +221,8 @@ export function OperationPage() {
                           className="p-4 cursor-pointer hover:shadow-lg transition-shadow"
                           onClick={() => handleTemplateClick(template.id, template.title)}
                         >
-                          <div className="flex items-start gap-3">
-                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-xl flex-shrink-0", template.color)}>
+                          <div className="flex items-start gap-3 mb-3">
+                            <div className={cn("w-10 h-10 rounded-lg flex items-center justify-center text-xl shrink-0", template.color)}>
                               {template.icon}
                             </div>
                             <div className="flex-1 min-w-0">
