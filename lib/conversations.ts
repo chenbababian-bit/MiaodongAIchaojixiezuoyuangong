@@ -155,7 +155,14 @@ export type AdministrativeType =
   | 'administrative-inspection-report'    // 2102: 检查报告
   | 'administrative-supervision-notice'   // 2103: 督查通报
   | 'administrative-evaluation-report'    // 2104: 评估报告
-  | 'administrative-emergency-plan';      // 2105: 应急预案
+  | 'administrative-emergency-plan'       // 2105: 应急预案
+  | 'administrative-project-application'  // 2106: 项目申请书
+  | 'administrative-contract-agreement'   // 2107: 合同协议
+  | 'administrative-legal-opinion'        // 2108: 法律意见书
+  | 'administrative-work-plan'            // 2109: 工作计划
+  | 'administrative-work-summary'         // 2110: 工作总结
+  | 'administrative-research-report'      // 2111: 调研报告
+  | 'administrative-meeting-minutes';     // 2112: 会议纪要
 
 // 团队管理细粒度类型
 export type TeamManagementType =
@@ -886,6 +893,13 @@ export function getAdministrativeTypeByTemplateId(templateId: number): Administr
     2103: "administrative-supervision-notice",   // 督查通报
     2104: "administrative-evaluation-report",    // 评估报告
     2105: "administrative-emergency-plan",       // 应急预案
+    2106: "administrative-project-application",  // 项目申请书
+    2107: "administrative-contract-agreement",   // 合同协议
+    2108: "administrative-legal-opinion",        // 法律意见书
+    2109: "administrative-work-plan",            // 工作计划
+    2110: "administrative-work-summary",         // 工作总结
+    2111: "administrative-research-report",      // 调研报告
+    2112: "administrative-meeting-minutes",      // 会议纪要
   };
 
   const type = templateMap[templateId];

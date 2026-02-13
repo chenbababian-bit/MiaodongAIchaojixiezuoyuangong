@@ -147,5 +147,12 @@ CHECK (type IN (
   'administrative-inspection-report',
   'administrative-supervision-notice',
   'administrative-evaluation-report',
-  'administrative-emergency-plan'
+  'administrative-emergency-plan',
+  'administrative-project-application',
+  'administrative-contract-agreement',
+  'administrative-legal-opinion',
+  'administrative-work-plan',
+  'administrative-work-summary',
+  'administrative-research-report',
+  'administrative-meeting-minutes'
 ));
