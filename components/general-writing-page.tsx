@@ -126,6 +126,12 @@ export function GeneralWritingPage() {
       router.push(
         `/writing/administrative?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
+    }
+    // 检测是否为礼仪公文模块（2401-2404），跳转到礼仪公文对话式界面
+    else if (templateId >= 2401 && templateId <= 2404) {
+      router.push(
+        `/writing/etiquette?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
     } else {
       router.push(
         `/writing/general?template=${templateId}&title=${encodeURIComponent(title)}`

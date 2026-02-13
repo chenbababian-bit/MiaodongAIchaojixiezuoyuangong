@@ -271,6 +271,12 @@ export function GeneralWritingDetailPage() {
       router.replace(`/writing/administrative?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
 
+    // 礼仪公文模块 (2401-2404)
+    if (numId >= 2401 && numId <= 2404) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/etiquette?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
     // 团队管理模块 (1301-1316)
     if (numId >= 1301 && numId <= 1316) {
       const source = searchParams.get("source") || "general";
@@ -293,6 +299,12 @@ export function GeneralWritingDetailPage() {
     if (numId >= 2001 && numId <= 2015) {
       const source = searchParams.get("source") || "general";
       router.replace(`/writing/government-affairs?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
+    // 宣传公文模块 (2201-2205)
+    if (numId >= 2201 && numId <= 2205) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/publicity?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
   }, [templateId, templateTitle, router, searchParams]);
 

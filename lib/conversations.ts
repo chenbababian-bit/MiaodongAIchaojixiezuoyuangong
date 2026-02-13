@@ -171,6 +171,13 @@ export type AdministrativeType =
   | 'administrative-research-report'      // 2111: 调研报告
   | 'administrative-meeting-minutes';     // 2112: 会议纪要
 
+// 礼仪公文细粒度类型
+export type EtiquetteType =
+  | 'etiquette-thank-you-letter'         // 2401: 感谢信
+  | 'etiquette-congratulation-letter'    // 2402: 祝贺信
+  | 'etiquette-condolence-letter'        // 2403: 吊唁信
+  | 'etiquette-speech-draft';            // 2404: 致辞稿
+
 // 团队管理细粒度类型
 export type TeamManagementType =
   | 'team-management-recruitment-ad'       // 1301: 招聘广告
@@ -239,8 +246,16 @@ export type GovernmentAffairsType =
   | 'government-affairs-letter'                  // 2014: 函
   | 'government-affairs-minutes';                // 2015: 纪要
 
+// 宣传公文细粒度类型
+export type PublicityType =
+  | 'publicity-news-release'           // 2201: 新闻稿
+  | 'publicity-media-statement'        // 2202: 媒体声明
+  | 'publicity-open-letter'            // 2203: 公开信
+  | 'publicity-initiative'             // 2204: 倡议书
+  | 'publicity-social-media-announcement'; // 2205: 社交媒体公告
+
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | AdministrativeType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType;
 
 export interface Conversation {
   id: string;
@@ -941,6 +956,28 @@ export function getAdministrativeTypeByTemplateId(templateId: number): Administr
 }
 
 /**
+ * 根据礼仪公文模板ID获取对应的对话类型
+ * @param templateId 模板ID (2401-2404)
+ * @returns 对应的礼仪公文对话类型
+ */
+export function getEtiquetteTypeByTemplateId(templateId: number): EtiquetteType {
+  const templateMap: Record<number, EtiquetteType> = {
+    2401: "etiquette-thank-you-letter",         // 感谢信
+    2402: "etiquette-congratulation-letter",    // 祝贺信
+    2403: "etiquette-condolence-letter",        // 吊唁信
+    2404: "etiquette-speech-draft",             // 致辞稿
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的礼仪公文模板ID: ${templateId}，使用默认类型 etiquette-thank-you-letter`);
+    return "etiquette-thank-you-letter";
+  }
+
+  return type;
+}
+
+/**
  * 根据政务公文模板ID获取对应的对话类型
  * @param templateId 模板ID
  * @returns 对应的政务公文对话类型
@@ -968,6 +1005,25 @@ export function getGovernmentAffairsTypeByTemplateId(templateId: number): Govern
   if (!type) {
     console.warn(`未知的政务公文模板ID: ${templateId}，使用默认类型 government-affairs-resolution`);
     return "government-affairs-resolution";
+  }
+
+  return type;
+}
+
+// 宣传公文模板ID到对话类型的映射
+export function getPublicityTypeByTemplateId(templateId: number): PublicityType {
+  const templateMap: Record<number, PublicityType> = {
+    2201: "publicity-news-release",           // 新闻稿
+    2202: "publicity-media-statement",        // 媒体声明
+    2203: "publicity-open-letter",            // 公开信
+    2204: "publicity-initiative",             // 倡议书
+    2205: "publicity-social-media-announcement", // 社交媒体公告
+  };
+
+  const type = templateMap[templateId];
+  if (!type) {
+    console.warn(`未知的宣传公文模板ID: ${templateId}，使用默认类型 publicity-news-release`);
+    return "publicity-news-release";
   }
 
   return type;
