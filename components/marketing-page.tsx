@@ -183,8 +183,8 @@ export function MarketingPage() {
       return;
     }
 
-    // 检测是否为创意策略模块（11001-11005），直接跳转到对话式界面
-    if (templateId >= 11001 && templateId <= 11005) {
+    // 检测是否为创意策略模块（11001-11014），直接跳转到对话式界面
+    if (templateId >= 11001 && templateId <= 11014) {
       router.push(
         `/writing/creative-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-creative-creative-strategy`
       );
