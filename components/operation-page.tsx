@@ -27,6 +27,13 @@ import {
   ecommerceTeamManagementTemplates,
   ecommerceInnovationStrategyTemplates,
   shortVideoContentCreationTemplates,
+  shortVideoPlatformDistributionTemplates,
+  shortVideoDataAnalysisTemplates,
+  shortVideoMarketingAdvertisingTemplates,
+  shortVideoUserManagementTemplates,
+  shortVideoTeamCollaborationTemplates,
+  shortVideoComplianceLegalTemplates,
+  shortVideoTechnicalToolsTemplates,
   privateDomainUserGrowthTemplates,
   privateDomainCommunityTemplates,
   weiboOperationPlanningTemplates,
@@ -115,6 +122,13 @@ export function OperationPage() {
   // 短视频运营下的所有子分类配置
   const shortVideoOperationCategories = [
     { id: "content-creation", label: "内容创作", templates: shortVideoContentCreationTemplates },
+    { id: "platform-distribution", label: "平台分发", templates: shortVideoPlatformDistributionTemplates },
+    { id: "data-analysis", label: "数据分析", templates: shortVideoDataAnalysisTemplates },
+    { id: "marketing-advertising", label: "营销广告", templates: shortVideoMarketingAdvertisingTemplates },
+    { id: "user-management", label: "用户管理", templates: shortVideoUserManagementTemplates },
+    { id: "team-collaboration", label: "团队协作", templates: shortVideoTeamCollaborationTemplates },
+    { id: "compliance-legal", label: "合规法务", templates: shortVideoComplianceLegalTemplates },
+    { id: "technical-tools", label: "技术工具", templates: shortVideoTechnicalToolsTemplates },
   ];
 
   // 私域运营下的所有子分类配置
