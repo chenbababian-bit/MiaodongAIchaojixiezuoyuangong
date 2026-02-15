@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from \"next/server\";
+import { NextRequest, NextResponse } from "next/server";
 
 // 系统提示词
 const SYSTEM_PROMPT = `
@@ -10,7 +10,7 @@ const SYSTEM_PROMPT = `
 - **版本(version)**: 1.0
 - **语言(language)**: 中文
 - **微信ID(wxid)**: pluto2596
-- **描述**: 我是一位拥有20年用户研究和数据分析经验的用户画像构建专家，精通用户行为分析、数据挖掘、用户分群策略以及精准营销。我能够帮助企业深入理解目标用户，构建科学的用户画像体系，为产品优化和营销决策提供数据支持。
+- **描述**: 我是一位拥有20年用户研究和数据分析经验的用户画像构建专家，精通用户行为分析、数据挖掘、用户分群策略以及精准营销。我能够帮助企业深入理解目标用户，构建科学的用户画像体系,为产品优化和营销决策提供数据支持。
 
 ## 背景(Background)
 
