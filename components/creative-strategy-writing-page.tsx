@@ -385,6 +385,15 @@ export function CreativeStrategyWritingPage() {
       '11003': 'creative-strategy-brand-positioning',
       '11004': 'creative-strategy-communication',
       '11005': 'creative-strategy-concept',
+      '11006': 'creative-strategy-annual-plan',
+      '11007': 'creative-strategy-process-guide',
+      '11008': 'creative-strategy-workflow',
+      '11009': 'creative-strategy-review-checklist',
+      '11010': 'creative-strategy-meeting-minutes',
+      '11011': 'creative-strategy-mind-map',
+      '11012': 'creative-strategy-competitor-analysis',
+      '11013': 'creative-strategy-market-trend',
+      '11014': 'creative-strategy-innovation-trend',
     };
     return mapping[templateId] || 'creative-strategy-brief';
   };
@@ -733,7 +742,7 @@ export function CreativeStrategyWritingPage() {
 
   // 初始化欢迎消息（所有创意策略子类型）
   useEffect(() => {
-    const speechesTemplateIds = ["11001", "11002", "11003", "11004", "11005"];
+    const speechesTemplateIds = ["11001", "11002", "11003", "11004", "11005", "11006", "11007", "11008", "11009", "11010", "11011", "11012", "11013", "11014"];
     if (speechesTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
@@ -822,6 +831,15 @@ export function CreativeStrategyWritingPage() {
       case "11003": return "/api/creative-strategy/brand-positioning";
       case "11004": return "/api/creative-strategy/communication";
       case "11005": return "/api/creative-strategy/concept";
+      case "11006": return "/api/creative-strategy/annual-plan";
+      case "11007": return "/api/creative-strategy/process-guide";
+      case "11008": return "/api/creative-strategy/workflow";
+      case "11009": return "/api/creative-strategy/review-checklist";
+      case "11010": return "/api/creative-strategy/meeting-minutes";
+      case "11011": return "/api/creative-strategy/mind-map";
+      case "11012": return "/api/creative-strategy/competitor-analysis";
+      case "11013": return "/api/creative-strategy/market-trend";
+      case "11014": return "/api/creative-strategy/innovation-trend";
       default: return "/api/creative-strategy/brief";
     }
   };
@@ -982,7 +1000,7 @@ export function CreativeStrategyWritingPage() {
     setInputValue(""); // 清空输入框
 
     // 所有创意策略子类型：重置消息列表为对应的欢迎消息
-    const speechesTemplateIds = ["11001", "11002", "11003", "11004", "11005"];
+    const speechesTemplateIds = ["11001", "11002", "11003", "11004", "11005", "11006", "11007", "11008", "11009", "11010", "11011", "11012", "11013", "11014"];
     if (speechesTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
@@ -1000,7 +1018,7 @@ export function CreativeStrategyWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["11001", "11002", "11003", "11004", "11005"].includes(templateId) ? (
+      {["11001", "11002", "11003", "11004", "11005", "11006", "11007", "11008", "11009", "11010", "11011", "11012", "11013", "11014"].includes(templateId) ? (
         /* 所有创意策略子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
