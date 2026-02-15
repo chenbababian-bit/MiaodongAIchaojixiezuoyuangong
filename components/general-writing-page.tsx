@@ -97,6 +97,12 @@ export function GeneralWritingPage() {
         `/writing/speeches?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
       );
     }
+    // 检测是否为创意策略模块（11001-11014），跳转到创意策略对话式界面
+    else if (templateId >= 11001 && templateId <= 11014) {
+      router.push(
+        `/writing/creative-strategy?template=${templateId}&title=${encodeURIComponent(title)}&source=general`
+      );
+    }
     // 检测是否为团队管理模块（1301-1316），跳转到团队管理对话式界面
     else if (templateId >= 1301 && templateId <= 1316) {
       router.push(

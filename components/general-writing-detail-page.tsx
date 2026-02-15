@@ -265,6 +265,12 @@ export function GeneralWritingDetailPage() {
       router.replace(`/writing/speeches?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
     }
 
+    // 创意策略模块 (11001-11014)
+    if (numId >= 11001 && numId <= 11014) {
+      const source = searchParams.get("source") || "general";
+      router.replace(`/writing/creative-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
+
     // 事务公文模块 (2101-2112)
     if (numId >= 2101 && numId <= 2112) {
       const source = searchParams.get("source") || "general";
