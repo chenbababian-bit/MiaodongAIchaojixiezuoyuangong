@@ -737,7 +737,7 @@ export function CreativeStrategyWritingPage() {
 
 让我们开始创作一份专业的转正述职报告演讲稿吧！`
     };
-    return welcomeMessages[templateId] || welcomeMessages["1201"];
+    return welcomeMessages[templateId] || welcomeMessages["11001"];
   };
 
   // 初始化欢迎消息（所有创意策略子类型）
