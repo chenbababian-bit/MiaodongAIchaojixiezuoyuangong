@@ -178,6 +178,14 @@ export type EtiquetteType =
   | 'etiquette-condolence-letter'        // 2403: 吊唁信
   | 'etiquette-speech-draft';            // 2404: 致辞稿
 
+// 品牌战略细粒度类型
+export type BrandStrategyType =
+  | 'brand-strategy-company-intro'           // 10001: 企业简介内容策划
+  | 'brand-strategy-positioning-slogan'      // 10002: 品牌定位语+品牌口号slogan
+  | 'brand-strategy-brand-house'             // 10003: 品牌屋梳理
+  | 'brand-strategy-positioning-report'      // 10004: 品牌定位报告
+  | 'brand-strategy-vision-mission';         // 10005: 品牌愿景和使命
+
 // 团队管理细粒度类型
 export type TeamManagementType =
   | 'team-management-recruitment-ad'       // 1301: 招聘广告
@@ -255,7 +263,7 @@ export type PublicityType =
   | 'publicity-social-media-announcement'; // 2205: 社交媒体公告
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType;
 
 export interface Conversation {
   id: string;

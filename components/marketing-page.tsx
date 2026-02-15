@@ -175,6 +175,14 @@ export function MarketingPage() {
   const [activeThirdLevel, setActiveThirdLevel] = useState("brand-strategy");
 
   const handleTemplateClick = (templateId: number, templateTitle: string) => {
+    // 检测是否为品牌战略模块（10001-10005），直接跳转到对话式界面
+    if (templateId >= 10001 && templateId <= 10005) {
+      router.push(
+        `/marketing/brand-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-brand-brand-strategy`
+      );
+      return;
+    }
+
     // 根据当前激活的分类构建source参数
     let source = "";
     if (activeSecondLevel === "brand") {
