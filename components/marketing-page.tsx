@@ -191,6 +191,14 @@ export function MarketingPage() {
       return;
     }
 
+    // 检测是否为媒介模块（13001-13016），直接跳转到对话式界面
+    if (templateId >= 13001 && templateId <= 13016) {
+      router.push(
+        `/writing/media?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-media-media-strategy`
+      );
+      return;
+    }
+
     // 根据当前激活的分类构建source参数
     let source = "";
     if (activeSecondLevel === "brand") {
