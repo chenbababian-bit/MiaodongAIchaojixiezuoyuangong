@@ -202,7 +202,16 @@ export type CreativeStrategyType =
   | 'creative-strategy-proposal'             // 11002: 创意策略提案
   | 'creative-strategy-brand-positioning'    // 11003: 品牌定位文档
   | 'creative-strategy-communication'        // 11004: 传播策略提案
-  | 'creative-strategy-concept';             // 11005: 创意概念提案
+  | 'creative-strategy-concept'              // 11005: 创意概念提案
+  | 'creative-strategy-annual-plan'          // 11006: 年度创意计划
+  | 'creative-strategy-process-guide'        // 11007: 创意流程指南
+  | 'creative-strategy-workflow'             // 11008: 创意工作流程
+  | 'creative-strategy-review-checklist'     // 11009: 创意审核清单
+  | 'creative-strategy-meeting-minutes'      // 11010: 创意会议纪要
+  | 'creative-strategy-mind-map'             // 11011: 创意思维导图
+  | 'creative-strategy-competitor-analysis'  // 11012: 竞品分析报告
+  | 'creative-strategy-market-trend'         // 11013: 市场趋势分析
+  | 'creative-strategy-innovation-trend';    // 11014: 创新趋势报告
 
 // 团队管理细粒度类型
 export type TeamManagementType =
