@@ -26,8 +26,6 @@ import {
   ecommerceComplianceLegalTemplates,
   ecommerceTeamManagementTemplates,
   ecommerceInnovationStrategyTemplates,
-  userResearchTemplates,
-  userGrowthTemplates,
   shortVideoContentCreationTemplates,
   privateDomainUserGrowthTemplates,
   privateDomainCommunityTemplates,
@@ -37,6 +35,18 @@ import {
   communityPlanningTemplates,
   customerServiceTemplates,
 } from "@/lib/marketing-templates";
+import {
+  userOperationUserResearchTemplates,
+  userOperationUserGrowthTemplates,
+  userOperationUserActivationTemplates,
+  userOperationDataAnalysisTemplates,
+  userOperationContentPlanningTemplates,
+  userOperationEventPlanningTemplates,
+  userOperationFeedbackIterationTemplates,
+  userOperationCustomerServiceTemplates,
+  userOperationInternalCommunicationTemplates,
+  userOperationCompliancePolicyTemplates,
+} from "@/lib/user-operation-templates";
 
 export function OperationPage() {
   const router = useRouter();
@@ -90,8 +100,16 @@ export function OperationPage() {
 
   // 用户运营下的所有子分类配置
   const userOperationCategories = [
-    { id: "user-research", label: "用户研究", templates: userResearchTemplates },
-    { id: "user-growth", label: "用户增长", templates: userGrowthTemplates },
+    { id: "user-research", label: "用户研究", templates: userOperationUserResearchTemplates },
+    { id: "user-growth", label: "用户增长", templates: userOperationUserGrowthTemplates },
+    { id: "user-activation", label: "用户促活", templates: userOperationUserActivationTemplates },
+    { id: "data-analysis", label: "数据分析", templates: userOperationDataAnalysisTemplates },
+    { id: "content-planning", label: "内容策划", templates: userOperationContentPlanningTemplates },
+    { id: "event-planning", label: "活动策划", templates: userOperationEventPlanningTemplates },
+    { id: "feedback-iteration", label: "反馈迭代", templates: userOperationFeedbackIterationTemplates },
+    { id: "customer-service", label: "客户服务", templates: userOperationCustomerServiceTemplates },
+    { id: "internal-communication", label: "内部沟通", templates: userOperationInternalCommunicationTemplates },
+    { id: "compliance-policy", label: "合规政策", templates: userOperationCompliancePolicyTemplates },
   ];
 
   // 短视频运营下的所有子分类配置
