@@ -18,6 +18,14 @@ import {
   complianceLegalTemplates,
   ecommerceMarketAnalysisTemplates,
   ecommerceProductManagementTemplates,
+  ecommerceMarketingPromotionTemplates,
+  ecommerceCustomerServiceTemplates,
+  ecommerceLogisticsTemplates,
+  ecommerceDataAnalysisTemplates,
+  ecommerceFinanceBudgetTemplates,
+  ecommerceComplianceLegalTemplates,
+  ecommerceTeamManagementTemplates,
+  ecommerceInnovationStrategyTemplates,
   userResearchTemplates,
   userGrowthTemplates,
   shortVideoContentCreationTemplates,
@@ -70,6 +78,14 @@ export function OperationPage() {
   const ecommerceOperationCategories = [
     { id: "market-analysis", label: "市场分析", templates: ecommerceMarketAnalysisTemplates },
     { id: "product-management", label: "商品管理", templates: ecommerceProductManagementTemplates },
+    { id: "marketing-promotion", label: "营销促销", templates: ecommerceMarketingPromotionTemplates },
+    { id: "customer-service", label: "客户服务", templates: ecommerceCustomerServiceTemplates },
+    { id: "logistics", label: "物流仓储", templates: ecommerceLogisticsTemplates },
+    { id: "data-analysis", label: "数据分析", templates: ecommerceDataAnalysisTemplates },
+    { id: "finance-budget", label: "财务预算", templates: ecommerceFinanceBudgetTemplates },
+    { id: "compliance-legal", label: "合规法律", templates: ecommerceComplianceLegalTemplates },
+    { id: "team-management", label: "团队管理", templates: ecommerceTeamManagementTemplates },
+    { id: "innovation-strategy", label: "创新战略", templates: ecommerceInnovationStrategyTemplates },
   ];
 
   // 用户运营下的所有子分类配置
