@@ -216,5 +216,14 @@ CHECK (type IN (
   'creative-strategy-proposal',
   'creative-strategy-brand-positioning',
   'creative-strategy-communication',
-  'creative-strategy-concept'
+  'creative-strategy-concept',
+  'creative-strategy-annual-plan',
+  'creative-strategy-process-guide',
+  'creative-strategy-workflow',
+  'creative-strategy-review-checklist',
+  'creative-strategy-meeting-minutes',
+  'creative-strategy-mind-map',
+  'creative-strategy-competitor-analysis',
+  'creative-strategy-market-trend',
+  'creative-strategy-innovation-trend'
 ));
