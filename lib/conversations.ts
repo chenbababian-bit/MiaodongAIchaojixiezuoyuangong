@@ -189,7 +189,12 @@ export type BrandStrategyType =
   | 'brand-strategy-positioning-map'         // 10007: 品牌定位地图
   | 'brand-strategy-architecture'            // 10008: 品牌架构策略
   | 'brand-strategy-story-narrative'         // 10009: 品牌故事与叙述
-  | 'brand-strategy-audience-analysis';      // 10010: 目标受众分析
+  | 'brand-strategy-audience-analysis'       // 10010: 目标受众分析
+  | 'brand-strategy-competitor-analysis'     // 10011: 竞争对手分析
+  | 'brand-strategy-differentiation'         // 10012: 品牌差异化策略
+  | 'brand-strategy-extension-plan'          // 10013: 品牌扩展计划
+  | 'brand-strategy-risk-management'         // 10014: 品牌风险管理
+  | 'brand-strategy-annual-plan';            // 10015: 年度品牌战略计划
 
 // 创意策略细粒度类型
 export type CreativeStrategyType =

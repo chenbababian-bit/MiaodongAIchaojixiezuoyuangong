@@ -175,8 +175,8 @@ export function MarketingPage() {
   const [activeThirdLevel, setActiveThirdLevel] = useState("brand-strategy");
 
   const handleTemplateClick = (templateId: number, templateTitle: string) => {
-    // 检测是否为品牌战略模块（10001-10010），直接跳转到对话式界面
-    if (templateId >= 10001 && templateId <= 10010) {
+    // 检测是否为品牌战略模块（10001-10015），直接跳转到对话式界面
+    if (templateId >= 10001 && templateId <= 10015) {
       router.push(
         `/marketing/brand-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-brand-brand-strategy`
       );
