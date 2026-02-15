@@ -213,6 +213,25 @@ export type CreativeStrategyType =
   | 'creative-strategy-market-trend'         // 11013: 市场趋势分析
   | 'creative-strategy-innovation-trend';    // 11014: 创新趋势报告
 
+// 媒介细粒度类型
+export type MediaType =
+  | 'media-strategy-proposal'           // 13001: 媒体策略提案
+  | 'media-mix-analysis'                // 13002: 媒体组合分析
+  | 'media-placement-plan'              // 13003: 媒体投放计划
+  | 'media-budget-allocation'           // 13004: 媒体预算分配表
+  | 'media-schedule'                    // 13005: 媒体排期表
+  | 'media-resource-procurement'        // 13006: 媒体资源采购建议
+  | 'ad-placement-selection'            // 13007: 广告位选择报告
+  | 'media-monitoring-report'           // 13008: 媒体监测报告
+  | 'media-evaluation-report'           // 13009: 媒体评估报告
+  | 'media-competition-analysis'        // 13010: 媒体竞争分析
+  | 'target-audience-definition'        // 13011: 目标受众定义
+  | 'media-cost-benefit-analysis'       // 13012: 媒体成本效益分析
+  | 'media-influence-assessment'        // 13013: 媒体影响力评估
+  | 'media-channel-selection'           // 13014: 媒体渠道选择报告
+  | 'media-innovation-proposal'         // 13015: 媒体创新提案
+  | 'cross-media-integration';          // 13016: 跨媒体整合策略
+
 // 团队管理细粒度类型
 export type TeamManagementType =
   | 'team-management-recruitment-ad'       // 1301: 招聘广告
@@ -290,7 +309,7 @@ export type PublicityType =
   | 'publicity-social-media-announcement'; // 2205: 社交媒体公告
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType | CreativeStrategyType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType | CreativeStrategyType | MediaType;
 
 export interface Conversation {
   id: string;
