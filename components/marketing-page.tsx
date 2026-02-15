@@ -175,10 +175,18 @@ export function MarketingPage() {
   const [activeThirdLevel, setActiveThirdLevel] = useState("brand-strategy");
 
   const handleTemplateClick = (templateId: number, templateTitle: string) => {
-    // 检测是否为品牌战略模块（10001-10005），直接跳转到对话式界面
-    if (templateId >= 10001 && templateId <= 10005) {
+    // 检测是否为品牌战略模块（10001-10010），直接跳转到对话式界面
+    if (templateId >= 10001 && templateId <= 10010) {
       router.push(
         `/marketing/brand-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-brand-brand-strategy`
+      );
+      return;
+    }
+
+    // 检测是否为创意策略模块（11001-11005），直接跳转到对话式界面
+    if (templateId >= 11001 && templateId <= 11005) {
+      router.push(
+        `/writing/creative-strategy?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-creative-creative-strategy`
       );
       return;
     }

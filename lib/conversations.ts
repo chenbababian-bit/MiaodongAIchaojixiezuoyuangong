@@ -184,7 +184,20 @@ export type BrandStrategyType =
   | 'brand-strategy-positioning-slogan'      // 10002: 品牌定位语+品牌口号slogan
   | 'brand-strategy-brand-house'             // 10003: 品牌屋梳理
   | 'brand-strategy-positioning-report'      // 10004: 品牌定位报告
-  | 'brand-strategy-vision-mission';         // 10005: 品牌愿景和使命
+  | 'brand-strategy-vision-mission'          // 10005: 品牌愿景和使命
+  | 'brand-strategy-value-proposition'       // 10006: 品牌价值主张
+  | 'brand-strategy-positioning-map'         // 10007: 品牌定位地图
+  | 'brand-strategy-architecture'            // 10008: 品牌架构策略
+  | 'brand-strategy-story-narrative'         // 10009: 品牌故事与叙述
+  | 'brand-strategy-audience-analysis';      // 10010: 目标受众分析
+
+// 创意策略细粒度类型
+export type CreativeStrategyType =
+  | 'creative-strategy-brief'                // 11001: 创意简报
+  | 'creative-strategy-proposal'             // 11002: 创意策略提案
+  | 'creative-strategy-brand-positioning'    // 11003: 品牌定位文档
+  | 'creative-strategy-communication'        // 11004: 传播策略提案
+  | 'creative-strategy-concept';             // 11005: 创意概念提案
 
 // 团队管理细粒度类型
 export type TeamManagementType =
@@ -263,7 +276,7 @@ export type PublicityType =
   | 'publicity-social-media-announcement'; // 2205: 社交媒体公告
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType | CreativeStrategyType;
 
 export interface Conversation {
   id: string;
