@@ -36,6 +36,12 @@ import {
   shortVideoTechnicalToolsTemplates,
   privateDomainUserGrowthTemplates,
   privateDomainCommunityTemplates,
+  privateDomainContentTemplates,
+  privateDomainInteractionTemplates,
+  privateDomainDataAnalysisTemplates,
+  privateDomainMarketingTemplates,
+  privateDomainTeamTemplates,
+  privateDomainComplianceTemplates,
   weiboOperationPlanningTemplates,
   weiboContentCreationTemplates,
   officialAccountContentPlanningTemplates,
@@ -65,7 +71,13 @@ export function OperationPage() {
     const source = `operation-${activeSecondLevel}-${activeThirdLevel}`;
 
     console.log("点击了模板卡片，ID:", templateId);
-    router.push(`/writing/xiaohongshu?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+
+    // 私域运营模板 (14001-14080) 跳转到专用页面
+    if (templateId >= 14001 && templateId <= 14080) {
+      router.push(`/writing/private-operation?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    } else {
+      router.push(`/writing/xiaohongshu?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=${source}`);
+    }
   };
 
   // 滚动到指定分类的位置
@@ -135,6 +147,12 @@ export function OperationPage() {
   const privateDomainOperationCategories = [
     { id: "user-growth-private", label: "用户增长", templates: privateDomainUserGrowthTemplates },
     { id: "community-operation", label: "社群运营", templates: privateDomainCommunityTemplates },
+    { id: "content-production", label: "内容生产", templates: privateDomainContentTemplates },
+    { id: "user-interaction", label: "用户互动", templates: privateDomainInteractionTemplates },
+    { id: "data-analysis-private", label: "数据分析", templates: privateDomainDataAnalysisTemplates },
+    { id: "marketing-conversion", label: "营销转化", templates: privateDomainMarketingTemplates },
+    { id: "team-management", label: "团队管理", templates: privateDomainTeamTemplates },
+    { id: "compliance-management", label: "合规管理", templates: privateDomainComplianceTemplates },
   ];
 
   // 微博运营下的所有子分类配置
