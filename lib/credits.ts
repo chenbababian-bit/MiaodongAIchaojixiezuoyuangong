@@ -239,9 +239,17 @@ export function getPricingRuleByCategory(category: TemplateCategory | string): P
  * 计算消费积分
  *
  * 计费规则：
- * - 每 2000 字消耗 1 积分（每千字 0.5 积分）
- * - 最低消费 10 积分
+ * - 每千字 0.5 积分（每 2000 字消耗 1 积分）
+ * - 不满 2000 字按 1 积分计算（向上取整）
  * - 1 元 = 10 积分
+ *
+ * 计费示例：
+ * - 500 字 → ceil(500/2000) = 1 积分
+ * - 1000 字 → ceil(1000/2000) = 1 积分
+ * - 2000 字 → ceil(2000/2000) = 1 积分
+ * - 3000 字 → ceil(3000/2000) = 2 积分
+ * - 5000 字 → ceil(5000/2000) = 3 积分
+ * - 20000 字 → ceil(20000/2000) = 10 积分
  */
 export function calculateCredits(wordCount: number, rule: PricingRule): number {
   if (wordCount <= 0) return 0;
@@ -249,7 +257,7 @@ export function calculateCredits(wordCount: number, rule: PricingRule): number {
   // 每 2000 字消耗 1 积分，向上取整
   const baseCredits = Math.ceil(wordCount / 2000);
 
-  // 应用最低消费限制
+  // 应用最低消费限制（默认为1积分）
   let finalCredits = Math.max(baseCredits, rule.minCredits);
 
   // 应用最高消费限制（如果有）
