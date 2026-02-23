@@ -2,6 +2,7 @@
 
 import { Grid3X3, Sun } from "lucide-react";
 import { UserInfo } from "@/components/user-info";
+import { CreditsDisplay } from "@/components/credits-display";
 
 export function AppHeader() {
   return (
@@ -16,6 +17,8 @@ export function AppHeader() {
 
       {/* Right Actions */}
       <div className="flex items-center gap-3">
+        {/* 积分显示 */}
+        <CreditsDisplay />
         <button className="flex h-8 w-8 items-center justify-center rounded-lg text-muted-foreground hover:bg-muted transition-colors">
           <Grid3X3 className="h-4 w-4" />
         </button>

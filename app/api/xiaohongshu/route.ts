@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { cleanMarkdown } from "@/lib/markdown-cleaner";
+import { generateWithCredits } from "@/lib/api-with-credits";
 
 // DeepSeek API 配置
 const DEEPSEEK_API_KEY = process.env.DEEPSEEK_API_KEY;
@@ -218,91 +219,87 @@ export async function POST(request: NextRequest) {
       );
     }
 
-    console.log("开始调用 DeepSeek API, 内容:", content);
+    // 使用带积分扣费的生成函数
+    return await generateWithCredits(request, {
+      templateId: 102, // 小红书爆款文案
+      generateFn: async () => {
+        console.log("开始调用 DeepSeek API, 内容:", content);
 
-    // 创建 AbortController 用于超时控制
-    const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 55000); // 55秒超时
+        // 创建 AbortController 用于超时控制
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 55000); // 55秒超时
 
-    try {
-      // 构建消息数组
-      const messages: Array<{ role: string; content: string }> = [
-        {
-          role: "system",
-          content: SYSTEM_PROMPT,
-        },
-      ];
+        try {
+          // 构建消息数组
+          const messages: Array<{ role: string; content: string }> = [
+            {
+              role: "system",
+              content: SYSTEM_PROMPT,
+            },
+          ];
 
-      // 如果有对话历史，添加到消息数组中
-      if (conversationHistory && Array.isArray(conversationHistory)) {
-        messages.push(...conversationHistory);
-      }
+          // 如果有对话历史，添加到消息数组中
+          if (conversationHistory && Array.isArray(conversationHistory)) {
+            messages.push(...conversationHistory);
+          }
 
-      // 添加当前用户消息
-      messages.push({
-        role: "user",
-        content: content,
-      });
+          // 添加当前用户消息
+          messages.push({
+            role: "user",
+            content: content,
+          });
 
-      const response = await fetch(DEEPSEEK_API_URL, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
-        },
-        body: JSON.stringify({
-          model: "deepseek-chat",
-          messages: messages,
-          temperature: 0.8,
-          max_tokens: 4000,
-        }),
-        signal: controller.signal,
-      });
+          const response = await fetch(DEEPSEEK_API_URL, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              Authorization: `Bearer ${DEEPSEEK_API_KEY}`,
+            },
+            body: JSON.stringify({
+              model: "deepseek-chat",
+              messages: messages,
+              temperature: 0.8,
+              max_tokens: 4000,
+            }),
+            signal: controller.signal,
+          });
 
-      clearTimeout(timeoutId);
+          clearTimeout(timeoutId);
 
-      console.log("DeepSeek API 响应状态:", response.status);
+          console.log("DeepSeek API 响应状态:", response.status);
 
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("DeepSeek API error:", errorText);
-        return NextResponse.json(
-          { error: `AI 服务错误: ${response.status}` },
-          { status: 500 }
-        );
-      }
+          if (!response.ok) {
+            const errorText = await response.text();
+            console.error("DeepSeek API error:", errorText);
+            throw new Error(`AI 服务错误: ${response.status}`);
+          }
 
-      const data = await response.json();
-      console.log("DeepSeek API 返回成功");
+          const data = await response.json();
+          console.log("DeepSeek API 返回成功");
 
-      const result = data.choices?.[0]?.message?.content;
+          const result = data.choices?.[0]?.message?.content;
 
-      if (!result) {
-        return NextResponse.json(
-          { error: "AI 返回结果为空，请重试" },
-          { status: 500 }
-        );
-      }
+          if (!result) {
+            throw new Error("AI 返回结果为空");
+          }
 
-      // 清理markdown格式，但保留emoji
-      const cleanedResult = cleanMarkdown(result);
+          // 清理markdown格式，但保留emoji
+          const cleanedResult = cleanMarkdown(result);
 
-      return NextResponse.json({
-        success: true,
-        result: cleanedResult,
-        usage: data.usage,
-      });
-    } catch (fetchError) {
-      clearTimeout(timeoutId);
-      if (fetchError instanceof Error && fetchError.name === "AbortError") {
-        console.error("请求超时");
-        return NextResponse.json(
-          { error: "请求超时，请重试" },
-          { status: 504 }
-        );
-      }
-      throw fetchError;
-    }
+          return {
+            result: cleanedResult,
+            usage: data.usage,
+          };
+        } catch (fetchError) {
+          clearTimeout(timeoutId);
+          if (fetchError instanceof Error && fetchError.name === "AbortError") {
+            console.error("请求超时");
+            throw new Error("请求超时，请重试");
+          }
+          throw fetchError;
+        }
+      },
+    });
   } catch (error) {
     console.error("API Error:", error);
     return NextResponse.json(
