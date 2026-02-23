@@ -44,6 +44,14 @@ import {
   privateDomainComplianceTemplates,
   weiboOperationPlanningTemplates,
   weiboContentCreationTemplates,
+  weiboUserInteractionTemplates,
+  weiboCooperationPromotionTemplates,
+  weiboDataAnalysisTemplates,
+  weiboCrisisManagementTemplates,
+  weiboReportSummaryTemplates,
+  weiboTeamManagementTemplates,
+  weiboComplianceTemplates,
+  weiboInnovationTrendsTemplates,
   officialAccountContentPlanningTemplates,
   communityPlanningTemplates,
   customerServiceTemplates,
@@ -159,6 +167,14 @@ export function OperationPage() {
   const weiboOperationCategories = [
     { id: "operation-planning", label: "运营规划", templates: weiboOperationPlanningTemplates },
     { id: "content-creation-weibo", label: "内容创作", templates: weiboContentCreationTemplates },
+    { id: "user-interaction", label: "用户互动", templates: weiboUserInteractionTemplates },
+    { id: "cooperation-promotion", label: "合作推广", templates: weiboCooperationPromotionTemplates },
+    { id: "data-analysis-weibo", label: "数据分析", templates: weiboDataAnalysisTemplates },
+    { id: "crisis-management", label: "危机公关", templates: weiboCrisisManagementTemplates },
+    { id: "report-summary-weibo", label: "报告总结", templates: weiboReportSummaryTemplates },
+    { id: "team-management-weibo", label: "团队管理", templates: weiboTeamManagementTemplates },
+    { id: "compliance-weibo", label: "法规合规", templates: weiboComplianceTemplates },
+    { id: "innovation-trends", label: "创新趋势", templates: weiboInnovationTrendsTemplates },
   ];
 
   // 公众号运营下的所有子分类配置

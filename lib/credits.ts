@@ -71,25 +71,24 @@ export const DEFAULT_NEW_USER_CREDITS = 10;
 // - 最低消费 10 积分
 
 // 默认定价规则（统一定价）
-// creditsPerHundredChars 表示每100字消耗的积分数
-// 由于每2000字=1积分，即每100字=0.05积分，这里用特殊值标记
-// 实际计算在 calculateCredits 函数中处理
+// 计费规则：每千字 0.5 积分 = 每 2000 字消耗 1 积分
+// minCredits 设为 1，表示最少消费 1 积分（不满 2000 字也算 1 积分）
 const DEFAULT_PRICING: Record<string, PricingRule> = {
-  default: { creditsPerHundredChars: 1, minCredits: 10 },
-  xiaohongshu: { creditsPerHundredChars: 1, minCredits: 10 },
-  wechat: { creditsPerHundredChars: 1, minCredits: 10 },
-  toutiao: { creditsPerHundredChars: 1, minCredits: 10 },
-  weibo: { creditsPerHundredChars: 1, minCredits: 10 },
-  zhihu: { creditsPerHundredChars: 1, minCredits: 10 },
-  video: { creditsPerHundredChars: 1, minCredits: 10 },
-  live: { creditsPerHundredChars: 1, minCredits: 10 },
-  private: { creditsPerHundredChars: 1, minCredits: 10 },
-  report: { creditsPerHundredChars: 1, minCredits: 10 },
-  'brand-strategy': { creditsPerHundredChars: 1, minCredits: 10 },
-  'creative-strategy': { creditsPerHundredChars: 1, minCredits: 10 },
-  'data-analysis': { creditsPerHundredChars: 1, minCredits: 10 },
-  business: { creditsPerHundredChars: 1, minCredits: 10 },
-  general: { creditsPerHundredChars: 1, minCredits: 10 },
+  default: { creditsPerHundredChars: 1, minCredits: 1 },
+  xiaohongshu: { creditsPerHundredChars: 1, minCredits: 1 },
+  wechat: { creditsPerHundredChars: 1, minCredits: 1 },
+  toutiao: { creditsPerHundredChars: 1, minCredits: 1 },
+  weibo: { creditsPerHundredChars: 1, minCredits: 1 },
+  zhihu: { creditsPerHundredChars: 1, minCredits: 1 },
+  video: { creditsPerHundredChars: 1, minCredits: 1 },
+  live: { creditsPerHundredChars: 1, minCredits: 1 },
+  private: { creditsPerHundredChars: 1, minCredits: 1 },
+  report: { creditsPerHundredChars: 1, minCredits: 1 },
+  'brand-strategy': { creditsPerHundredChars: 1, minCredits: 1 },
+  'creative-strategy': { creditsPerHundredChars: 1, minCredits: 1 },
+  'data-analysis': { creditsPerHundredChars: 1, minCredits: 1 },
+  business: { creditsPerHundredChars: 1, minCredits: 1 },
+  general: { creditsPerHundredChars: 1, minCredits: 1 },
 };
 
 // ============================================

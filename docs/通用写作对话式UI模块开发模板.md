@@ -132,6 +132,7 @@ const getWelcomeMessage = (templateId: string): string => {
 - ✅ 引导用户提供必要信息
 - ❌ 避免使用过多emoji（可适当使用）
 - ❌ 避免使用复杂的markdown格式
+- ❌ **AI提问的第一句不要显示工作流程**（如"第一步：收集信息"等流程性描述应省略，直接以友好问候或引导性问题开始）
 
 #### 2.6 修改API端点映射
 
