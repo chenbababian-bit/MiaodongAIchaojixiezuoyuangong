@@ -183,6 +183,14 @@ export function MarketingPage() {
       return;
     }
 
+    // 检测是否为市场分析模块（10101-10113），直接跳转到对话式界面
+    if (templateId >= 10101 && templateId <= 10113) {
+      router.push(
+        `/writing/market-analysis?template=${templateId}&title=${encodeURIComponent(templateTitle)}&source=marketing-brand-market-analysis`
+      );
+      return;
+    }
+
     // 检测是否为创意策略模块（11001-11014），直接跳转到对话式界面
     if (templateId >= 11001 && templateId <= 11014) {
       router.push(

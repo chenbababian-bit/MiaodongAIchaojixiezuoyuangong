@@ -213,6 +213,22 @@ export type CreativeStrategyType =
   | 'creative-strategy-market-trend'         // 11013: 市场趋势分析
   | 'creative-strategy-innovation-trend';    // 11014: 创新趋势报告
 
+// 市场分析细粒度类型
+export type MarketAnalysisType =
+  | 'market-analysis-trend-report'           // 10101: 市场趋势报告
+  | 'market-analysis-consumer-behavior'      // 10102: 消费者行为研究
+  | 'market-analysis-brand-awareness'        // 10103: 品牌认知度调查
+  | 'market-analysis-brand-loyalty'          // 10104: 品牌忠诚度测量
+  | 'market-analysis-segmentation'           // 10105: 市场细分报告
+  | 'market-analysis-industry-benchmark'     // 10106: 行业基准分析
+  | 'market-analysis-brand-equity'           // 10107: 品牌资产评估
+  | 'market-analysis-media-consumption'      // 10108: 媒体消费习惯研究
+  | 'market-analysis-brand-influence'        // 10109: 品牌影响力评估
+  | 'market-analysis-competitor'             // 10110: 竞品分析报告
+  | 'market-analysis-opportunity-threat'     // 10111: 市场机会与威胁分析
+  | 'market-analysis-swot'                   // 10112: SWOT分析报告
+  | 'market-analysis-pestle';                // 10113: PESTLE分析报告
+
 // 媒介细粒度类型
 export type MediaType =
   | 'media-strategy-proposal'           // 13001: 媒体策略提案
@@ -309,7 +325,7 @@ export type PublicityType =
   | 'publicity-social-media-announcement'; // 2205: 社交媒体公告
 
 // 对话类型
-export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType | CreativeStrategyType | MediaType;
+export type ConversationType = 'qa' | 'role' | XiaohongshuType | WechatType | ToutiaoType | WeiboType | ZhihuType | VideoType | PrivateType | KuaishouType | DouyinType | DataAnalysisType | LiveStreamingType | ReportType | SpeechesType | CommunicationDocsType | TeamManagementType | ProjectManagementType | PersonalDevelopmentType | GovernmentAffairsType | PublicityType | AdministrativeType | EtiquetteType | BrandStrategyType | CreativeStrategyType | MediaType | MarketAnalysisType;
 
 export interface Conversation {
   id: string;
