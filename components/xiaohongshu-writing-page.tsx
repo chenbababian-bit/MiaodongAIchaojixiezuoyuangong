@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useCredits } from "@/lib/credits-context";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -372,6 +373,7 @@ function getIconComponent(iconType: string) {
 export function XiaohongshuWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshCredits } = useCredits();
   const templateTitle = searchParams.get("title") || "小红书爆款文案";
   const templateId = searchParams.get("template") || "1";
   const source = searchParams.get("source") || "hot"; // 获取source参数
@@ -726,8 +728,8 @@ export function XiaohongshuWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
-
-      // 将AI回复转换为纯文本并同步到富文本编辑器
+      // 刷新积分显示
+      refreshCredits();
       const plainText = markdownToPlainText(data.result);
       setCurrentResult(plainText);
 

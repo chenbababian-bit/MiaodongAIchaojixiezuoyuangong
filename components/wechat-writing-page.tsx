@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
+import { useCredits } from "@/lib/credits-context";
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -425,6 +426,7 @@ function getIconComponent(iconType: string) {
 export function WechatWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshCredits } = useCredits();
   const templateTitle = searchParams.get("title") || "公众号文章撰写";
   const templateId = searchParams.get("template") || "201";
   const source = searchParams.get("source") || "hot"; // 获取source参数
@@ -816,6 +818,8 @@ export function WechatWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(cleanedResult);

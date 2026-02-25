@@ -29,6 +29,7 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { useCredits } from "@/lib/credits-context";
 
 // 模板配置接口
 interface TemplateConfig {
@@ -167,6 +168,7 @@ const TEMPLATE_CONFIGS: Record<string, TemplateConfig> = {
 export function UniversalWritingPage() {
   const router = useRouter();
   const searchParams = useSearchParams();
+  const { refreshCredits } = useCredits();
   const templateId = searchParams.get("template") || "1";
   const source = searchParams.get("source") || "hot";
 
@@ -215,6 +217,8 @@ export function UniversalWritingPage() {
       }
 
       setCurrentResult(data.result);
+      // 刷新积分显示
+      refreshCredits();
     } catch (err) {
       setError(err instanceof Error ? err.message : "创作失败,请重试");
     } finally {
