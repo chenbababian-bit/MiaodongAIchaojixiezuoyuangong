@@ -24,6 +24,7 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
 import { getTemplateById, getCanonicalId } from "@/lib/template-config";
+import { useCredits } from "@/lib/credits-context";
 
 // 今日头条5个子功能的示例提问
 const examplePromptsByTemplate: Record<string, string[]> = {
@@ -176,6 +177,7 @@ const getApiEndpoint = (templateId: string): string => {
 
 export function ToutiaoWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "头条爆文";
   const templateId = searchParams.get("template") || "301";
@@ -387,6 +389,8 @@ export function ToutiaoWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);

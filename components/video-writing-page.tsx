@@ -38,6 +38,7 @@ import { videoContentTemplates } from "@/lib/video-templates";
 import { MessageBubble } from "@/components/message-bubble";
 import { supabase } from "@/lib/supabase";
 import { cleanMarkdownClient } from "@/lib/markdown-cleaner-client";
+import { useCredits } from "@/lib/credits-context";
 import {
   createConversation,
   getConversations,
@@ -286,6 +287,7 @@ const VIDEO_LIST_METHOD_WELCOME = `你好，我是拥有20年经验的短视频�
 
 export function VideoWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "短视频爆款文案";
   const templateId = searchParams.get("template") || "1001";
@@ -549,6 +551,8 @@ export function VideoWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);

@@ -19,6 +19,7 @@ import {
 } from "lucide-react";
 import { MessageBubble } from "@/components/message-bubble";
 import { supabase } from "@/lib/supabase";
+import { useCredits } from "@/lib/credits-context";
 import {
   createConversation,
   getConversations,
@@ -36,6 +37,7 @@ interface Conversation {
 }
 
 export function LongTextPage() {
+  const { refreshCredits } = useCredits();
   const [activeTab, setActiveTab] = useState<"qa" | "role">("qa");
   const [conversations, setConversations] = useState<Conversation[]>([]);
   const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
@@ -228,6 +230,8 @@ export function LongTextPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 保存用户消息和AI回复到数据库
       await addMessage(convId, 'user', userContent);

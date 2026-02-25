@@ -24,6 +24,7 @@ import {
 } from "@/lib/conversations";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { useCredits } from "@/lib/credits-context";
 
 // 数据分析6个子类型的AI欢迎消息
 // 5001: 短视频播放分析
@@ -183,6 +184,7 @@ const getApiEndpoint = (templateId: string): string => {
 
 export function DataAnalysisWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "数据分析";
   const templateId = searchParams.get("template") || "5001";
@@ -380,6 +382,8 @@ export function DataAnalysisWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);

@@ -60,8 +60,7 @@ import {
   privateTemplates,
 } from "@/components/media-page"; // 从media-page导入模板数据
 import { getTemplateById, getCanonicalId, isLegacyId } from "@/lib/template-config";
-import { communicationDocsTemplates } from "@/lib/general-templates";
-import { useCredits } from "@/lib/credits-context";
+import { governmentAffairsTemplates } from "@/lib/general-templates";
 
 // 顶部筛选标签
 const topFilters = [
@@ -371,23 +370,33 @@ function getIconComponent(iconType: string) {
   }
 }
 
-export function CommunicationDocsWritingPage() {
+export function GovernmentAffairsWritingPage() {
   const router = useRouter();
-  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
-  const templateTitle = searchParams.get("title") || "通信公文";
-  const templateId = searchParams.get("template") || "2301";
+  const templateTitle = searchParams.get("title") || "政务公文";
+  const templateId = searchParams.get("template") || "2001";
   const source = searchParams.get("source") || "hot"; // 获取source参数
 
-  // 通信公文模块的类型映射函数
-  const getCommunicationDocsTypeByTemplateId = (templateId: string): ConversationType => {
+  // 政务公文模块的类型映射函数
+  const getGovernmentAffairsTypeByTemplateId = (templateId: string): ConversationType => {
     const mapping: Record<string, ConversationType> = {
-      '2301': 'communication-docs-formal-letter',
-      '2302': 'communication-docs-email',
-      '2303': 'communication-docs-memo',
-      '2304': 'communication-docs-meeting-invitation',
+      '2001': 'government-affairs-resolution',
+      '2002': 'government-affairs-decision',
+      '2003': 'government-affairs-order',
+      '2004': 'government-affairs-communique',
+      '2005': 'government-affairs-announcement',
+      '2006': 'government-affairs-notice',
+      '2007': 'government-affairs-opinion',
+      '2008': 'government-affairs-notification',
+      '2009': 'government-affairs-circular',
+      '2010': 'government-affairs-report',
+      '2011': 'government-affairs-request-for-instructions',
+      '2012': 'government-affairs-reply',
+      '2013': 'government-affairs-proposal',
+      '2014': 'government-affairs-letter',
+      '2015': 'government-affairs-minutes',
     };
-    return mapping[templateId] || 'communication-docs-formal-letter';
+    return mapping[templateId] || 'government-affairs-resolution';
   };
 
   // 自动重定向旧ID到新ID
@@ -445,10 +454,10 @@ export function CommunicationDocsWritingPage() {
       const platform = source.replace("media-", "");
       // 根据平台返回对应的模板
       switch (platform) {
-        case "communication-docs":
-          return communicationDocsTemplates.map((t: any) => ({
+        case "government-affairs":
+          return governmentAffairsTemplates.map((t: any) => ({
             id: t.id,
-            icon: "communication-docs",
+            icon: "government-affairs",
             iconBg: t.color,
             title: t.title,
             desc: t.desc,
@@ -537,7 +546,7 @@ export function CommunicationDocsWritingPage() {
       setIsLoadingHistory(true);
       try {
         // 根据当前模板ID获取对应的子类型
-        const conversationType = getCommunicationDocsTypeByTemplateId(activeTemplate.toString());
+        const conversationType = getGovernmentAffairsTypeByTemplateId(activeTemplate.toString());
         const conversations = await getConversations(userId, undefined, conversationType);
         setHistoryConversations(conversations);
       } catch (error) {
@@ -556,77 +565,61 @@ export function CommunicationDocsWritingPage() {
 
   // 获取当前模板对应的欢迎消息
   const getWelcomeMessage = (templateId: string): string => {
-    // 通信公文模板的欢迎消息
+    // 政务公文模板的欢迎消息
     const welcomeMessages: Record<string, string> = {
-      "2301": `您好！我是您的专属正式信函撰写专家，拥有50年的商务写作经验。
+      "2001": `您好！我是您的专属决议撰写专家。我将帮助您撰写一份全面、准确、具有可操作性的政务决议。
 
-我能为您提供：
-- 各类正式信函的专业撰写（商务信函、邀请函、推荐信等）
-- 符合商务礼仪和行业规范的格式
-- 精准、得体的措辞和语气把控
-- 多种风格和调性的方案选择
+请告诉我您需要撰写的决议相关信息，我会为您提供专业的指导和建议。`,
+      "2002": `您好！我是您的专属决定撰写专家。我将帮助您撰写一份内容准确、条理清晰、具有可操作性的政务《决定》。
 
-请告诉我：
-1. 信函的类型和用途是什么？
-2. 收件人是谁？（客户、合作伙伴、政府机构等）
-3. 信函的主要内容和目的是什么？
-4. 您期望的语气风格？（正式庄重/友好亲切/简洁务实）
+请告诉我您需要撰写的决定相关信息，我会为您提供专业的指导和建议。`,
+      "2003": `您好！我是您的专属命令（令）撰写专家。我将帮助您撰写符合规范、内容准确、具有权威性的命令（令）。
 
-让我们开始创作一封专业的正式信函！`,
-      "2302": `您好！我是您的专属电子邮件撰写助手，专注于商务邮件和职场沟通。
+请告诉我您需要撰写的命令相关信息，我会为您提供专业的指导和建议。`,
+      "2004": `您好！我是您的专属公报撰写专家。我将帮助您撰写一份准确、清晰、全面的政务公报，满足公众对政府信息的需求。
 
-我能帮您：
-- 撰写各类商务电子邮件（工作汇报、项目沟通、客户联系等）
-- 优化邮件结构和表达，提升沟通效率
-- 把控邮件语气，确保专业得体
-- 提供清晰的主题和行动号召
+请告诉我您需要撰写的公报相关信息，我会为您提供专业的指导和建议。`,
+      "2005": `您好！我是您的专属公告撰写专家。我将帮助您撰写一份准确、清晰、简洁的政务公告，确保公众能够准确理解公告内容。
 
-请告诉我：
-1. 邮件的目的是什么？（汇报工作、请求支持、商务洽谈等）
-2. 收件人是谁？（上级、同事、客户、合作方等）
-3. 需要传达的核心信息是什么？
-4. 是否有特殊要求？（紧急程度、附件说明等）
+请告诉我您需要撰写的公告相关信息，我会为您提供专业的指导和建议。`,
+      "2006": `您好！我是您的专属通告撰写专家。我将帮助您撰写一份清晰、准确、具有权威性的政务通告。
 
-让我们开始撰写一封高效的商务邮件！`,
-      "2303": `您好！我是您的专属备忘录撰写专家，专注于内部沟通文档的专业撰写。
+请告诉我您需要撰写的通告相关信息，我会为您提供专业的指导和建议。`,
+      "2007": `您好！我是您的专属意见撰写专家。我将帮助您撰写一份全面、准确、具有可操作性的政务《意见》。
 
-我能为您：
-- 撰写各类备忘录（会议备忘、政策通知、工作安排等）
-- 确保信息传达清晰、准确、完整
-- 优化文档结构，便于快速阅读和理解
-- 提供专业的格式和措辞建议
+请告诉我您需要撰写的意见相关信息，我会为您提供专业的指导和建议。`,
+      "2008": `您好！我是您的专属通知撰写专家。我将帮助您撰写一份符合政务工作要求、内容准确、条理清晰的通知。
 
-请告诉我：
-1. 备忘录的主题和目的是什么？
-2. 目标读者是谁？（部门员工、管理层、全体员工等）
-3. 需要传达的关键信息有哪些？
-4. 是否需要包含行动要求或截止日期？
+请告诉我您需要撰写的通知相关信息，我会为您提供专业的指导和建议。`,
+      "2009": `您好！我是您的专属通报撰写专家。我将帮助您撰写一份符合政务工作规范的通报，准确传达相关信息。
 
-让我们开始创作一份清晰有效的备忘录！`,
-      "2304": `您好！我是您的专属会议邀请函撰写助手，专注于各类会议邀请的专业撰写。
+请告诉我您需要撰写的通报相关信息，我会为您提供专业的指导和建议。`,
+      "2010": `您好！我是您的专属报告撰写专家。我将帮助您撰写一份全面、准确、清晰的政务报告，为上级决策提供有力依据。
 
-我能帮您：
-- 撰写各类会议邀请函（商务会议、研讨会、年会等）
-- 清晰传达会议信息（时间、地点、议程等）
-- 提升邀请函的专业度和吸引力
-- 确保格式规范、信息完整
+请告诉我您需要撰写的报告相关信息，我会为您提供专业的指导和建议。`,
+      "2011": `您好！我是您的专属请示撰写专家。我将帮助您了解并掌握政务工作中《请示》的写作要点。
 
-请告诉我：
-1. 会议的类型和主题是什么？
-2. 会议的时间、地点和形式？（线上/线下/混合）
-3. 邀请对象是谁？（客户、合作伙伴、内部员工等）
-4. 会议的主要议程和预期成果是什么？
-5. 是否需要回复确认？
+请告诉我您需要撰写的请示相关信息，我会为您提供专业的指导和建议。`,
+      "2012": `您好！我是您的专属批复撰写专家。我将帮助您撰写一份符合规范、内容准确、表达清晰的政务批复。
 
-让我们开始创作一份专业的会议邀请函！`
+请告诉我您需要撰写的批复相关信息，我会为您提供专业的指导和建议。`,
+      "2013": `您好！我是您的专属议案撰写专家。我将帮助您撰写一份具有针对性、可行性和前瞻性的政务议案，为政府决策提供有力支持。
+
+请告诉我您需要撰写的议案相关信息，我会为您提供专业的指导和建议。`,
+      "2014": `您好！我是您的专属函撰写专家。我将帮助您了解并掌握政务工作中函的写作方法，提供详细的函件写作指导。
+
+请告诉我您需要撰写的函相关信息，我会为您提供专业的指导和建议。`,
+      "2015": `您好！我是您的专属纪要撰写专家。我将帮助您撰写一份全面、准确、清晰的政务纪要，反映会议的主要内容和决策结果。
+
+请告诉我您需要撰写的纪要相关信息，我会为您提供专业的指导和建议。`,
     };
-    return welcomeMessages[templateId] || welcomeMessages["2301"];
+    return welcomeMessages[templateId] || welcomeMessages["2001"];
   };
 
-  // 初始化欢迎消息（所有通信公文子类型）
+  // 初始化欢迎消息（所有政务公文子类型）
   useEffect(() => {
-    const communicationDocsTemplateIds = ["2301", "2302", "2303", "2304"];
-    if (communicationDocsTemplateIds.includes(templateId) && messages.length === 0) {
+    const governmentAffairsTemplateIds = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"];
+    if (governmentAffairsTemplateIds.includes(templateId) && messages.length === 0) {
       setMessages([{
         id: 'welcome',
         role: 'assistant',
@@ -709,11 +702,22 @@ export function CommunicationDocsWritingPage() {
   // 获取当前模板对应的API端点
   const getApiEndpoint = (templateId: string): string => {
     switch (templateId) {
-      case "2301": return "/api/communication-docs/formal-letter";
-      case "2302": return "/api/communication-docs/email";
-      case "2303": return "/api/communication-docs/memo";
-      case "2304": return "/api/communication-docs/meeting-invitation";
-      default: return "/api/communication-docs/formal-letter";
+      case "2001": return "/api/government-affairs/resolution";
+      case "2002": return "/api/government-affairs/decision";
+      case "2003": return "/api/government-affairs/order";
+      case "2004": return "/api/government-affairs/communique";
+      case "2005": return "/api/government-affairs/announcement";
+      case "2006": return "/api/government-affairs/notice";
+      case "2007": return "/api/government-affairs/opinion";
+      case "2008": return "/api/government-affairs/notification";
+      case "2009": return "/api/government-affairs/circular";
+      case "2010": return "/api/government-affairs/report";
+      case "2011": return "/api/government-affairs/request-for-instructions";
+      case "2012": return "/api/government-affairs/reply";
+      case "2013": return "/api/government-affairs/proposal";
+      case "2014": return "/api/government-affairs/letter";
+      case "2015": return "/api/government-affairs/minutes";
+      default: return "/api/government-affairs/resolution";
     }
   };
 
@@ -790,8 +794,6 @@ export function CommunicationDocsWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
-      // 刷新积分显示
-      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);
@@ -808,7 +810,7 @@ export function CommunicationDocsWritingPage() {
       if (userId && !currentConversationId) {
         try {
           const title = userContent.slice(0, 30) + (userContent.length > 30 ? '...' : '');
-          const conversationType = getCommunicationDocsTypeByTemplateId(activeTemplate.toString());
+          const conversationType = getGovernmentAffairsTypeByTemplateId(activeTemplate.toString());
           const convId = await createConversation(userId, title, conversationType);
           setCurrentConversationId(convId);
 
@@ -874,9 +876,9 @@ export function CommunicationDocsWritingPage() {
     setCurrentConversationId(null); // 重置对话ID
     setInputValue(""); // 清空输入框
 
-    // 所有通信公文子类型：重置消息列表为对应的欢迎消息
-    const communicationDocsTemplateIds = ["2301", "2302", "2303", "2304"];
-    if (communicationDocsTemplateIds.includes(templateId)) {
+    // 所有政务公文子类型：重置消息列表为对应的欢迎消息
+    const governmentAffairsTemplateIds = ["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"];
+    if (governmentAffairsTemplateIds.includes(templateId)) {
       setMessages([{
         id: 'welcome-' + Date.now(),
         role: 'assistant',
@@ -893,8 +895,8 @@ export function CommunicationDocsWritingPage() {
 
   return (
     <div className="flex h-[calc(100vh-56px)]">
-      {["2301", "2302", "2303", "2304"].includes(templateId) ? (
-        /* 所有通信公文子类型：统一使用对话模式UI */
+      {["2001", "2002", "2003", "2004", "2005", "2006", "2007", "2008", "2009", "2010", "2011", "2012", "2013", "2014", "2015"].includes(templateId) ? (
+        /* 所有政务公文子类型：统一使用对话模式UI */
         <div className="w-full flex flex-col">
           {/* 统一的顶部标题栏 */}
           <div className="border-b border-border p-4">
@@ -1453,7 +1455,7 @@ export function CommunicationDocsWritingPage() {
                           // 如果没有当前对话ID，创建新对话
                           if (!convId) {
                             const title = currentResult.slice(0, 30) + (currentResult.length > 30 ? '...' : '');
-                            const conversationType = getCommunicationDocsTypeByTemplateId(activeTemplate.toString());
+                            const conversationType = getGovernmentAffairsTypeByTemplateId(activeTemplate.toString());
                             convId = await createConversation(userId, title, conversationType);
                             setCurrentConversationId(convId);
 

@@ -23,6 +23,7 @@ import {
 } from "@/lib/conversations";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { useCredits } from "@/lib/credits-context";
 
 // 私域运营模块的类型映射函数
 const getPrivateOperationTypeByTemplateId = (templateId: string): ConversationType => {
@@ -191,6 +192,7 @@ const getApiEndpoint = (templateId: string): string => {
 
 export function PrivateOperationWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "私域运营";
   const templateId = searchParams.get("template") || "14001";
@@ -389,6 +391,8 @@ export function PrivateOperationWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);

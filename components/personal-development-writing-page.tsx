@@ -61,6 +61,7 @@ import {
 } from "@/components/media-page"; // 从media-page导入模板数据
 import { getTemplateById, getCanonicalId, isLegacyId } from "@/lib/template-config";
 import { personalDevelopmentTemplates } from "@/lib/general-templates";
+import { useCredits } from "@/lib/credits-context";
 
 // 顶部筛选标签
 const topFilters = [
@@ -372,6 +373,7 @@ function getIconComponent(iconType: string) {
 
 export function PersonalDevelopmentWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "个人发展";
   const templateId = searchParams.get("template") || "1101";
@@ -1064,6 +1066,8 @@ export function PersonalDevelopmentWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);

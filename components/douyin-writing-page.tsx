@@ -51,6 +51,7 @@ import {
 } from "@/components/ui/select";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { RichTextEditor } from "@/components/rich-text-editor";
+import { useCredits } from "@/lib/credits-context";
 
 // 抖音7个子类型的AI欢迎消息
 // 2001: 企业抖音矩阵运营战略图
@@ -121,6 +122,7 @@ const DOUYIN_NAME_WELCOME = `你好！我是拥有50年落地项目经验的商�
 
 export function DouyinWritingPage() {
   const router = useRouter();
+  const { refreshCredits } = useCredits();
   const searchParams = useSearchParams();
   const templateTitle = searchParams.get("title") || "企业抖音矩阵运营战略图";
   const templateId = searchParams.get("template") || "2001";
@@ -362,6 +364,8 @@ export function DouyinWritingPage() {
         isCollapsed: false
       };
       setMessages(prev => [...prev, aiMessage]);
+      // 刷新积分显示
+      refreshCredits();
 
       // 将AI回复转换为纯文本并同步到富文本编辑器
       const plainText = markdownToPlainText(data.result);
