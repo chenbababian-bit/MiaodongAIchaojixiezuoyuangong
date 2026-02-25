@@ -1,8 +1,7 @@
 'use client';
 
 import React from 'react';
-import { CreditCard, Loader2, RefreshCw } from 'lucide-react';
-import { Button } from '@/components/ui/button';
+import { CreditCard, Loader2 } from 'lucide-react';
 import { useCredits } from '@/lib/credits-context';
 
 interface CreditsDisplayProps {
@@ -18,7 +17,7 @@ export function CreditsDisplay({
   compact = false,
   className = '',
 }: CreditsDisplayProps) {
-  const { credits, loading, error, refreshCredits } = useCredits();
+  const { credits, loading, error } = useCredits();
 
   if (loading) {
     return (
@@ -30,19 +29,8 @@ export function CreditsDisplay({
   }
 
   if (error) {
-    return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        <span className="text-sm text-red-500">积分加载失败</span>
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={refreshCredits}
-          className="h-6 w-6 p-0"
-        >
-          <RefreshCw className="h-3 w-3" />
-        </Button>
-      </div>
-    );
+    // 未登录时静默隐藏，不显示错误
+    return null;
   }
 
   if (!credits) {
