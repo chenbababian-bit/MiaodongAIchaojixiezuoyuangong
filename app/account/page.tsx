@@ -4,10 +4,10 @@ import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CreditCard, History, FileText, Settings, ArrowUpRight, Download, Loader2 } from "lucide-react";
-import { useUserCredits } from "@/hooks/use-user-credits";
+import { useCredits } from "@/lib/credits-context";
 
 export default function AccountPage() {
-  const { credits, loading, error, refreshCredits } = useUserCredits();
+  const { credits, loading, error, refreshCredits } = useCredits();
   
   // 模拟用户基本信息（后续可以从用户API获取）
   const userData = {
