@@ -1,16 +1,16 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, History, FileText, Settings, ArrowUpRight, Download } from "lucide-react";
+import { CreditCard, History, FileText, Settings, ArrowUpRight, Download, Loader2 } from "lucide-react";
+import { useUserCredits } from "@/hooks/use-user-credits";
 
 export default function AccountPage() {
-  // 模拟用户数据 - 后续会从 API 获取
+  const { credits, loading, error, refreshCredits } = useUserCredits();
+  
+  // 模拟用户基本信息（后续可以从用户API获取）
   const userData = {
     name: "张三",
     email: "zhangsan@example.com",
-    credits: 125,
-    totalEarned: 500,
-    totalConsumed: 375,
     joinDate: "2024-01-15",
   };
 
@@ -48,36 +48,61 @@ export default function AccountPage() {
           <CardDescription>您的当前积分和消费情况</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
-            <div className="space-y-4">
-              <div>
-                <div className="text-5xl font-bold">{userData.credits}</div>
-                <p className="text-muted-foreground">当前可用积分</p>
-              </div>
-              
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <div className="text-2xl font-semibold text-green-600">+{userData.totalEarned}</div>
-                  <p className="text-sm text-muted-foreground">累计获得</p>
-                </div>
-                <div>
-                  <div className="text-2xl font-semibold text-red-600">-{userData.totalConsumed}</div>
-                  <p className="text-sm text-muted-foreground">累计消费</p>
-                </div>
-              </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-2">加载积分数据中...</span>
             </div>
+          ) : error ? (
+            <div className="text-center py-8">
+              <p className="text-red-500 mb-4">{error}</p>
+              <Button onClick={refreshCredits} variant="outline">
+                重试
+              </Button>
+            </div>
+          ) : credits ? (
+            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6">
+              <div className="space-y-4">
+                <div>
+                  <div className="text-5xl font-bold">{credits.balance.toLocaleString()}</div>
+                  <p className="text-muted-foreground">当前可用积分</p>
+                </div>
+                
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <div className="text-2xl font-semibold text-green-600">+{credits.total_earned.toLocaleString()}</div>
+                    <p className="text-sm text-muted-foreground">累计获得</p>
+                  </div>
+                  <div>
+                    <div className="text-2xl font-semibold text-red-600">-{credits.total_consumed.toLocaleString()}</div>
+                    <p className="text-sm text-muted-foreground">累计消费</p>
+                  </div>
+                </div>
+              </div>
 
-            <div className="space-y-3">
-              <Button size="lg" className="w-full lg:w-auto">
-                <CreditCard className="mr-2 h-4 w-4" />
-                立即充值
-              </Button>
-              <Button variant="outline" size="lg" className="w-full lg:w-auto">
-                <History className="mr-2 h-4 w-4" />
-                查看明细
+              <div className="space-y-3">
+                <Button size="lg" className="w-full lg:w-auto" asChild>
+                  <a href="/account/recharge">
+                    <CreditCard className="mr-2 h-4 w-4" />
+                    立即充值
+                  </a>
+                </Button>
+                <Button variant="outline" size="lg" className="w-full lg:w-auto" asChild>
+                  <a href="/account/transactions">
+                    <History className="mr-2 h-4 w-4" />
+                    查看明细
+                  </a>
+                </Button>
+              </div>
+            </div>
+          ) : (
+            <div className="text-center py-8">
+              <p className="text-muted-foreground">暂无积分数据</p>
+              <Button onClick={refreshCredits} variant="outline" className="mt-4">
+                刷新
               </Button>
             </div>
-          </div>
+          )}
         </CardContent>
       </Card>
 

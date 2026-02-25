@@ -3,8 +3,21 @@
  * 提供积分查询、扣费、记录等功能
  */
 
-import { supabase } from './supabase';
+import { createClient } from '@supabase/supabase-js';
 import { getTemplateById, type TemplateCategory } from './template-config';
+
+// 创建服务端 Supabase 客户端（使用 Service Role Key 绕过 RLS）
+// 注意：仅在服务端 API 路由中使用，不要在客户端使用
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL!;
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!;
+
+// 服务端客户端，用于积分操作（绕过 RLS 策略）
+const supabaseAdmin = createClient(supabaseUrl, supabaseServiceKey, {
+  auth: {
+    autoRefreshToken: false,
+    persistSession: false,
+  },
+});
 
 // ============================================
 // 类型定义
@@ -68,7 +81,7 @@ export const DEFAULT_NEW_USER_CREDITS = 10;
 // 计费规则说明：
 // - 1 元 = 10 积分
 // - 每千字 0.5 积分（即每 2000 字消耗 1 积分）
-// - 最低消费 10 积分
+// - 最低消费 1 积分（不满 2000 字也算 1 积分）
 
 // 默认定价规则（统一定价）
 // 计费规则：每千字 0.5 积分 = 每 2000 字消耗 1 积分
@@ -101,7 +114,7 @@ const DEFAULT_PRICING: Record<string, PricingRule> = {
  */
 export async function getUserCredits(userId: string): Promise<UserCredits | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('user_credits')
       .select('*')
       .eq('user_id', userId)
@@ -128,7 +141,7 @@ export async function getUserCredits(userId: string): Promise<UserCredits | null
  */
 export async function initializeUserCredits(userId: string): Promise<UserCredits | null> {
   try {
-    const { data, error } = await supabase
+    const { data, error } = await supabaseAdmin
       .from('user_credits')
       .insert({
         user_id: userId,
@@ -168,7 +181,7 @@ export async function initializeUserCredits(userId: string): Promise<UserCredits
  * 直接获取用户积分（不触发初始化）
  */
 async function getUserCreditsDirectly(userId: string): Promise<UserCredits | null> {
-  const { data, error } = await supabase
+  const { data, error } = await supabaseAdmin
     .from('user_credits')
     .select('*')
     .eq('user_id', userId)
@@ -308,7 +321,7 @@ export async function deductCredits(
     const balanceAfter = balanceBefore - amount;
 
     // 3. 更新余额
-    const { error: updateError } = await supabase
+    const { error: updateError } = await supabaseAdmin
       .from('user_credits')
       .update({
         balance: balanceAfter,
@@ -366,7 +379,7 @@ async function recordTransaction(
   data: Omit<CreditTransaction, 'id' | 'user_id' | 'created_at'>
 ): Promise<CreditTransaction | null> {
   try {
-    const { data: transaction, error } = await supabase
+    const { data: transaction, error } = await supabaseAdmin
       .from('credit_transactions')
       .insert({
         user_id: userId,
@@ -399,7 +412,7 @@ export async function getTransactionHistory(
   }
 ): Promise<CreditTransaction[]> {
   try {
-    let query = supabase
+    let query = supabaseAdmin
       .from('credit_transactions')
       .select('*')
       .eq('user_id', userId)
@@ -446,7 +459,7 @@ export async function rechargeCredits(
     const balanceBefore = credits.balance;
     const balanceAfter = balanceBefore + amount;
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('user_credits')
       .update({
         balance: balanceAfter,
@@ -489,7 +502,7 @@ export async function giftCredits(
     const balanceBefore = credits.balance;
     const balanceAfter = balanceBefore + amount;
 
-    const { error } = await supabase
+    const { error } = await supabaseAdmin
       .from('user_credits')
       .update({
         balance: balanceAfter,
