@@ -123,7 +123,7 @@ BEGIN
   RAISE NOTICE '  - 触发器和函数';
   RAISE NOTICE '';
   RAISE NOTICE '积分计费规则：';
-  RAISE NOTICE '  - 新用户默认获得 100 积分';
-  RAISE NOTICE '  - 每100字消耗 1-2 积分（根据模板类型）';
-  RAISE NOTICE '  - 最低消费 1-5 积分（根据模板类型）';
+  RAISE NOTICE '  - 新用户默认获得 10 积分';
+  RAISE NOTICE '  - 每1000字消耗 0.5 积分（即每2000字消耗1积分）';
+  RAISE NOTICE '  - 最低消费 1 积分';
 END $$;

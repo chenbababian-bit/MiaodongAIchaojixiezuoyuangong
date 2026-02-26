@@ -73,6 +73,7 @@ export async function middleware(request: NextRequest) {
     '/xiaohongshu',
     '/profile',
     '/account',
+    '/credits',
   ]
 
   // 定义公开路由（不需要登录）

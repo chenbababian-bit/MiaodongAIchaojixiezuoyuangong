@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
-import { createClient } from '@supabase/supabase-js';
+import { supabase } from '@/lib/supabase';
 
 interface CreditsData {
   balance: number;
@@ -34,8 +34,16 @@ export function CreditsProvider({ children }: CreditsProviderProps) {
       setLoading(true);
       setError(null);
 
+      // 先检查用户是否已登录
+      const { data: { session } } = await supabase.auth.getSession();
+      if (!session) {
+        setCredits(null);
+        setError('请先登录');
+        return;
+      }
+
       const response = await fetch('/api/user/credits');
-      
+
       if (!response.ok) {
         if (response.status === 401) {
           throw new Error('请先登录');
@@ -44,7 +52,7 @@ export function CreditsProvider({ children }: CreditsProviderProps) {
       }
 
       const data = await response.json();
-      
+
       if (data.success && data.data) {
         setCredits(data.data);
       } else {
@@ -74,10 +82,6 @@ export function CreditsProvider({ children }: CreditsProviderProps) {
     fetchCredits();
 
     // 监听登录状态变化，登录后自动刷新积分
-    const supabase = createClient(
-      process.env.NEXT_PUBLIC_SUPABASE_URL!,
-      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-    );
     const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
       if (event === 'SIGNED_IN') {
         fetchCredits();

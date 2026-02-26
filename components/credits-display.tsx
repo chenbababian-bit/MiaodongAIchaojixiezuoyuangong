@@ -1,70 +1,40 @@
 'use client';
 
 import React from 'react';
-import { CreditCard, Loader2 } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { Coins } from 'lucide-react';
 import { useCredits } from '@/lib/credits-context';
 
 interface CreditsDisplayProps {
-  showIcon?: boolean;
-  showLabel?: boolean;
-  compact?: boolean;
   className?: string;
 }
 
-export function CreditsDisplay({
-  showIcon = true,
-  showLabel = true,
-  compact = false,
-  className = '',
-}: CreditsDisplayProps) {
+export function CreditsDisplay({ className = '' }: CreditsDisplayProps) {
   const { credits, loading, error } = useCredits();
+  const router = useRouter();
 
-  if (loading) {
-    return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        {showIcon && <Loader2 className="h-4 w-4 animate-spin" />}
-        <span className="text-sm">加载中...</span>
-      </div>
-    );
-  }
-
-  if (error) {
-    // 未登录时静默隐藏，不显示错误
+  // 未登录时静默隐藏
+  if (error === '请先登录' || (!loading && !credits && error)) {
     return null;
   }
 
-  if (!credits) {
+  if (loading) {
     return (
-      <div className={`flex items-center gap-2 ${className}`}>
-        <span className="text-sm text-muted-foreground">暂无积分</span>
-      </div>
+      <div className={`h-8 w-24 animate-pulse rounded-lg bg-muted ${className}`} />
     );
   }
 
-  if (compact) {
-    return (
-      <div className={`flex items-center gap-1.5 ${className}`}>
-        {showIcon && <CreditCard className="h-4 w-4" />}
-        <span className="font-medium">{credits.balance.toLocaleString()}</span>
-        {showLabel && <span className="text-sm text-muted-foreground">积分</span>}
-      </div>
-    );
-  }
+  if (!credits) return null;
 
   return (
-    <div className={`flex items-center gap-2 ${className}`}>
-      {showIcon && <CreditCard className="h-4 w-4" />}
-      <div className="flex flex-col">
-        <div className="flex items-baseline gap-1">
-          <span className="font-semibold">{credits.balance.toLocaleString()}</span>
-          <span className="text-sm text-muted-foreground">积分</span>
-        </div>
-        {showLabel && (
-          <div className="text-xs text-muted-foreground">
-            可用余额
-          </div>
-        )}
-      </div>
-    </div>
+    <button
+      onClick={() => router.push('/credits')}
+      className={`flex items-center gap-1.5 rounded-lg border border-border bg-card px-3 py-1.5 text-sm transition-colors hover:bg-muted ${className}`}
+      title="点击充值积分"
+    >
+      <Coins className="h-3.5 w-3.5 text-amber-500" />
+      <span className="font-medium text-foreground">{credits.balance.toLocaleString()}</span>
+      <span className="text-muted-foreground">积分</span>
+    </button>
   );
 }
