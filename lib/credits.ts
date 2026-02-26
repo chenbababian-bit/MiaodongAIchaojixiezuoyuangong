@@ -84,24 +84,24 @@ export const DEFAULT_NEW_USER_CREDITS = 10;
 // - 最低消费 1 积分（不满 2000 字也算 1 积分）
 
 // 默认定价规则（统一定价）
-// 计费规则：每千字 0.5 积分 = 每 2000 字消耗 1 积分
-// minCredits 设为 1，表示最少消费 1 积分（不满 2000 字也算 1 积分）
+// 计费规则：每千字 0.5 积分，精确到3位小数
+// minCredits 设为 0.001，表示最少消费 0.001 积分
 const DEFAULT_PRICING: Record<string, PricingRule> = {
-  default: { creditsPerHundredChars: 1, minCredits: 1 },
-  xiaohongshu: { creditsPerHundredChars: 1, minCredits: 1 },
-  wechat: { creditsPerHundredChars: 1, minCredits: 1 },
-  toutiao: { creditsPerHundredChars: 1, minCredits: 1 },
-  weibo: { creditsPerHundredChars: 1, minCredits: 1 },
-  zhihu: { creditsPerHundredChars: 1, minCredits: 1 },
-  video: { creditsPerHundredChars: 1, minCredits: 1 },
-  live: { creditsPerHundredChars: 1, minCredits: 1 },
-  private: { creditsPerHundredChars: 1, minCredits: 1 },
-  report: { creditsPerHundredChars: 1, minCredits: 1 },
-  'brand-strategy': { creditsPerHundredChars: 1, minCredits: 1 },
-  'creative-strategy': { creditsPerHundredChars: 1, minCredits: 1 },
-  'data-analysis': { creditsPerHundredChars: 1, minCredits: 1 },
-  business: { creditsPerHundredChars: 1, minCredits: 1 },
-  general: { creditsPerHundredChars: 1, minCredits: 1 },
+  default: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  xiaohongshu: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  wechat: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  toutiao: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  weibo: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  zhihu: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  video: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  live: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  private: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  report: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  'brand-strategy': { creditsPerHundredChars: 1, minCredits: 0.001 },
+  'creative-strategy': { creditsPerHundredChars: 1, minCredits: 0.001 },
+  'data-analysis': { creditsPerHundredChars: 1, minCredits: 0.001 },
+  business: { creditsPerHundredChars: 1, minCredits: 0.001 },
+  general: { creditsPerHundredChars: 1, minCredits: 0.001 },
 };
 
 // ============================================
@@ -252,25 +252,25 @@ export function getPricingRuleByCategory(category: TemplateCategory | string): P
  * 计算消费积分
  *
  * 计费规则：
- * - 每千字 0.5 积分（每 2000 字消耗 1 积分）
- * - 不满 2000 字按 1 积分计算（向上取整）
+ * - 每千字 0.5 积分，精确到3位小数
  * - 1 元 = 10 积分
  *
  * 计费示例：
- * - 500 字 → ceil(500/2000) = 1 积分
- * - 1000 字 → ceil(1000/2000) = 1 积分
- * - 2000 字 → ceil(2000/2000) = 1 积分
- * - 3000 字 → ceil(3000/2000) = 2 积分
- * - 5000 字 → ceil(5000/2000) = 3 积分
- * - 20000 字 → ceil(20000/2000) = 10 积分
+ * - 100 字 → 0.05 积分
+ * - 500 字 → 0.25 积分
+ * - 1000 字 → 0.5 积分
+ * - 1328 字 → 0.664 积分
+ * - 2000 字 → 1 积分
+ * - 5000 字 → 2.5 积分
  */
 export function calculateCredits(wordCount: number, rule: PricingRule): number {
   if (wordCount <= 0) return 0;
 
-  // 每 2000 字消耗 1 积分，向上取整
-  const baseCredits = Math.ceil(wordCount / 2000);
+  // 每千字 0.5 积分，精确到3位小数
+  const rawCredits = (wordCount / 1000) * 0.5;
+  const baseCredits = Math.round(rawCredits * 1000) / 1000;
 
-  // 应用最低消费限制（默认为1积分）
+  // 应用最低消费限制
   let finalCredits = Math.max(baseCredits, rule.minCredits);
 
   // 应用最高消费限制（如果有）
@@ -278,7 +278,8 @@ export function calculateCredits(wordCount: number, rule: PricingRule): number {
     finalCredits = Math.min(finalCredits, rule.maxCredits);
   }
 
-  return finalCredits;
+  // 保留3位小数
+  return Math.round(finalCredits * 1000) / 1000;
 }
 
 /**

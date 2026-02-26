@@ -33,7 +33,7 @@ export function CreditsDisplay({ className = '' }: CreditsDisplayProps) {
       title="点击充值积分"
     >
       <Coins className="h-3.5 w-3.5 text-amber-500" />
-      <span className="font-medium text-foreground">{credits.balance.toLocaleString()}</span>
+      <span className="font-medium text-foreground">{Number(credits.balance).toFixed(3)}</span>
       <span className="text-muted-foreground">积分</span>
     </button>
   );
