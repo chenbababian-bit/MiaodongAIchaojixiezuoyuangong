@@ -1,23 +1,14 @@
 "use client";
 
 import { Grid3X3, Sun } from "lucide-react";
-import { usePathname } from "next/navigation";
 import { UserInfo } from "@/components/user-info";
 import { CreditsDisplay } from "@/components/credits-display";
-import { BackButton } from "@/components/ui/back-button";
 
 export function AppHeader() {
-  const pathname = usePathname();
-  // 首页不显示返回按钮
-  const showBack = pathname !== "/";
-
   return (
     <header className="sticky top-0 z-30 flex h-14 items-center justify-between border-b border-border bg-card px-6">
-      {/* 左侧：返回按钮（非首页）+ Logo */}
+      {/* Logo */}
       <div className="flex items-center gap-3">
-        {showBack && (
-          <BackButton fallbackPath="/" />
-        )}
         <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-primary-foreground font-bold text-xs">
           AI
         </div>

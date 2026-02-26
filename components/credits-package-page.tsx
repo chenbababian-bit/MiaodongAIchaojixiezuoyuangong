@@ -4,6 +4,7 @@ import React, { useState } from 'react';
 import { Zap, Star, Crown, Sparkles, Rocket, Diamond } from 'lucide-react';
 import { toast } from 'sonner';
 import { useCredits } from '@/lib/credits-context';
+import { BackButton } from '@/components/ui/back-button';
 
 const packages = [
   {
@@ -99,6 +100,9 @@ export function CreditsPackagePage() {
   return (
     <div className="min-h-full bg-background">
       <div className="mx-auto max-w-5xl px-6 py-10">
+
+        {/* 返回按钮 */}
+        <BackButton className="mb-6" fallbackPath="/" />
 
         {/* 页头 */}
         <div className="mb-10 text-center">
