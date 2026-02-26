@@ -1,6 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
+import { createClient } from '@supabase/supabase-js';
 
 interface CreditsData {
   balance: number;
@@ -71,6 +72,23 @@ export function CreditsProvider({ children }: CreditsProviderProps) {
 
   useEffect(() => {
     fetchCredits();
+
+    // 监听登录状态变化，登录后自动刷新积分
+    const supabase = createClient(
+      process.env.NEXT_PUBLIC_SUPABASE_URL!,
+      process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
+    );
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((event) => {
+      if (event === 'SIGNED_IN') {
+        fetchCredits();
+      } else if (event === 'SIGNED_OUT') {
+        setCredits(null);
+        setError(null);
+        setLoading(false);
+      }
+    });
+
+    return () => subscription.unsubscribe();
   }, []);
 
   return (
