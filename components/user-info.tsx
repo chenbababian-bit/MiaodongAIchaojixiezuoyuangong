@@ -109,7 +109,7 @@ export function UserInfo() {
           </div>
         </DropdownMenuLabel>
         <DropdownMenuSeparator />
-        <DropdownMenuItem onClick={() => router.push('/profile')}>
+        <DropdownMenuItem onClick={() => router.push('/account')}>
           <UserIcon className="mr-2 h-4 w-4" />
           <span>个人资料</span>
         </DropdownMenuItem>
