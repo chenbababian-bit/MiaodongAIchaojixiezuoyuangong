@@ -63,7 +63,21 @@ export async function middleware(request: NextRequest) {
     }
   )
 
-  const { data: { session } } = await supabase.auth.getSession()
+  // 添加超时保护：5秒超时
+  let session = null
+  try {
+    const sessionPromise = supabase.auth.getSession()
+    const timeoutPromise = new Promise((_, reject) =>
+      setTimeout(() => reject(new Error('Session check timeout')), 5000)
+    )
+
+    const result = await Promise.race([sessionPromise, timeoutPromise]) as any
+    session = result?.data?.session || null
+  } catch (error) {
+    console.error('Middleware session check failed:', error)
+    // 超时或错误时，允许请求继续，但视为未登录
+    session = null
+  }
 
   // 定义需要登录才能访问的路由
   const protectedRoutes = [
