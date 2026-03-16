@@ -13,7 +13,7 @@ import {
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
-import { LogOut, User as UserIcon, History, ShoppingCart } from 'lucide-react'
+import { LogOut, User as UserIcon } from 'lucide-react'
 import { toast } from 'sonner'
 import type { User } from '@supabase/supabase-js'
 
@@ -111,15 +111,7 @@ export function UserInfo() {
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={() => router.push('/account')}>
           <UserIcon className="mr-2 h-4 w-4" />
-          <span>个人资料</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/account/transactions')}>
-          <History className="mr-2 h-4 w-4" />
-          <span>积分消费记录</span>
-        </DropdownMenuItem>
-        <DropdownMenuItem onClick={() => router.push('/account/orders')}>
-          <ShoppingCart className="mr-2 h-4 w-4" />
-          <span>充值订单记录</span>
+          <span>个人中心</span>
         </DropdownMenuItem>
         <DropdownMenuSeparator />
         <DropdownMenuItem onClick={handleLogout}>
