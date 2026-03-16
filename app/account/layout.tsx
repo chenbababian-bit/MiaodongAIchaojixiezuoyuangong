@@ -1,5 +1,7 @@
-import React from "react";
-import { redirect } from "next/navigation";
+'use client';
+
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { supabase } from "@/lib/supabase";
 import { AccountSidebar } from "@/components/account/account-sidebar";
 
@@ -7,15 +9,34 @@ interface AccountLayoutProps {
   children: React.ReactNode;
 }
 
-export default async function AccountLayout({ children }: AccountLayoutProps) {
-  // 检查用户是否已登录
-  const {
-    data: { user },
-  } = await supabase.auth.getUser();
+export default function AccountLayout({ children }: AccountLayoutProps) {
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
-  if (!user) {
-    // 未登录用户重定向到登录页
-    redirect("/login");
+  useEffect(() => {
+    // 检查用户是否已登录
+    const checkUser = async () => {
+      const {
+        data: { user },
+      } = await supabase.auth.getUser();
+
+      if (!user) {
+        // 未登录用户重定向到登录页
+        router.push("/login");
+      } else {
+        setLoading(false);
+      }
+    };
+
+    checkUser();
+  }, [router]);
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
   return (
