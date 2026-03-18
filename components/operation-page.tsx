@@ -53,6 +53,9 @@ import {
   weiboComplianceTemplates,
   weiboInnovationTrendsTemplates,
   officialAccountContentPlanningTemplates,
+  officialAccountUserInteractionTemplates,
+  officialAccountPromotionCooperationTemplates,
+  officialAccountDataAnalysisTemplates,
   communityPlanningTemplates,
   customerServiceTemplates,
 } from "@/lib/marketing-templates";
@@ -180,6 +183,9 @@ export function OperationPage() {
   // 公众号运营下的所有子分类配置
   const officialAccountOperationCategories = [
     { id: "content-planning", label: "内容策划", templates: officialAccountContentPlanningTemplates },
+    { id: "user-interaction-official", label: "用户互动", templates: officialAccountUserInteractionTemplates },
+    { id: "promotion-cooperation", label: "推广合作", templates: officialAccountPromotionCooperationTemplates },
+    { id: "data-analysis-official", label: "数据分析", templates: officialAccountDataAnalysisTemplates },
   ];
 
   // 社群运营下的所有子分类配置
