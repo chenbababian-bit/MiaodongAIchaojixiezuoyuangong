@@ -17,7 +17,7 @@ export default function AccountPage() {
   };
 
   const quickActions = [
-    { icon: CreditCard, label: "立即充值", description: "购买积分继续使用", href: "/account/recharge", color: "bg-blue-500" },
+    { icon: CreditCard, label: "立即充值", description: "购买积分继续使用", href: "/credits", color: "bg-blue-500" },
     { icon: History, label: "查看记录", description: "消费明细一目了然", href: "/account/transactions", color: "bg-green-500" },
     { icon: FileText, label: "我的文档", description: "管理生成的内容", href: "/documents", color: "bg-purple-500" },
     { icon: Settings, label: "账户设置", description: "修改个人信息", href: "/account/settings", color: "bg-gray-500" },
@@ -84,7 +84,7 @@ export default function AccountPage() {
 
               <div className="space-y-3">
                 <Button size="lg" className="w-full lg:w-auto" asChild>
-                  <a href="/account/recharge">
+                  <a href="/credits">
                     <CreditCard className="mr-2 h-4 w-4" />
                     立即充值
                   </a>

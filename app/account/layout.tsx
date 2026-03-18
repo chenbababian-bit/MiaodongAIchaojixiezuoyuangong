@@ -74,7 +74,7 @@ export default function AccountLayout({ children }: AccountLayoutProps) {
             <span>概览</span>
           </a>
           <a
-            href="/account/recharge"
+            href="/credits"
             className="flex flex-col items-center gap-1 p-2 text-xs text-muted-foreground"
           >
             <div className="h-5 w-5 rounded-full bg-primary/10 flex items-center justify-center">

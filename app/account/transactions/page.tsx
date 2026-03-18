@@ -1,44 +1,68 @@
 'use client';
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Pagination, PaginationContent, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from "@/components/ui/pagination";
-import { History, Download, Filter, Search } from "lucide-react";
+import { History, Download, Filter, Search, Loader2 } from "lucide-react";
 import { Input } from "@/components/ui/input";
+import { useCredits } from "@/lib/credits-context";
 
-// 模拟消费记录数据
-const mockTransactions = Array.from({ length: 45 }, (_, i) => ({
-  id: i + 1,
-  time: `2024-02-${String(26 - Math.floor(i / 3)).padStart(2, '0')} ${String(10 + (i % 10)).padStart(2, '0')}:${String(30 + (i % 30)).padStart(2, '0')}`,
-  function: [
-    "小红书爆款文案生成",
-    "微信公众号文章撰写",
-    "抖音短视频脚本",
-    "知乎深度回答",
-    "微博热点文案",
-    "品牌定位策略",
-    "市场分析报告",
-    "创意广告文案",
-    "产品介绍文案",
-    "活动策划方案"
-  ][i % 10],
-  consumed: -[5, 10, 8, 12, 15, 20, 25, 30, 40, 50][i % 10],
-  remaining: 1000 - (i + 1) * [5, 10, 8, 12, 15, 20, 25, 30, 40, 50][i % 10],
-}));
+interface Transaction {
+  id: string;
+  transaction_type: 'consumption' | 'recharge' | 'gift' | 'refund' | 'adjustment';
+  amount: number;
+  balance_before: number;
+  balance_after: number;
+  template_name?: string;
+  description?: string;
+  created_at: string;
+}
 
 const ITEMS_PER_PAGE = 20;
 
 export default function TransactionsPage() {
+  const { credits } = useCredits();
   const [currentPage, setCurrentPage] = useState(1);
   const [searchQuery, setSearchQuery] = useState("");
+  const [transactions, setTransactions] = useState<Transaction[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  // 获取交易记录
+  useEffect(() => {
+    const fetchTransactions = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('/api/user/transactions?limit=100');
+        const result = await response.json();
+
+        if (result.success) {
+          setTransactions(result.data);
+        } else {
+          setError('获取交易记录失败');
+        }
+      } catch (err) {
+        console.error('获取交易记录错误:', err);
+        setError('加载失败，请刷新重试');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchTransactions();
+  }, []);
 
   // 过滤数据
-  const filteredTransactions = mockTransactions.filter(transaction =>
-    transaction.function.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredTransactions = transactions.filter(transaction => {
+    const searchText = searchQuery.toLowerCase();
+    return (
+      transaction.template_name?.toLowerCase().includes(searchText) ||
+      transaction.description?.toLowerCase().includes(searchText)
+    );
+  });
 
   // 分页计算
   const totalPages = Math.ceil(filteredTransactions.length / ITEMS_PER_PAGE);
@@ -53,9 +77,27 @@ export default function TransactionsPage() {
   };
 
   const handleExport = () => {
-    // 模拟导出功能
     alert("导出功能即将上线");
   };
+
+  // 格式化日期
+  const formatDate = (dateString: string) => {
+    const date = new Date(dateString);
+    return date.toLocaleString('zh-CN', {
+      year: 'numeric',
+      month: '2-digit',
+      day: '2-digit',
+      hour: '2-digit',
+      minute: '2-digit',
+    });
+  };
+
+  // 计算统计数据
+  const totalConsumed = transactions
+    .filter(t => t.transaction_type === 'consumption')
+    .reduce((sum, t) => sum + Math.abs(t.amount), 0);
+
+  const consumptionCount = transactions.filter(t => t.transaction_type === 'consumption').length;
 
   return (
     <div className="space-y-6">
@@ -85,7 +127,7 @@ export default function TransactionsPage() {
                 value={searchQuery}
                 onChange={(e) => {
                   setSearchQuery(e.target.value);
-                  setCurrentPage(1); // 搜索时重置到第一页
+                  setCurrentPage(1);
                 }}
               />
             </div>
@@ -105,97 +147,108 @@ export default function TransactionsPage() {
             消费明细
           </CardTitle>
           <CardDescription>
-            共 {filteredTransactions.length} 条记录，当前显示第 {startIndex + 1}-{Math.min(endIndex, filteredTransactions.length)} 条
+            {loading ? '加载中...' : `共 ${filteredTransactions.length} 条记录，当前显示第 ${startIndex + 1}-${Math.min(endIndex, filteredTransactions.length)} 条`}
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead className="w-[180px]">时间</TableHead>
-                  <TableHead>使用功能</TableHead>
-                  <TableHead className="w-[120px] text-right">消耗积分</TableHead>
-                  <TableHead className="w-[120px] text-right">剩余积分</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {currentTransactions.length > 0 ? (
-                  currentTransactions.map((transaction) => (
-                    <TableRow key={transaction.id}>
-                      <TableCell className="font-medium">{transaction.time}</TableCell>
-                      <TableCell>{transaction.function}</TableCell>
-                      <TableCell className="text-right">
-                        <Badge variant={transaction.consumed < 0 ? "destructive" : "default"}>
-                          {transaction.consumed > 0 ? "+" : ""}{transaction.consumed} 积分
-                        </Badge>
-                      </TableCell>
-                      <TableCell className="text-right font-medium">
-                        {transaction.remaining.toLocaleString()} 积分
-                      </TableCell>
-                    </TableRow>
-                  ))
-                ) : (
-                  <TableRow>
-                    <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
-                      暂无消费记录
-                    </TableCell>
-                  </TableRow>
-                )}
-              </TableBody>
-            </Table>
-          </div>
-
-          {/* 分页控件 */}
-          {totalPages > 1 && (
-            <div className="mt-6">
-              <Pagination>
-                <PaginationContent>
-                  <PaginationItem>
-                    <PaginationPrevious 
-                      onClick={() => handlePageChange(currentPage - 1)}
-                      className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                  
-                  {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
-                    let pageNum;
-                    if (totalPages <= 5) {
-                      pageNum = i + 1;
-                    } else if (currentPage <= 3) {
-                      pageNum = i + 1;
-                    } else if (currentPage >= totalPages - 2) {
-                      pageNum = totalPages - 4 + i;
-                    } else {
-                      pageNum = currentPage - 2 + i;
-                    }
-                    
-                    return (
-                      <PaginationItem key={pageNum}>
-                        <PaginationLink
-                          onClick={() => handlePageChange(pageNum)}
-                          isActive={currentPage === pageNum}
-                          className="cursor-pointer"
-                        >
-                          {pageNum}
-                        </PaginationLink>
-                      </PaginationItem>
-                    );
-                  })}
-                  
-                  <PaginationItem>
-                    <PaginationNext 
-                      onClick={() => handlePageChange(currentPage + 1)}
-                      className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
-                    />
-                  </PaginationItem>
-                </PaginationContent>
-              </Pagination>
-              
-              <div className="text-center text-sm text-muted-foreground mt-2">
-                第 {currentPage} 页，共 {totalPages} 页
-              </div>
+          {loading ? (
+            <div className="flex items-center justify-center py-12">
+              <Loader2 className="h-8 w-8 animate-spin text-primary" />
+              <span className="ml-2">加载中...</span>
             </div>
+          ) : error ? (
+            <div className="text-center py-8 text-red-500">{error}</div>
+          ) : (
+            <>
+              <div className="rounded-md border">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-[180px]">时间</TableHead>
+                      <TableHead>使用功能</TableHead>
+                      <TableHead className="w-[120px] text-right">消耗积分</TableHead>
+                      <TableHead className="w-[120px] text-right">剩余积分</TableHead>
+                    </TableRow>
+                  </TableHeader>
+                  <TableBody>
+                    {currentTransactions.length > 0 ? (
+                      currentTransactions.map((transaction) => (
+                        <TableRow key={transaction.id}>
+                          <TableCell className="font-medium">{formatDate(transaction.created_at)}</TableCell>
+                          <TableCell>{transaction.template_name || transaction.description || '未知操作'}</TableCell>
+                          <TableCell className="text-right">
+                            <Badge variant={transaction.amount < 0 ? "destructive" : "default"}>
+                              {transaction.amount > 0 ? "+" : ""}{transaction.amount.toFixed(3)} 积分
+                            </Badge>
+                          </TableCell>
+                          <TableCell className="text-right font-medium">
+                            {transaction.balance_after.toFixed(3)} 积分
+                          </TableCell>
+                        </TableRow>
+                      ))
+                    ) : (
+                      <TableRow>
+                        <TableCell colSpan={4} className="text-center py-8 text-muted-foreground">
+                          暂无消费记录
+                        </TableCell>
+                      </TableRow>
+                    )}
+                  </TableBody>
+                </Table>
+              </div>
+
+              {/* 分页控件 */}
+              {totalPages > 1 && (
+                <div className="mt-6">
+                  <Pagination>
+                    <PaginationContent>
+                      <PaginationItem>
+                        <PaginationPrevious
+                          onClick={() => handlePageChange(currentPage - 1)}
+                          className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                        />
+                      </PaginationItem>
+
+                      {Array.from({ length: Math.min(5, totalPages) }, (_, i) => {
+                        let pageNum;
+                        if (totalPages <= 5) {
+                          pageNum = i + 1;
+                        } else if (currentPage <= 3) {
+                          pageNum = i + 1;
+                        } else if (currentPage >= totalPages - 2) {
+                          pageNum = totalPages - 4 + i;
+                        } else {
+                          pageNum = currentPage - 2 + i;
+                        }
+
+                        return (
+                          <PaginationItem key={pageNum}>
+                            <PaginationLink
+                              onClick={() => handlePageChange(pageNum)}
+                              isActive={currentPage === pageNum}
+                              className="cursor-pointer"
+                            >
+                              {pageNum}
+                            </PaginationLink>
+                          </PaginationItem>
+                        );
+                      })}
+
+                      <PaginationItem>
+                        <PaginationNext
+                          onClick={() => handlePageChange(currentPage + 1)}
+                          className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+                        />
+                      </PaginationItem>
+                    </PaginationContent>
+                  </Pagination>
+
+                  <div className="text-center text-sm text-muted-foreground mt-2">
+                    第 {currentPage} 页，共 {totalPages} 页
+                  </div>
+                </div>
+              )}
+            </>
           )}
         </CardContent>
       </Card>
@@ -205,7 +258,7 @@ export default function TransactionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-destructive">
-              {Math.abs(mockTransactions.reduce((sum, t) => sum + (t.consumed < 0 ? t.consumed : 0), 0)).toLocaleString()}
+              {totalConsumed.toFixed(3)}
             </div>
             <p className="text-sm text-muted-foreground">累计消耗积分</p>
           </CardContent>
@@ -213,7 +266,7 @@ export default function TransactionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold">
-              {mockTransactions.length}
+              {consumptionCount}
             </div>
             <p className="text-sm text-muted-foreground">总消费次数</p>
           </CardContent>
@@ -221,7 +274,7 @@ export default function TransactionsPage() {
         <Card>
           <CardContent className="pt-6">
             <div className="text-2xl font-bold text-green-600">
-              {mockTransactions[mockTransactions.length - 1]?.remaining.toLocaleString() || "0"}
+              {credits?.balance.toFixed(3) || "0.000"}
             </div>
             <p className="text-sm text-muted-foreground">当前剩余积分</p>
           </CardContent>

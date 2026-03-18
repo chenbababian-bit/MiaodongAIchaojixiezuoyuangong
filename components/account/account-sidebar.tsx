@@ -15,7 +15,7 @@ import {
 
 const navItems = [
   { icon: User, label: "账户概览", href: "/account" },
-  { icon: CreditCard, label: "充值中心", href: "/account/recharge" },
+  { icon: CreditCard, label: "充值中心", href: "/credits" },
   { icon: History, label: "消费记录", href: "/account/transactions" },
   { icon: FileText, label: "我的文档", href: "/documents" },
   { icon: ShoppingCart, label: "订单记录", href: "/account/orders" },
