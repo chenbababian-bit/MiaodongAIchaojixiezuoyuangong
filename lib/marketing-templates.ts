@@ -12608,3 +12608,354 @@ export const officialAccountDataAnalysisTemplates = [
     color: "bg-green-500",
   },
 ];
+
+// ========== 社群运营 - 内容创作模板 (ID: 36251-36299) ==========
+export const communityContentCreationTemplates = [
+  {
+    id: 36251,
+    icon: "✍️",
+    title: "社群内容策划方案",
+    desc: "制定社群内容策划方案，确保内容质量和发布节奏。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 36252,
+    icon: "📝",
+    title: "社群内容创作指南",
+    desc: "编写内容创作指南，规范社群内容的标准和风格。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36253,
+    icon: "🎨",
+    title: "社群视觉设计规范",
+    desc: "制定视觉设计规范，统一社群内容的视觉风格。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36254,
+    icon: "📅",
+    title: "社群内容日历",
+    desc: "规划社群内容日历，确保内容发布的连续性和多样性。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36255,
+    icon: "📊",
+    title: "社群内容效果评估",
+    desc: "评估社群内容效果，优化内容策略和创作方向。",
+    color: "bg-pink-500",
+  },
+];
+
+// ========== 社群运营 - 用户互动模板 (ID: 36351-36399) ==========
+export const communityUserInteractionTemplates = [
+  {
+    id: 36351,
+    icon: "💬",
+    title: "社群互动策略",
+    desc: "制定社群互动策略，提升用户参与度和活跃度。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36352,
+    icon: "🤝",
+    title: "社群用户关系管理",
+    desc: "建立用户关系管理体系，维护良好的社群氛围。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36353,
+    icon: "🎉",
+    title: "社群互动活动策划",
+    desc: "策划互动活动，激发用户参与热情。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36354,
+    icon: "📢",
+    title: "社群话题引导指南",
+    desc: "编写话题引导指南，规范社群讨论的方向和质量。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 36355,
+    icon: "👥",
+    title: "社群用户分层管理",
+    desc: "实施用户分层管理，针对不同用户提供差异化互动。",
+    color: "bg-indigo-500",
+  },
+];
+
+// ========== 社群运营 - 社群活动模板 (ID: 36401-36449) ==========
+export const communityActivityTemplates = [
+  {
+    id: 36401,
+    icon: "🎯",
+    title: "社群活动策划方案",
+    desc: "制定社群活动策划方案，明确活动目标和执行计划。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36402,
+    icon: "📅",
+    title: "社群活动日历",
+    desc: "规划社群活动日历，确保活动举办的连续性和多样性。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36403,
+    icon: "📋",
+    title: "社群活动执行手册",
+    desc: "编写活动执行手册，规范活动执行的流程和标准。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 36404,
+    icon: "📊",
+    title: "社群活动效果评估",
+    desc: "评估活动效果，总结经验教训，优化后续活动。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 36405,
+    icon: "💰",
+    title: "社群活动预算管理",
+    desc: "管理活动预算，确保活动资源的合理分配和使用。",
+    color: "bg-red-500",
+  },
+];
+
+// ========== 社群运营 - 合作拓展模板 (ID: 36451-36499) ==========
+export const communityCooperationTemplates = [
+  {
+    id: 36451,
+    icon: "🤝",
+    title: "社群合作策略",
+    desc: "制定社群合作策略，拓展合作伙伴和资源。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36452,
+    icon: "📋",
+    title: "社群合作协议模板",
+    desc: "提供合作协议模板，规范合作流程和权益。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 36453,
+    icon: "📈",
+    title: "社群合作效果评估",
+    desc: "评估合作效果，优化合作策略和伙伴选择。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 36454,
+    icon: "🌐",
+    title: "社群跨平台合作",
+    desc: "策划跨平台合作，拓展社群的影响力和覆盖面。",
+    color: "bg-red-500",
+  },
+  {
+    id: 36455,
+    icon: "💼",
+    title: "社群商业合作指南",
+    desc: "编写商业合作指南，规范商业化合作的标准和流程。",
+    color: "bg-blue-500",
+  },
+];
+
+// ========== 社群运营 - 数据分析模板 (ID: 36551-36599) ==========
+export const communityDataAnalysisTemplates = [
+  {
+    id: 36551,
+    icon: "📊",
+    title: "社群数据监控体系",
+    desc: "建立数据监控体系，实时跟踪社群运营数据。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 36552,
+    icon: "📈",
+    title: "社群用户增长分析",
+    desc: "分析用户增长数据，优化用户获取和留存策略。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 36553,
+    icon: "📊",
+    title: "社群内容效果分析",
+    desc: "分析内容效果数据，优化内容策略和创作方向。",
+    color: "bg-red-500",
+  },
+  {
+    id: 36554,
+    icon: "📊",
+    title: "社群互动数据分析",
+    desc: "分析互动数据，优化互动策略和用户体验。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 36555,
+    icon: "📊",
+    title: "社群活动效果分析",
+    desc: "分析活动效果数据，优化活动策划和执行。",
+    color: "bg-green-500",
+  },
+];
+
+// ========== 社群运营 - 社群管理模板 (ID: 36601-36649) ==========
+export const communityManagementTemplates = [
+  {
+    id: 36601,
+    icon: "👥",
+    title: "社群团队管理",
+    desc: "管理社群运营团队，确保团队高效协作。",
+    color: "bg-indigo-500",
+  },
+  {
+    id: 36602,
+    icon: "📋",
+    title: "社群工作流程",
+    desc: "优化社群工作流程，提升运营效率和质量。",
+    color: "bg-red-500",
+  },
+  {
+    id: 36603,
+    icon: "📅",
+    title: "社群工作计划",
+    desc: "制定社群工作计划，明确工作目标和时间安排。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 36604,
+    icon: "📊",
+    title: "社群绩效评估",
+    desc: "评估社群运营绩效，激励优秀表现，改进不足。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36605,
+    icon: "🔄",
+    title: "社群流程优化",
+    desc: "优化社群运营流程，提升工作效率和用户体验。",
+    color: "bg-purple-500",
+  },
+];
+
+// ========== 社群运营 - 用户服务模板 (ID: 36651-36699) ==========
+export const communityUserServiceTemplates = [
+  {
+    id: 36651,
+    icon: "💬",
+    title: "社群用户服务指南",
+    desc: "编写用户服务指南，规范服务流程和标准。",
+    color: "bg-red-500",
+  },
+  {
+    id: 36652,
+    icon: "❓",
+    title: "社群常见问题解答",
+    desc: "整理常见问题解答，提升用户自助服务能力。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 36653,
+    icon: "📋",
+    title: "社群用户反馈机制",
+    desc: "建立用户反馈机制，及时收集和处理用户意见。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36654,
+    icon: "🔄",
+    title: "社群问题处理流程",
+    desc: "优化问题处理流程，提升问题解决效率。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36655,
+    icon: "📊",
+    title: "社群用户满意度调查",
+    desc: "设计满意度调查，了解用户对社群服务的评价。",
+    color: "bg-yellow-500",
+  },
+];
+
+// ========== 社群运营 - 法务合规模板 (ID: 36701-36749) ==========
+export const communityComplianceTemplates = [
+  {
+    id: 36701,
+    icon: "⚖️",
+    title: "社群合规政策",
+    desc: "制定社群合规政策，确保运营符合法律法规。",
+    color: "bg-blue-500",
+  },
+  {
+    id: 36702,
+    icon: "📜",
+    title: "社群用户协议",
+    desc: "编写用户协议，明确用户权利和义务。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36703,
+    icon: "🔒",
+    title: "社群隐私保护指南",
+    desc: "制定隐私保护指南，保护用户个人信息安全。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36704,
+    icon: "🚨",
+    title: "社群内容审核标准",
+    desc: "制定内容审核标准，确保社群内容的安全合规。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36705,
+    icon: "📋",
+    title: "社群风险防控预案",
+    desc: "制定风险防控预案，预防和处理运营风险。",
+    color: "bg-pink-500",
+  },
+];
+
+// ========== 社群运营 - 技术工具模板 (ID: 36751-36799) ==========
+export const communityTechnicalToolsTemplates = [
+  {
+    id: 36751,
+    icon: "🛠️",
+    title: "社群工具选型指南",
+    desc: "提供工具选型指南，帮助选择适合的社群运营工具。",
+    color: "bg-green-500",
+  },
+  {
+    id: 36752,
+    icon: "📱",
+    title: "社群平台使用指南",
+    desc: "编写平台使用指南，规范各平台的操作流程。",
+    color: "bg-purple-500",
+  },
+  {
+    id: 36753,
+    icon: "⚙️",
+    title: "社群自动化工具配置",
+    desc: "配置自动化工具，提升社群运营效率。",
+    color: "bg-yellow-500",
+  },
+  {
+    id: 36754,
+    icon: "📊",
+    title: "社群数据分析工具",
+    desc: "介绍数据分析工具，帮助进行数据监控和分析。",
+    color: "bg-pink-500",
+  },
+  {
+    id: 36755,
+    icon: "🤖",
+    title: "社群AI工具应用",
+    desc: "应用AI工具，提升社群运营的智能化和效率。",
+    color: "bg-indigo-500",
+  },
+];

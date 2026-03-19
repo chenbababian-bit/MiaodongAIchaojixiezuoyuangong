@@ -57,6 +57,15 @@ import {
   officialAccountPromotionCooperationTemplates,
   officialAccountDataAnalysisTemplates,
   communityPlanningTemplates,
+  communityContentCreationTemplates,
+  communityUserInteractionTemplates,
+  communityActivityTemplates,
+  communityCooperationTemplates,
+  communityDataAnalysisTemplates,
+  communityManagementTemplates,
+  communityUserServiceTemplates,
+  communityComplianceTemplates,
+  communityTechnicalToolsTemplates,
   customerServiceTemplates,
 } from "@/lib/marketing-templates";
 import {
@@ -191,6 +200,15 @@ export function OperationPage() {
   // 社群运营下的所有子分类配置
   const communityOperationCategories = [
     { id: "community-planning", label: "社群策划", templates: communityPlanningTemplates },
+    { id: "content-creation-community", label: "内容创作", templates: communityContentCreationTemplates },
+    { id: "user-interaction-community", label: "用户互动", templates: communityUserInteractionTemplates },
+    { id: "community-activities", label: "社群活动", templates: communityActivityTemplates },
+    { id: "cooperation-expansion", label: "合作拓展", templates: communityCooperationTemplates },
+    { id: "data-analysis-community", label: "数据分析", templates: communityDataAnalysisTemplates },
+    { id: "community-management", label: "社群管理", templates: communityManagementTemplates },
+    { id: "user-service-community", label: "用户服务", templates: communityUserServiceTemplates },
+    { id: "compliance-community", label: "法务合规", templates: communityComplianceTemplates },
+    { id: "technical-tools", label: "技术工具", templates: communityTechnicalToolsTemplates },
   ];
 
   // 客户服务下的所有子分类配置
