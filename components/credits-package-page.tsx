@@ -87,7 +87,11 @@ const packages = [
   },
 ];
 
-export function CreditsPackagePage() {
+interface CreditsPackagePageProps {
+  hideBackButton?: boolean;
+}
+
+export function CreditsPackagePage({ hideBackButton = false }: CreditsPackagePageProps) {
   const { credits } = useCredits();
   const [selectedId, setSelectedId] = useState<string | null>(null);
 
@@ -102,7 +106,7 @@ export function CreditsPackagePage() {
       <div className="mx-auto max-w-5xl px-6 py-10">
 
         {/* 返回按钮 */}
-        <BackButton className="mb-6" fallbackPath="/" />
+        {!hideBackButton && <BackButton className="mb-6" fallbackPath="/" />}
 
         {/* 页头 */}
         <div className="mb-10 text-center">
