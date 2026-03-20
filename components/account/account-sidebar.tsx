@@ -11,6 +11,7 @@ import {
   FileText,
   ShoppingCart,
   LogOut,
+  ArrowLeft,
 } from "lucide-react";
 
 const navItems = [
@@ -31,6 +32,17 @@ export function AccountSidebar({ className }: AccountSidebarProps) {
 
   return (
     <aside className={cn("w-64 border-r border-border bg-card", className)}>
+      {/* 返回主页按钮 */}
+      <div className="p-4 pb-0">
+        <Link
+          href="/"
+          className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          返回主页
+        </Link>
+      </div>
+
       {/* 用户信息区域 */}
       <div className="border-b border-border p-6">
         <div className="flex items-center gap-3">

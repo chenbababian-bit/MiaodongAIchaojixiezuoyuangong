@@ -67,6 +67,10 @@ import {
   communityComplianceTemplates,
   communityTechnicalToolsTemplates,
   customerServiceTemplates,
+  customerServiceTechnicalSupportTemplates,
+  customerServiceCustomerRelationshipTemplates,
+  customerServiceSalesSupportTemplates,
+  customerServiceComplaintDisputeTemplates,
 } from "@/lib/marketing-templates";
 import {
   userOperationUserResearchTemplates,
@@ -214,6 +218,10 @@ export function OperationPage() {
   // 客户服务下的所有子分类配置
   const customerServiceCategories = [
     { id: "customer-service", label: "客户服务", templates: customerServiceTemplates },
+    { id: "technical-support", label: "技术支持", templates: customerServiceTechnicalSupportTemplates },
+    { id: "customer-relationship", label: "客户关系", templates: customerServiceCustomerRelationshipTemplates },
+    { id: "sales-support", label: "销售支持", templates: customerServiceSalesSupportTemplates },
+    { id: "complaint-dispute", label: "投诉纠纷", templates: customerServiceComplaintDisputeTemplates },
   ];
 
   // 获取当前第二层分类的标题

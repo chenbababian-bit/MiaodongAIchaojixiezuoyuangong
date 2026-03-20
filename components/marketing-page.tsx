@@ -105,7 +105,7 @@ import {
   accountManagementTemplates,
   placementMonitoringTemplates,
   dataAnalysisTrafficTemplates,
-  technicalSupportTemplates,
+  trafficTechnicalSupportTemplates,
   teamCollaborationTemplates,
   legalComplianceTrafficTemplates,
   gameSubCategories,
@@ -358,7 +358,7 @@ export function MarketingPage() {
     { id: "account-management", label: "账户管理", templates: accountManagementTemplates },
     { id: "placement-monitoring", label: "投放监测", templates: placementMonitoringTemplates },
     { id: "data-analysis-traffic", label: "数据分析", templates: dataAnalysisTrafficTemplates },
-    { id: "technical-support", label: "技术支持", templates: technicalSupportTemplates },
+    { id: "technical-support", label: "技术支持", templates: trafficTechnicalSupportTemplates },
     { id: "team-collaboration", label: "团队协作", templates: teamCollaborationTemplates },
     { id: "legal-compliance-traffic", label: "法律合规", templates: legalComplianceTrafficTemplates },
   ];

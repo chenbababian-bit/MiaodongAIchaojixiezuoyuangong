@@ -3,7 +3,7 @@
 import React from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { CreditCard, History, FileText, Settings, ArrowUpRight, Download, Loader2, ArrowLeft } from "lucide-react";
+import { CreditCard, History, FileText, Settings, ArrowUpRight, Download, Loader2 } from "lucide-react";
 import { useCredits } from "@/lib/credits-context";
 
 export default function AccountPage() {
@@ -34,10 +34,6 @@ export default function AccountPage() {
     <div className="space-y-6">
       {/* 页面标题 */}
       <div>
-        <a href="/" className="inline-flex items-center gap-1.5 text-sm text-muted-foreground hover:text-foreground transition-colors mb-3">
-          <ArrowLeft className="h-4 w-4" />
-          返回主页
-        </a>
         <h1 className="text-3xl font-bold tracking-tight">账户概览</h1>
         <p className="text-muted-foreground">
           欢迎回来，{userData.name}！这里是您的账户管理中心
