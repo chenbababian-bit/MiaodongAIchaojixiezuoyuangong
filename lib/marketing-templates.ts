@@ -5803,7 +5803,7 @@ export const dataAnalysisTrafficTemplates = [
 ];
 
 // ========== 流量投放 - 技术支持模板 ==========
-export const technicalSupportTemplates = [
+export const trafficTechnicalSupportTemplates = [
   {
     id: 27501,
     icon: "📝",
