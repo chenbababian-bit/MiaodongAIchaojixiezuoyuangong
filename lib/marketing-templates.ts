@@ -13393,13 +13393,6 @@ export const customerServiceCustomerRelationshipTemplates = [
     desc: "撰写一份详细、准确的《客户关怀活动效果评估报告》，为客户关怀活动的优化提供建议。",
     color: "bg-pink-500",
   },
-  {
-    id: 36927,
-    icon: "📈",
-    title: "客户关系管理评估报告",
-    desc: "撰写一份全面的客户关系管理评估报告，分析现有客户关系管理体系的优势和不足，提出改进建议。",
-    color: "bg-indigo-500",
-  },
 ];
 
 // ========== 客户服务 - 销售支持模板 (ID: 37001-37099) ==========
