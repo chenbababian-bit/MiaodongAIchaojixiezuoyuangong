@@ -71,6 +71,11 @@ import {
   customerServiceCustomerRelationshipTemplates,
   customerServiceSalesSupportTemplates,
   customerServiceComplaintDisputeTemplates,
+  customerServiceCustomerExperienceTemplates,
+  customerServiceLegalComplianceTemplates,
+  customerServiceItServiceTemplates,
+  customerServiceCommunicationCollaborationTemplates,
+  customerServiceTrainingDevelopmentTemplates,
 } from "@/lib/marketing-templates";
 import {
   userOperationUserResearchTemplates,
@@ -222,6 +227,11 @@ export function OperationPage() {
     { id: "customer-relationship", label: "客户关系", templates: customerServiceCustomerRelationshipTemplates },
     { id: "sales-support", label: "销售支持", templates: customerServiceSalesSupportTemplates },
     { id: "complaint-dispute", label: "投诉纠纷", templates: customerServiceComplaintDisputeTemplates },
+    { id: "customer-experience", label: "客户体验", templates: customerServiceCustomerExperienceTemplates },
+    { id: "legal-compliance", label: "法务合规", templates: customerServiceLegalComplianceTemplates },
+    { id: "it-service", label: "IT服务", templates: customerServiceItServiceTemplates },
+    { id: "communication-collaboration", label: "沟通协作", templates: customerServiceCommunicationCollaborationTemplates },
+    { id: "training-development", label: "培训发展", templates: customerServiceTrainingDevelopmentTemplates },
   ];
 
   // 获取当前第二层分类的标题
