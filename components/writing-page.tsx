@@ -10,6 +10,7 @@ import { MediaPage } from "@/components/media-page";
 import { MarketingPage } from "@/components/marketing-page";
 import { OperationPage } from "@/components/operation-page";
 import { GeneralWritingPage } from "@/components/general-writing-page";
+import { ProductPage } from "@/components/product-page";
 import {
   Search,
   Star,
@@ -471,8 +472,8 @@ export function WritingPage() {
 
   // 滚动监听，自动更新左侧导航高亮
   useEffect(() => {
-    // 如果是自媒体、营销、运营或通用写作页面，不需要滚动监听
-    if (activeCategory === "media" || activeCategory === "marketing" || activeCategory === "operation" || activeCategory === "general") return;
+    // 如果是自媒体、营销、运营、通用写作或产品页面，不需要滚动监听
+    if (activeCategory === "media" || activeCategory === "marketing" || activeCategory === "operation" || activeCategory === "general" || activeCategory === "product") return;
 
     const contentElement = contentRef.current;
     if (!contentElement) return;
@@ -602,6 +603,9 @@ export function WritingPage() {
       ) : activeCategory === "general" ? (
         // 通用写作页面
         <GeneralWritingPage />
+      ) : activeCategory === "product" ? (
+        // 产品页面
+        <ProductPage />
       ) : (
         // 其他分类的默认页面
         <div className="flex flex-1 overflow-hidden">{/* Left Filter Sidebar */}
